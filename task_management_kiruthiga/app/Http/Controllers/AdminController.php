@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -6,9 +7,9 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+    public function index()
     {
-        $user = Auth::guard('admin')->user();
+        $user = Auth::user();
         return view('admin.dashboard', compact('user'));
     }
 }

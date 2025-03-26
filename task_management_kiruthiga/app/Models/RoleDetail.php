@@ -5,14 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RoleDetail extends Model {
+class RoleDetail extends Model
+{
     use HasFactory;
 
     protected $table = 'role_details';
     protected $fillable = ['role', 'department', 'department_id'];
 
-    // Relationship with AdminDetail
-    public function admins() {
+    // One role can have multiple admins
+    public function admins()
+    {
         return $this->hasMany(AdminDetail::class, 'role_id');
     }
 }

@@ -1,31 +1,33 @@
 <?php
 
-//welcome page 
 use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
+use App\Http\Controllers\AuthController;
+// Login Routes
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-//adminauthcontroller 
-// routes/web.php
-
-use App\Http\Controllers\AdminAuthController;
-use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AdminController;
-Route::get('admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
-Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
-Route::get('admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+use App\Http\Controllers\EmployeeController;
 
 
-
-// Admin Routes
-Route::middleware(['auth:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminAuthController::class, 'dashboard'])->name('admin.dashboard');
+// Admin Dashboard (Only for Admin)
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 });
 
-// Employee Routes
-Route::middleware(['auth:employee'])->group(function () {
-    Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
+// Employee Dashboard (Only for Employee)
+Route::middleware(['auth', 'role:employee'])->group(function () {
+    Route::get('/employee/dashboard', [EmployeeController::class, 'index'])->name('employee.dashboard');
 });
 
+// Add the route for role details
+Route::get('admin/role-details', [AdminController::class, 'roleDetails'])->name('admin.role.details');
+// Add route for adding a new role
+Route::get('admin/role/add', [AdminController::class, 'addRole'])->name('admin.role.add');
+Route::post('admin/role/store', [AdminController::class, 'storeRole'])->name('admin.role.store');
