@@ -9,9 +9,8 @@ return new class extends Migration {
     {
         Schema::create('role_details', function (Blueprint $table) {
             $table->id();
-            $table->string('role'); // Role Name (e.g., Admin, Employee)
-            $table->string('department'); // Department Name
-            $table->unsignedBigInteger('department_id'); // Foreign key for department
+            $table->string('role')->unique();
+            $table->string('department');
             $table->timestamps();
         });
     }

@@ -10,9 +10,9 @@ class RoleDetail extends Model
     use HasFactory;
 
     protected $table = 'role_details';
-    protected $fillable = ['role', 'department', 'department_id'];
 
-    // One role can have multiple admins
+    protected $fillable = ['role', 'department'];
+
     public function admins()
     {
         return $this->hasMany(AdminDetail::class, 'role_id');
