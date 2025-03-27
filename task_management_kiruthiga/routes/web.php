@@ -12,12 +12,12 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Admin Dashboard Route (Protected)
+
+// Dashboard Routes (Protect them with middleware if needed)
 Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
-})->middleware('admin')->name('admin.dashboard');
+})->name('admin.dashboard');
 
-// Employee Dashboard Route (Protected)
 Route::get('/employee/dashboard', function () {
     return view('employee.dashboard');
-})->middleware('employee')->name('employee.dashboard');
+})->name('employee.dashboard');

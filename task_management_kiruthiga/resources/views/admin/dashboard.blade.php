@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,7 +92,7 @@
     <!-- Main Content -->
     <div class="flex-1 p-6 bg-gray-900 text-white flex flex-col justify-center items-center">
         <div class="flex items-center w-full justify-between px-4 md:px-0">
-            <h1 class="text-2xl font-bold text-center md:text-left w-full">Welcome, {{ auth()->user()->full_name }}</h1>
+            <h1 class="text-2xl font-bold text-center md:text-left w-full">Welcome, you</h1>
         </div>
         
         <p class="mt-2 text-gray-400 text-center">Manage tasks and employees efficiently.</p>

@@ -69,7 +69,7 @@ return [
         'driver' => 'eloquent',
         'model' => App\Models\User::class,
     ],
-     'admin_details' => [
+    'admin_details' => [
         'driver' => 'eloquent',
         'model' => App\Models\AdminDetail::class,
     ],
@@ -101,6 +101,7 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+        
     ],
 
     /*
