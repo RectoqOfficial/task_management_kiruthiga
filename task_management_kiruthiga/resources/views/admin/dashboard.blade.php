@@ -13,14 +13,15 @@
     <div id="sidebar" class="w-64 bg-gray-900 h-screen p-4 hidden md:block">
         <a class="text-lg font-bold text-white block text-center mb-6" href="#">ADMIN PANEL</a>
         <ul>
-            <li class="px-4 py-3">
-                <a class="flex items-center text-gray-300 hover:text-purple-400" href="forms.html">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
-                    </svg>
-                    <span class="ml-4">Role Details</span>
-                </a>
-            </li>
+        <li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-purple-400" onclick="loadRoleDetails()">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
+        </svg>
+        <span class="ml-4">Role Details</span>
+    </a>
+</li>
+
             <li class="px-4 py-3">
                 <a class="flex items-center text-gray-300 hover:text-purple-400" href="cards.html">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -70,7 +71,7 @@
         <a class="text-lg font-bold text-white block text-center mb-6" href="#">ADMIN PANEL</a>
         <ul>
             <li class="px-4 py-3">
-                <a class="flex items-center text-gray-300 hover:text-purple-400" href="forms.html">Role Details</a>
+                <a class="flex items-center text-gray-300 hover:text-purple-400" onclick="loadRoleDetails()">Role Details</a>
             </li>
             <li class="px-4 py-3">
                 <a class="flex items-center text-gray-300 hover:text-purple-400" href="cards.html">Employee Details</a>
@@ -98,10 +99,12 @@
         <p class="mt-2 text-gray-400 text-center">Manage tasks and employees efficiently.</p>
 
         <!-- Dashboard Overview -->
-        <div class="mt-6 p-6 bg-purple-600 shadow-md rounded-lg w-full max-w-2xl">
-            <h2 class="text-2xl font-semibold">Dashboard Overview</h2>
-            <p class="mt-2 text-white">Here you can monitor employees, tasks, and overall progress.</p>
-        </div>
+     <div id="contentArea" class="mt-6 p-6 bg-gray-800 shadow-md rounded-lg w-full max-w-2xl text-white">
+    <h2 class="text-2xl font-semibold">Dashboard Overview</h2>
+    <p class="mt-2">Here you can manage roles, users, and tasks.</p>
+</div>
+
+
     </div>
 
     <script>
@@ -109,6 +112,14 @@
             let sidebar = document.getElementById('mobileSidebar');
             sidebar.classList.toggle('-translate-x-full');
         }
+       function loadRoleDetails() {
+        fetch("{{ route('role.index') }}") // Fetch role details view
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('contentArea').innerHTML = data;
+        })
+        .catch(error => console.error("Error loading Role Details:", error));
+    }
     </script>
 
 </body>
