@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex h-screen bg-gray-100">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-green-900 text-white p-6">
-        <h2 class="text-xl font-bold mb-4">Employee Panel</h2>
-        <ul>
-            <li><a href="#" class="block py-2 hover:bg-green-700">My Tasks</a></li>
-            <li><a href="#" class="block py-2 hover:bg-green-700">Profile</a></li>
-            <li><a href="#" class="block py-2 hover:bg-green-700">Score Board</a></li>
-            <li>
-                <form action="{{ route('logout') }}" method="POST" class="mt-4">
-                    @csrf
-                    <button type="submit" class="w-full text-left py-2 hover:bg-red-700">Logout</button>
-                </form>
-            </li>
-        </ul>
-    </aside>
+<body class="bg-gray-100">
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-green-900 text-white h-screen p-6">
+            <h2 class="text-xl font-bold">Employee Dashboard</h2>
+            <ul class="mt-6 space-y-4">
+                <li><a href="#" class="block hover:text-gray-300">My Tasks</a></li>
+                <li><a href="#" class="block hover:text-gray-300">Profile</a></li>
+                <li><a href="#" class="block hover:text-gray-300">Scoreboard</a></li>
+                <li>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="block w-full text-left">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
 
-    <!-- Content -->
-    <main class="flex-1 p-10">
-        <h1 class="text-3xl font-bold">Welcome, {{ $user->name }}</h1>
-        <p class="text-gray-700 mt-2">This is the Employee Dashboard.</p>
-    </main>
+        <!-- Main Content -->
+        <div class="flex-1 p-6">
+            <h1 class="text-2xl font-bold">Welcome, {{ Auth::user()->fullname }}</h1>
+            <p>This is the employee dashboard.</p>
+        </div>
+    </div>
 </body>
 </html>

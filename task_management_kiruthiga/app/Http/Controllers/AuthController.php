@@ -12,30 +12,35 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|min:6',
+    ]);
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            
-            // Redirect based on user role
-            if ($user->role == 'admin') {
-                return redirect()->route('admin.dashboard');
-            } elseif ($user->role == 'employee') {
-                return redirect()->route('employee.dashboard');
-            }
+    $credentials = $request->only('email', 'password');
+
+    if (Auth::guard('admin')->attempt($credentials)) {
+        $user = Auth::guard('admin')->user(); // ✅ Fetch authenticated user
+
+        // Debugging check
+        \Log::info("User authenticated: ", ['user' => $user]);
+
+        if ($user->role->role == 'Admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->role->role == 'Employee') {
+            return redirect()->route('employee.dashboard');
         }
-
-        return back()->withErrors(['login_error' => 'Invalid credentials']);
     }
 
-    public function logout()
-    {
-        Auth::logout();
-        return redirect('/login');
-    }
+    return redirect()->back()->with('error', 'Invalid email or password');
+}
+
+public function logout()
+{
+    Auth::guard('admin')->logout();
+    return redirect()->route('login');
+}
+
 }
