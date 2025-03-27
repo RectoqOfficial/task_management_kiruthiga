@@ -21,11 +21,3 @@ Route::get('/admin/dashboard', function () {
 Route::get('/employee/dashboard', function () {
     return view('employee.dashboard');
 })->name('employee.dashboard');
-
-
-use App\Http\Controllers\RoleDetailsController;
-
-Route::get('/admin/role-details', [RoleDetailsController::class, 'index'])->name('role.index');
-Route::post('/admin/role-details/store', [RoleDetailsController::class, 'store'])->name('role.store');
-Route::delete('/admin/role-details/delete/{id}', [RoleDetailsController::class, 'destroy'])->name('role.destroy');
-

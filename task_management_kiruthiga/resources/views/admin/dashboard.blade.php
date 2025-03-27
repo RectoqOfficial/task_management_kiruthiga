@@ -112,14 +112,7 @@
             let sidebar = document.getElementById('mobileSidebar');
             sidebar.classList.toggle('-translate-x-full');
         }
-       function loadRoleDetails() {
-        fetch("{{ route('role.index') }}") // Fetch role details view
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('contentArea').innerHTML = data;
-        })
-        .catch(error => console.error("Error loading Role Details:", error));
-    }
+      
     </script>
 
 </body>
