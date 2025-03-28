@@ -86,7 +86,7 @@
                     <td class="border px-4 py-2">${role.role}</td>
                     <td class="border px-4 py-2">${role.department}</td>
                     <td class="border px-4 py-2">
-                        <button onclick="editRole(${role.id})" class="bg-yellow-500 text-white px-4 py-1 rounded-md hover:bg-yellow-600 transition duration-300">Edit</button>
+                     
                         <button onclick="deleteRole(${role.id})" class="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition duration-300">Delete</button>
                     </td>
                 </tr>`;

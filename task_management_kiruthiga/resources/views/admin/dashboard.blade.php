@@ -97,21 +97,24 @@
     </div>
 
   <!-- Main Content -->
-    <div class="flex-1 p-6 bg-gray-900 text-white flex flex-col justify-center items-center">
+    <div class="flex-1 p-2 bg-gray-900 text-white flex flex-col justify-center items-center">
         <div class="flex items-center w-full justify-between px-4 md:px-0">
             <h1 class="text-2xl font-bold text-center md:text-left w-full">Welcome, you</h1>
         </div>
         
         <p class="mt-2 text-gray-400 text-center">Manage tasks and employees efficiently.</p>
 
-        <!-- Content Area where Role Details will be loaded -->
-        <div id="contentArea" class="mt-8 p-8 bg-gray-900 shadow-lg rounded-2xl w-full max-w-4xl text-white">
-            <!-- The content of role_detail will be loaded here -->
+   <!-- ========== Start Section ========== -->
+     <div id="contentArea" class="mt-8 p-8 bg-gray-900 shadow-lg rounded-2xl w-full h-[100vh] text-white overflow-auto">
+         
         </div>
+   <!-- ========== End Section ========== -->
+   
+        
     </div>
 
 <script>
-     // Function to load Role Details content into the #contentArea div
+
 // Function to load Role Details content into the #contentArea div
 function loadRoleDetails(event) {
     event.preventDefault(); // Prevent default behavior

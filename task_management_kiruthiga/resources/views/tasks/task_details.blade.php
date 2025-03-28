@@ -9,60 +9,60 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6 bg-gray-100 min-h-screen">
+<div class="container mx-auto p-6 bg-gray-900 text-white min-h-screen">
     <h2 class="text-2xl font-bold mb-4 text-center">Task Details</h2>
 
     <!-- Task Form -->
-    <div class="bg-white p-6 rounded-lg shadow-lg">
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
         <form id="taskForm" class="space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Task Title</label>
-                    <input type="text" id="taskTitle" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
+                    <label class="block text-sm font-medium text-gray-300">Task Title</label>
+                    <input type="text" id="taskTitle" class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Description</label>
-                    <input type="text" id="description" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
+                    <label class="block text-sm font-medium text-gray-300">Description</label>
+                    <input type="text" id="description" class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Department</label>
-                    <input type="text" id="department" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
+                    <label class="block text-sm font-medium text-gray-300">Department</label>
+                    <input type="text" id="department" class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Role</label>
-                    <input type="text" id="role" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
+                    <label class="block text-sm font-medium text-gray-300">Role</label>
+                    <input type="text" id="role" class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Assigned To</label>
-                    <input type="text" id="assignedTo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
+                    <label class="block text-sm font-medium text-gray-300">Assigned To</label>
+                    <input type="text" id="assignedTo" class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">No. of Days</label>
-                    <input type="number" id="noOfDays" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
+                    <label class="block text-sm font-medium text-gray-300">No. of Days</label>
+                    <input type="number" id="noOfDays" class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Task Create Date</label>
-                    <input type="date" id="taskCreateDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
+                    <label class="block text-sm font-medium text-gray-300">Task Create Date</label>
+                    <input type="date" id="taskCreateDate" class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Task Start Date</label>
-                    <input type="date" id="taskStartDate" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required onchange="calculateDeadline()">
+                    <label class="block text-sm font-medium text-gray-300">Task Start Date</label>
+                    <input type="date" id="taskStartDate" class="w-full px-4 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 hover:border-blue-300" required onchange="calculateDeadline()">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Deadline</label>
-                    <input type="text" id="deadline" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed" readonly>
+                    <label class="block text-sm font-medium text-gray-300">Deadline</label>
+                    <input type="text" id="deadline" class="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 cursor-not-allowed" readonly>
                 </div>
             </div>
 
-            <button type="button" onclick="addTask()" class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <button type="button" onclick="addTask()" class="mt-4 px-6 py-2 bg-violet-300 text-white rounded-lg hover:bg-violet-400 transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500">
                 Add Task
             </button>
             <p id="error-message" class="text-red-500 mt-2 hidden">Please fill all fields.</p>
@@ -70,11 +70,11 @@
     </div>
 
     <!-- Task Table with Horizontal Scroll -->
-    <div class="mt-6 bg-white p-6 rounded-lg shadow-lg overflow-x-auto">
+    <div class="mt-6 bg-gray-800 p-6 rounded-lg shadow-lg overflow-x-auto">
         <h3 class="text-xl font-semibold mb-3">Task List</h3>
-        <table class="w-full border-collapse border border-gray-300 table-auto">
+        <table class="w-full border-collapse border border-gray-600 table-auto">
             <thead>
-                <tr class="bg-gray-200">
+                <tr class="bg-gray-700">
                     <th class="border px-4 py-2 text-sm">ID</th>
                     <th class="border px-4 py-2 text-sm">Task Title</th>
                     <th class="border px-4 py-2 text-sm">Assigned To</th>
