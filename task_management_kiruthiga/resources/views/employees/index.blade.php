@@ -51,8 +51,10 @@
                     <td class="px-4 py-3">{{ $employee->email_id }}</td>
                     <td class="px-4 py-3">{{ $employee->department }}</td>
                     <td class="px-4 py-3">{{ $employee->designation }}</td>
-                    <td class="px-4 py-3">{{ $employee->job_type }}</td>
-                    <td class="px-4 py-3">{{ $employee->role->name ?? 'N/A' }}</td>
+                    <td class="px-4 py-3">{{ $employee->jobtype }}</td>
+                    <td class="px-4 py-3">{{ $employee->role ? $employee->role->name : 'No Role Assigned' }}</td>
+    
+
                 </tr>
                 @endforeach
             </tbody>

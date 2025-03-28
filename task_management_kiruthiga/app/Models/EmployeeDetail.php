@@ -18,6 +18,6 @@ class EmployeeDetail extends Model {
     protected $hidden = ['password'];
 
     public function role() {
-        return $this->belongsTo(RoleDetail::class, 'role_id');
+        return $this->belongsTo(RoleDetail::class, 'role_id','id');
     }
 }

@@ -87,7 +87,7 @@
 
             <div>
                 <label class="block font-semibold text-gray-700">Job Type</label>
-                <select name="job_type" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 transition shadow-sm" required>
+                <select name="jobtype" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 transition shadow-sm" required>
                     <option value="">Select Job Type</option>
                     <option value="Onsite">Onsite</option>
                     <option value="Remote">Remote</option>
@@ -99,7 +99,7 @@
                 <select name="role_id" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 transition shadow-sm" required>
                     <option value="">Select Role</option>
                     @foreach($roleDetails as $role)
-                        <option value="{{ $role->id }}">{{ $role->role }}</option>
+                        <option value="{{ $role->id }}">{{ $role->id }}</option>
                     @endforeach
                 </select>
             </div>
