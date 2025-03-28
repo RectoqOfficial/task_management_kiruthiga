@@ -17,4 +17,6 @@ class RoleDetail extends Model
     {
         return $this->hasMany(AdminDetail::class, 'role_id');
     }
+       // Enable timestamps (optional, if you're using them)
+    public $timestamps = true;
 }
