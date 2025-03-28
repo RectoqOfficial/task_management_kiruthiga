@@ -12,20 +12,26 @@ class RoleDetailController extends Controller
         return view('admin.role_details', compact('roles'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'role' => 'required|unique:role_details,role|max:255',
-            'department' => 'required|max:255'
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'role' => 'required|unique:role_details,role|max:255',
+        'department' => 'required|max:255'
+    ]);
 
-        RoleDetail::create([
-            'role' => $request->role,
-            'department' => $request->department
-        ]);
+    // Store the role in a variable before returning
+    $role = RoleDetail::create([
+        'role' => $request->role,
+        'department' => $request->department
+    ]);
 
-        return response()->json(['success' => true, 'role' => $role,'message' => 'Role added successfully!']);
-    }
+    return response()->json([
+        'success' => true, 
+        'role' => $role, // Use the stored variable here
+        'message' => 'Role added successfully!'
+    ]);
+}
+
 
     public function destroy($id)
     {

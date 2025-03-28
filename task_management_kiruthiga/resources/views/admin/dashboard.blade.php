@@ -33,13 +33,13 @@
 </li>
 
              <li class="px-4 py-3">
-                <a class="flex items-center text-gray-300 hover:text-purple-400" href="charts.html">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
-                    </svg>
-                    <span class="ml-4">Task Details</span>
-                </a>
-            </li>
+    <a href="#" class="flex items-center text-gray-300 hover:text-purple-400" onclick="loadTaskDetails(event)">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+        </svg>
+        <span class="ml-4">Task Details</span>
+    </a>
+</li>
             <li class="px-4 py-3">
                 <a class="flex items-center text-gray-300 hover:text-purple-400" href="buttons.html">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -79,7 +79,7 @@
                 <a class="flex items-center text-gray-300 hover:text-purple-400" onclick="loadEmployeeDetails(event)">Employee Details</a>
             </li>
               <li class="px-4 py-3">
-                <a class="flex items-center text-gray-300 hover:text-purple-400" href="charts.html">Task Details</a>
+                <a class="flex items-center text-gray-300 hover:text-purple-400" onclick="loadTaskDetails(event)">Task Details</a>
             </li>
             <li class="px-4 py-3">
                 <a class="flex items-center text-gray-300 hover:text-purple-400" href="buttons.html">Scoreboard</a>
@@ -101,19 +101,20 @@
         <p class="mt-2 text-gray-400 text-center">Manage tasks and employees efficiently.</p>
 
         <!-- Dashboard Overview -->
-     <div id="contentArea" class="mt-6 p-6 bg-gray-800 shadow-md rounded-lg w-full max-w-2xl text-white">
-    <h2 class="text-2xl font-semibold">Dashboard Overview</h2>
-    <p class="mt-2">Here you can manage roles, users, and tasks.</p>
+   <div id="contentArea" class="mt-8 p-8 bg-gray-900 shadow-lg rounded-2xl w-full max-w-4xl text-white">
+  
 </div>
 
 
     </div>
 
     <script>
+        //for sidebar
         function toggleSidebar() {
             let sidebar = document.getElementById('mobileSidebar');
             sidebar.classList.toggle('-translate-x-full');
         }
+        //forroledetail
        function loadRoleDetails(event) {
         event.preventDefault(); // Prevents page reload
 
@@ -124,6 +125,7 @@
         })
         .catch(error => console.error('Error:', error));
     }
+    //foremployee
      function loadEmployeeDetails(event) {
         event.preventDefault(); // Prevents page reload
 
@@ -134,7 +136,28 @@
         })
         .catch(error => console.error('Error:', error));
     }
-    </script>
+
+   //fortask
+
+  function loadTaskDetails(event) {
+    event.preventDefault(); // Prevent full page reload
+
+    $.ajax({
+        url: "{{ route('task.details') }}", // Use correct Blade syntax
+        type: "GET",
+        dataType: "html",
+        success: function(response) {
+            $("#content-area").html(response); // Load response into content area
+        },
+        error: function(xhr, status, error) {
+            console.error("Error loading Task Details:", error);
+            $("#content-area").html("<p class='text-red-500'>Failed to load Task Details.</p>");
+        }
+    });
+}
+
+
+     </script>
 
 </body>
 </html>

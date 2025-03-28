@@ -1,152 +1,230 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Role Details</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
 @extends('layouts.app')
+
 @section('content')
-<div class="container mx-auto p-4 md:p-6">
-    <h2 class="text-xl md:text-2xl font-semibold mb-4">Role Details</h2>
-    
-    <!-- Button to Open Modal -->
-    <button onclick="openModal()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        Add Role
-    </button>
+<div class="container mx-auto p-4">
+    <h2 class="text-2xl font-semibold mb-4 text-white-800">Role Details</h2>
 
-    <!-- Role Modal -->
-    <div id="roleModal" class="fixed inset-0 flex items-center justify-center hidden bg-gray-800 bg-opacity-50 p-4">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h3 class="text-lg font-semibold mb-3">Add Role</h3>
-            <form id="addRoleForm" class="space-y-3">
-                @csrf
-                <label class="block text-gray-700">Role:</label>
-                <input type="text" id="role" name="role" placeholder="Enter Role" class="w-full p-2 border border-gray-300 rounded">
-                <span id="roleError" class="text-red-500 text-sm"></span>
-
-                <label class="block text-gray-700">Department:</label>
-                <input type="text" id="department" name="department" placeholder="Enter Department" class="w-full p-2 border border-gray-300 rounded">
-                <span id="departmentError" class="text-red-500 text-sm"></span>
-
-                <div class="flex justify-end space-x-2">
-                    <button type="button" onclick="closeModal()" class="bg-gray-400 hover:bg-gray-500 text-white py-2 px-4 rounded">
-                        Cancel
-                    </button>
-                    <button type="submit" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">
-                        Add Role
-                    </button>
-                </div>
-            </form>
+    <!-- Role Form -->
+    <form id="addRoleForm" class="space-y-3 mb-6 bg-gray-100 p-6 rounded-lg shadow">
+        @csrf
+        <div>
+            <label class="block text-gray-700">Role ID (Auto-generated):</label>
+            <input type="text" id="role_id" disabled class="w-full p-2 border border-gray-300 rounded bg-gray-200">
         </div>
-    </div>
+
+        <div>
+            <label class="block text-gray-700">Role:</label>
+            <input type="text" id="role" name="role" placeholder="Enter Role" class="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300">
+            <span id="roleError" class="text-red-500 text-sm"></span>
+        </div>
+
+        <div>
+            <label class="block text-gray-700">Department:</label>
+            <input type="text" id="department" name="department" placeholder="Enter Department" class="w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-300">
+            <span id="departmentError" class="text-red-500 text-sm"></span>
+        </div>
+
+        <button type="submit" class="bg-blue-400 hover:bg-blue-500 text-white py-2 px-4 rounded transition-all">
+            Add Role
+        </button>
+    </form>
 
     <!-- Role Details Table -->
-    <div class="mt-6 overflow-x-auto">
-        <table class="w-full border-collapse border border-gray-300 text-sm md:text-base">
-            <thead>
-                <tr class="bg-blue-500 text-white">
-                    <th class="border border-gray-300 px-3 py-2">ID</th>
-                    <th class="border border-gray-300 px-3 py-2">Role</th>
-                    <th class="border border-gray-300 px-3 py-2">Department</th>
-                    <th class="border border-gray-300 px-3 py-2">Action</th>
-                </tr>
-            </thead>
-            <tbody id="roleTable">
-                @foreach($roles as $role)
-                <tr id="roleRow{{ $role->id }}" class="hover:bg-blue-100">
-                    <td class="border border-gray-300 px-3 py-2">{{ $role->id }}</td>
-                    <td class="border border-gray-300 px-3 py-2">{{ $role->role }}</td>
-                    <td class="border border-gray-300 px-3 py-2">{{ $role->department }}</td>
-                    <td class="border border-gray-300 px-3 py-2">
-                        <button onclick="deleteRole({{ $role->id }})" class="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded">
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+  <!-- Role Details Table -->
+<div class="overflow-x-auto">
+    <table class="w-full border-collapse border border-gray-300 text-sm bg-gray-50 shadow rounded-lg">
+        <thead>
+            <tr class="bg-gray-700 text-white">
+                <th class="border border-gray-300 px-3 py-2">ID</th>
+                <th class="border border-gray-300 px-3 py-2">Role</th>
+                <th class="border border-gray-300 px-3 py-2">Department</th>
+                <th class="border border-gray-300 px-3 py-2">Action</th>
+            </tr>
+        </thead>
+        <tbody id="roleTable">
+            @foreach($roles as $role)
+            <tr id="roleRow{{ $role->id }}" class="bg-gray-100">
+                <td class="border border-gray-300 px-3 py-2 text-gray-900">{{ $role->id }}</td>
+                <td class="border border-gray-300 px-3 py-2 text-gray-900">{{ $role->role }}</td>
+                <td class="border border-gray-300 px-3 py-2 text-gray-900">{{ $role->department }}</td>
+                <td class="border border-gray-300 px-3 py-2">
+                    <button onclick="deleteRole({{ $role->id }})" class="bg-red-500 text-white py-1 px-3 rounded">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
+</div>
+
 @endsection
 
 @section('scripts')
 <script>
-    function openModal() {
-        document.getElementById("roleModal").classList.remove("hidden");
+ document.querySelector(".add-role-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+    
+    let role = document.querySelector(".role-input").value.trim();
+    let department = document.querySelector(".department-input").value.trim();
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+    
+    // Clear previous error messages
+    document.querySelector(".role-error").innerText = "";
+    document.querySelector(".department-error").innerText = "";
+    
+    if (!role || !department) {
+        document.querySelector(".role-error").innerText = role ? "" : "Role is required!";
+        document.querySelector(".department-error").innerText = department ? "" : "Department is required!";
+        return;
     }
-    function closeModal() {
-        document.getElementById("roleModal").classList.add("hidden");
-    }
+    
+    fetch("{{ route('role.store') }}", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": csrfToken,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ role: role, department: department })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Role Added Successfully!");
 
-    document.getElementById("addRoleForm").addEventListener("submit", function (event) {
-        event.preventDefault();
+            // Append new role to the table dynamically
+            let newRow = document.createElement("tr");
+            newRow.classList.add("role-row");
+            newRow.innerHTML = `
+                <td class="border border-gray-300 px-3 py-2 text-gray-900">${data.role.id}</td>
+                <td class="border border-gray-300 px-3 py-2 text-gray-900">${data.role.role}</td>
+                <td class="border border-gray-300 px-3 py-2 text-gray-900">${data.role.department}</td>
+                <td class="border border-gray-300 px-3 py-2">
+                    <button class="delete-role bg-red-500 text-white py-1 px-3 rounded" data-id="${data.role.id}">
+                        Delete
+                    </button>
+                </td>
+            `;
+            
+            document.querySelector(".role-table").appendChild(newRow);
+            
+            // Reset form fields without refreshing
+            document.querySelector(".add-role-form").reset();
+        } else {
+            alert("Error: " + data.message);
+        }
+    })
+    .catch(error => console.error("Error:", error));
+});
 
-        let role = document.getElementById("role").value.trim();
-        let department = document.getElementById("department").value.trim();
+// Event delegation for delete buttons
+document.querySelector(".role-table").addEventListener("click", function (event) {
+    if (event.target.classList.contains("delete-role")) {
+        let roleId = event.target.getAttribute("data-id");
         let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
-        if (!role || !department) {
-            alert("Role and Department fields cannot be empty!");
-            return;
-        }
-
-        fetch("{{ route('role.store') }}", {
-            method: "POST",
+        fetch(`{{ route('role.destroy', '') }}/${roleId}`, {
+            method: "DELETE",
             headers: {
                 "X-CSRF-TOKEN": csrfToken,
                 "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ role, department })
+            }
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert("Role Added Successfully!");
-                let newRow = document.createElement("tr");
-                newRow.setAttribute("id", "roleRow" + data.role.id);
-                newRow.innerHTML = `
-                    <td class="border border-gray-300 px-3 py-2">${data.role.id}</td>
-                    <td class="border border-gray-300 px-3 py-2">${data.role.role}</td>
-                    <td class="border border-gray-300 px-3 py-2">${data.role.department}</td>
-                    <td class="border border-gray-300 px-3 py-2">
-                        <button onclick="deleteRole(${data.role.id})" class="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded">
-                            Delete
-                        </button>
-                    </td>
-                `;
-                document.getElementById("roleTable").appendChild(newRow);
-                closeModal();
-                document.getElementById("addRoleForm").reset();
+                alert("Role Deleted Successfully!");
+                event.target.closest(".role-row").remove();
             } else {
                 alert("Error: " + data.message);
             }
         })
         .catch(error => console.error("Error:", error));
-    });
-
-    function deleteRole(id) {
-        if (confirm("Are you sure you want to delete this role?")) {
-            let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-            fetch(`/roles/${id}`, {
-                method: "DELETE",
-                headers: { "X-CSRF-TOKEN": csrfToken }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Role Deleted Successfully!");
-                    document.getElementById("roleRow" + id).remove();
-                } else {
-                    alert("Error: " + data.message);
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        }
     }
+});
+document.querySelector(".add-role-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+    
+    let role = document.querySelector(".role-input").value.trim();
+    let department = document.querySelector(".department-input").value.trim();
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+    
+    // Clear previous error messages
+    document.querySelector(".role-error").innerText = "";
+    document.querySelector(".department-error").innerText = "";
+    
+    if (!role || !department) {
+        document.querySelector(".role-error").innerText = role ? "" : "Role is required!";
+        document.querySelector(".department-error").innerText = department ? "" : "Department is required!";
+        return;
+    }
+    
+    fetch("{{ route('role.store') }}", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": csrfToken,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ role: role, department: department })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Role Added Successfully!");
+
+            // Append new role to the table dynamically
+            let newRow = document.createElement("tr");
+            newRow.classList.add("role-row");
+            newRow.innerHTML = `
+                <td class="border border-gray-300 px-3 py-2 text-gray-900">${data.role.id}</td>
+                <td class="border border-gray-300 px-3 py-2 text-gray-900">${data.role.role}</td>
+                <td class="border border-gray-300 px-3 py-2 text-gray-900">${data.role.department}</td>
+                <td class="border border-gray-300 px-3 py-2">
+                    <button class="delete-role bg-red-500 text-white py-1 px-3 rounded" data-id="${data.role.id}">
+                        Delete
+                    </button>
+                </td>
+            `;
+            
+            document.querySelector(".role-table").appendChild(newRow);
+            
+            // Reset form fields without refreshing
+            document.querySelector(".add-role-form").reset();
+        } else {
+            alert("Error: " + data.message);
+        }
+    })
+    .catch(error => console.error("Error:", error));
+});
+
+// Event delegation for delete buttons
+document.querySelector(".role-table").addEventListener("click", function (event) {
+    if (event.target.classList.contains("delete-role")) {
+        let roleId = event.target.getAttribute("data-id");
+        let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+        fetch(`{{ route('role.destroy', '') }}/${roleId}`, {
+            method: "DELETE",
+            headers: {
+                "X-CSRF-TOKEN": csrfToken,
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Role Deleted Successfully!");
+                event.target.closest(".role-row").remove();
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+});
+
+
 </script>
+
 @endsection
