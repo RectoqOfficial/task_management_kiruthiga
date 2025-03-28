@@ -21,3 +21,16 @@ Route::get('/admin/dashboard', function () {
 Route::get('/employee/dashboard', function () {
     return view('employee.dashboard');
 })->name('employee.dashboard');
+
+use App\Http\Controllers\RoleDetailController;
+
+Route::get('/admin/role-details', [RoleDetailController::class, 'index'])->name('admin.role.details');
+Route::post('/roles', [RoleDetailController::class, 'store'])->name('role.store');
+Route::delete('/roles/{id}', [RoleDetailController::class, 'destroy'])->name('role.destroy');
+
+
+use App\Http\Controllers\EmployeeDetailController;
+
+Route::get('/employees', [EmployeeDetailController::class, 'index'])->name('employees.index');
+Route::get('/employees/create', [EmployeeDetailController::class, 'create'])->name('employees.create');
+Route::post('/employees', [EmployeeDetailController::class, 'store'])->name('employees.store');

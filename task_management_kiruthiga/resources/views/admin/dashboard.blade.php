@@ -14,7 +14,8 @@
         <a class="text-lg font-bold text-white block text-center mb-6" href="#">ADMIN PANEL</a>
         <ul>
         <li class="px-4 py-3">
-    <a href="#" class="flex items-center text-gray-300 hover:text-purple-400" onclick="loadRoleDetails()">
+   <li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-purple-400" onclick="loadRoleDetails(event)">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
         </svg>
@@ -22,14 +23,15 @@
     </a>
 </li>
 
-            <li class="px-4 py-3">
-                <a class="flex items-center text-gray-300 hover:text-purple-400" href="cards.html">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2-2"></path>
-                    </svg>
-                    <span class="ml-4">Employee Details</span>
-                </a>
-            </li>
+<li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-purple-400" onclick="loadEmployeeDetails(event)">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2-2"></path>
+        </svg>
+        <span class="ml-4">Employee Details</span>
+    </a>
+</li>
+
              <li class="px-4 py-3">
                 <a class="flex items-center text-gray-300 hover:text-purple-400" href="charts.html">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -71,10 +73,10 @@
         <a class="text-lg font-bold text-white block text-center mb-6" href="#">ADMIN PANEL</a>
         <ul>
             <li class="px-4 py-3">
-                <a class="flex items-center text-gray-300 hover:text-purple-400" onclick="loadRoleDetails()">Role Details</a>
+                <a  class="flex items-center text-gray-300 hover:text-purple-400 onclick="loadRoleDetails(event)">Role Details</a>
             </li>
             <li class="px-4 py-3">
-                <a class="flex items-center text-gray-300 hover:text-purple-400" href="cards.html">Employee Details</a>
+                <a class="flex items-center text-gray-300 hover:text-purple-400" onclick="loadEmployeeDetails(event)">Employee Details</a>
             </li>
               <li class="px-4 py-3">
                 <a class="flex items-center text-gray-300 hover:text-purple-400" href="charts.html">Task Details</a>
@@ -112,7 +114,26 @@
             let sidebar = document.getElementById('mobileSidebar');
             sidebar.classList.toggle('-translate-x-full');
         }
-      
+       function loadRoleDetails(event) {
+        event.preventDefault(); // Prevents page reload
+
+        fetch("{{ route('admin.role.details') }}") // Fetch content from route
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('contentArea').innerHTML = data; // Load response into div
+        })
+        .catch(error => console.error('Error:', error));
+    }
+     function loadEmployeeDetails(event) {
+        event.preventDefault(); // Prevents page reload
+
+        fetch("{{ route('employees.index') }}") // Fetch content from route
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('contentArea').innerHTML = data; // Load response into div
+        })
+        .catch(error => console.error('Error:', error));
+    }
     </script>
 
 </body>
