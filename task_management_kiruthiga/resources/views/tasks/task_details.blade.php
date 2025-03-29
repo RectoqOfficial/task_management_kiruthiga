@@ -74,7 +74,7 @@
         <h3 class="text-xl font-semibold mb-3">Task List</h3>
         <table class="w-full border-collapse border border-gray-600 table-auto">
             <thead>
-                <tr class="bg-gray-700">
+                <tr class="bg-purple-700/60 tesxt-white">
                     <th class="border px-4 py-2 text-sm">ID</th>
                     <th class="border px-4 py-2 text-sm">Task Title</th>
                     <th class="border px-4 py-2 text-sm">Assigned To</th>

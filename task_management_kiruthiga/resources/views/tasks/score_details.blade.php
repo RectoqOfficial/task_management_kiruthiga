@@ -15,7 +15,7 @@
     <div class="overflow-x-auto mt-6">
         <table class="min-w-full table-auto border-collapse bg-gray-800 rounded-lg shadow-md">
             <thead>
-                <tr class="text-white">
+                <tr class="text-white bg-purple-700/60">
                     <th class="border px-4 py-2">ID</th>
                     <th class="border px-4 py-2">Task Title</th>
                     <th class="border px-4 py-2">Status</th>
@@ -26,17 +26,25 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($tasks as $task)
-                <tr class="text-white hover:bg-gray-700 transition duration-300">
-                    <td class="border px-4 py-2">{{ $task->id }}</td>
-                    <td class="border px-4 py-2">{{ $task->task_title }}</td>
-                    <td class="border px-4 py-2">{{ $task->status }}</td>
-                    <td class="border px-4 py-2">{{ $task->scoreDetails->count() }}</td>
-                    <td class="border px-4 py-2">{{ $task->scoreDetails->last()->overdue ? 'Yes' : 'No' }}</td>
-                    <td class="border px-4 py-2">{{ $task->scoreDetails->last()->score }}</td>
-                    <td class="border px-4 py-2">{{ $task->scoreDetails->last()->history }}</td>
-                </tr>
-                @endforeach
+ @foreach($tasks as $task)
+<tr class="text-white hover:bg-gray-700 transition duration-300">
+    <td class="border px-4 py-2">{{ $task->id }}</td>
+    <td class="border px-4 py-2">{{ $task->task_title ?? 'N/A' }}</td>
+    <td class="border px-4 py-2">{{ $task->status ?? 'N/A' }}</td>
+    <td class="border px-4 py-2">{{ $task->scoreDetails->count() }}</td>
+    <td class="border px-4 py-2">
+        {{ optional($task->scoreDetails->last())->overdue ? 'Yes' : 'No' }}
+    </td>
+    <td class="border px-4 py-2">
+        {{ optional($task->scoreDetails->last())->score ?? 'N/A' }}
+    </td>
+    <td class="border px-4 py-2">
+        {{ optional($task->scoreDetails->last())->history ?? 'No history available' }}
+    </td>
+</tr>
+@endforeach
+
+
             </tbody>
         </table>
     </div>
