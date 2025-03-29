@@ -3,21 +3,32 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class EmployeeDetail extends Model {
+class EmployeeDetail extends Authenticatable
+{
     use HasFactory;
 
-    protected $table = 'employee_details';
-
     protected $fillable = [
-        'fullname', 'gender', 'date_of_joining', 'contact', 
-        'email_id', 'password', 'role_id', 'department', 
-        'designation', 'jobtype'
+        'fullname',
+        'gender',
+        'date_of_joining',
+        'contact',
+        'email',
+        'password',
+        'department',
+        'designation',
+        'jobtype',
+        'role_id',
     ];
 
-    protected $hidden = ['password'];
+    protected $hidden = [
+        'password',
+    ];
 
-    public function role() {
-        return $this->belongsTo(RoleDetail::class, 'role_id','id');
+    // Relationship with Role Model
+    public function role()
+    {
+        return $this->belongsTo(RoleDetail::class);
     }
 }

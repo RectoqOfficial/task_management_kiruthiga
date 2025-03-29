@@ -103,7 +103,7 @@
             <select name="role_id" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-purple-500" required>
                 <option value="">Select Role</option>
                 @foreach($roleDetails as $role)
-                    <option value="{{ $role->id }}">{{ $role->role }}</option>
+                    <option value="{{ $role->id }}">{{ $role->id }}</option>
                 @endforeach
             </select>
         </div>
@@ -150,7 +150,7 @@
                     <td class="border px-4 py-2">{{ $employee->gender }}</td>
                     <td class="border px-4 py-2">{{ $employee->date_of_joining }}</td>
                     <td class="border px-4 py-2">{{ $employee->contact }}</td>
-                    <td class="border px-4 py-2">{{ $employee->email_id }}</td>
+                    <td class="border px-4 py-2">{{ $employee->email }}</td>
                     <td class="border px-4 py-2">{{ $employee->department }}</td>
                     <td class="border px-4 py-2">{{ $employee->designation }}</td>
                     <td class="border px-4 py-2">{{ $employee->jobtype }}</td>
@@ -196,17 +196,20 @@
 }
 //for eye toggle 
  function togglePassword() {
-        const passwordField = document.getElementById("password");
-        const eyeIcon = document.getElementById("eyeIcon");
+    const passwordField = document.getElementById("password");
+    const eyeIcon = document.getElementById("eyeIcon");
 
-        if (passwordField.type === "password") {
-            passwordField.type = "text";
-            eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.045 10.045 0 012 12s3.5-7 10-7 10 7 10 7a9.978 9.978 0 01-2.125 3.825M9.75 15.75a3 3 0 114.5-4.5"/>`; 
-        } else {
-            passwordField.type = "password";
-            eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>`;
-        }
+    if (passwordField.type === "password") {
+        passwordField.type = "text";
+        eyeIcon.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M13.875 18.825A10.045 10.045 0 012 12s3.5-7 10-7 10 7 10 7a9.978 9.978 0 01-2.125 3.825M9.75 15.75a3 3 0 114.5-4.5"/>`;
+    } else {
+        passwordField.type = "password";
+        eyeIcon.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>`;
     }
-
+}
 </script>
 </html>

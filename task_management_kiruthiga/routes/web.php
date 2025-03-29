@@ -72,7 +72,11 @@ Route::get('/roles', function () {
 
 use App\Http\Controllers\EmployeeDetailController;
 
-Route::get('/employee-details', [EmployeeDetailController::class, 'index']);
+Route::get('/employee-details', [EmployeeDetailController::class, 'index'])->name('employee_details.index');
+Route::post('/employee-details/store', [EmployeeDetailController::class, 'store'])->name('employee_details.store');
+Route::delete('/employee-details/{id}', [EmployeeDetailController::class, 'destroy']);
+
+
 Route::prefix('employee-details')->name('employee_details.')->group(function() {
     // Display employee details form and employee list
     Route::get('/', [EmployeeDetailController::class, 'index'])->name('index');
