@@ -6,18 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Role Detail | Task Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-    </style>
+ 
+
 </head>
 
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6 bg-gray-900 min-h-screen">
-    <h2 class="text-3xl font-bold mb-6 text-center text-white">Role Details</h2>
+<div class="container mx-auto p-6 bg-gray-900 min-h-screen ">
+    <h2 class="text-3xl font-bold mb-6 text-center  text-white">Role Details</h2>
 
 <!-- Role Detail Form -->
 <form id="roleDetailForm" class="group mb-6 p-6 rounded-lg shadow-xl bg-gradient-to-br from-gray-800 to-gray-900 bg-opacity-60 backdrop-blur-lg max-w-lg mx-auto transition duration-500 hover:ring-4 hover:ring-purple-500/50">
