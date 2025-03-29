@@ -154,7 +154,10 @@
                     <td class="border px-4 py-2">{{ $employee->department }}</td>
                     <td class="border px-4 py-2">{{ $employee->designation }}</td>
                     <td class="border px-4 py-2">{{ $employee->jobtype }}</td>
-                    <td class="border px-4 py-2">{{ $employee->role->role }} - {{ $employee->role->department }}</td>
+                   <td class="border px-4 py-2">
+    {{ optional($employee->role)->role ?? 'N/A' }} - {{ optional($employee->role)->department ?? 'N/A' }}
+</td>
+
                     <td class="border px-4 py-2">
 
                        <button onclick="deleteEmployee({{ $employee->id }})" 
@@ -212,4 +215,4 @@
     }
 }
 </script>
-</html>
+</html>  
