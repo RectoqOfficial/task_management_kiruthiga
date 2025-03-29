@@ -24,9 +24,12 @@
             <div>
                 <label for="department" class="block text-sm text-white">Department</label>
                 <input type="text" id="department" name="department" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-900 text-white focus:ring-2 focus:ring-purple-500" required>
-            </div>
-            <button type="submit" class="bg-violet-500 text-white px-6 py-2 rounded-md hover:bg-violet-600 transition duration-300">Add Role</button>
-        </div>
+           <div class="flex justify-center">
+    <button type="submit" class="w-full md:w-1/2 bg-violet-500 m-2 text-white px-6 py-2 rounded-md hover:bg-violet-600 transition duration-300">
+        Add Role
+    </button>
+</div>
+
     </form>
 
     <!-- Role Table with horizontal scrolling and responsiveness -->

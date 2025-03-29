@@ -104,7 +104,7 @@
                     <th class="border px-4 py-2">Gender</th>
                     <th class="border px-4 py-2">Date of Joining</th>
                     <th class="border px-4 py-2">Contact</th>
-                    <th class="border px-4 py-2">Email</th>
+                    <th class="border px-4 py-2">Email_id</th>
                     <th class="border px-4 py-2">Department</th>
                     <th class="border px-4 py-2">Designation</th>
                     <th class="border px-4 py-2">Job Type</th>
@@ -120,13 +120,13 @@
                     <td class="border px-4 py-2">{{ $employee->gender }}</td>
                     <td class="border px-4 py-2">{{ $employee->date_of_joining }}</td>
                     <td class="border px-4 py-2">{{ $employee->contact }}</td>
-                    <td class="border px-4 py-2">{{ $employee->email }}</td>
+                    <td class="border px-4 py-2">{{ $employee->email_id }}</td>
                     <td class="border px-4 py-2">{{ $employee->department }}</td>
                     <td class="border px-4 py-2">{{ $employee->designation }}</td>
                     <td class="border px-4 py-2">{{ $employee->jobtype }}</td>
                     <td class="border px-4 py-2">{{ $employee->role->role }} - {{ $employee->role->department }}</td>
                     <td class="border px-4 py-2">
-                        <button onclick="editEmployee({{ $employee->id }})" class="bg-yellow-500 text-white px-4 py-1 rounded-md hover:bg-yellow-600 transition duration-300">Edit</button>
+
                         <button onclick="deleteEmployee({{ $employee->id }})" class="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition duration-300">Delete</button>
                     </td>
                 </tr>
