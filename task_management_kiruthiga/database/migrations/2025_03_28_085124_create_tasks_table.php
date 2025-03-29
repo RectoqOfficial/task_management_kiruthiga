@@ -19,12 +19,13 @@ class CreateTasksTable extends Migration
             $table->text('description');
             $table->string('department');
             $table->string('role');
-            $table->string('assigned_to');
+             $table->unsignedBigInteger('assigned_to');
             $table->integer('no_of_days');
             $table->date('task_create_date');
             $table->date('task_start_date');
             $table->date('deadline');
             $table->timestamps();
+              $table->foreign('assigned_to')->references('id')->on('employee_details')->onDelete('cascade');
         });
     }
 

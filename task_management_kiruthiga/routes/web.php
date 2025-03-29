@@ -22,33 +22,28 @@ Route::get('/employee/dashboard', function () {
     return view('employee.dashboard');
 })->name('employee.dashboard');
 
-// use App\Http\Controllers\RoleDetailController;
-
-// Route::get('/admin/role-details', [RoleDetailController::class, 'index'])->name('admin.role.details');
-// Route::post('/roles/store', [RoleDetailController::class, 'store'])->name('role.store');
-// Route::delete('/roles/{id}', [RoleDetailController::class, 'destroy'])->name('role.destroy');
-
-
-// use App\Http\Controllers\EmployeeDetailController;
-
-// Route::get('/employees', [EmployeeDetailController::class, 'index'])->name('employees.index');
-// Route::get('/employees/create', [EmployeeDetailController::class, 'create'])->name('employees.create');
-// Route::post('/employees', [EmployeeDetailController::class, 'store'])->name('employees.store');
 
 // routes/web.php
 
 use App\Http\Controllers\TaskController;
-
-Route::get('/tasks', [TaskController::class, 'index']);  // Display tasks
-Route::post('/tasks', [TaskController::class, 'store']);  // Store new task
-Route::get('tasks/score_details', [TaskController::class, 'showScoreboard'])->name('tasks.score_details');
-Route::post('tasks/update_status/{taskId}', [TaskController::class, 'updateTaskStatus'])->name('tasks.update_status');
 // In your routes/web.php
-Route::get('/tasks', function() {
+Route::get('/task', function() {
     return view('tasks.task_details'); // Path to the view you want to load
 });
-Route::get('/tasks/score_details', [TaskController::class, 'showScoreDetails']);
+Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
+Route::get('/task', [TaskController::class, 'showTaskDetails'])->name('task.details');
+Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
 
+Route::get('/fetch-roles', [TaskController::class, 'fetchRoles'])->name('fetch.roles');
+Route::get('/fetch-employees', [TaskController::class, 'fetchEmployees'])->name('fetch.employees');
+Route::post('/tasks/store', [TaskController::class, 'store'])->name('tasks.store');
+Route::post('tasks/update_status/{taskId}', [TaskController::class, 'updateTaskStatus'])->name('tasks.update_status');
+
+// Scoreboard Route (Ensure only one exists)
+Route::get('/tasks/score_details', [TaskController::class, 'showScoreDetails'])->name('tasks.score_details');
+
+// // ❌ Remove direct view loading (this causes the undefined variable error)
+// Route::get('/task', [TaskController::class, 'showTaskDetails']); // Ensure controller passes data
 
 use App\Http\Controllers\RoleDetailController;
 

@@ -2,20 +2,86 @@
 // app/Http/Controllers/TaskController.php
 
 namespace App\Http\Controllers;
-
+use App\Models\RoleDetail;
+use App\Models\EmployeeDetail; 
 use Illuminate\Http\Request;
 use App\Models\Task;
 
 class TaskController extends Controller
 {
-    public function index() {
-        $tasks = Task::all(); // Fetch tasks from database
-        return view('tasks.task_details', compact('tasks'));
+    public function showTaskDetails()
+    {
+        $roleDetails = RoleDetail::all();
+
+        // Ensure both variables are collections
+        $departments = $roleDetails->pluck('department')->unique();
+        $roles = $roleDetails->pluck('role')->unique();
+
+        // Fetch employees who belong to the available departments & roles
+        $employees = EmployeeDetail::whereIn('department', $departments)
+                                   ->whereIn('role_id', RoleDetail::pluck('id'))
+                                   ->get();
+
+        return view('tasks.task_details', compact('departments', 'roles', 'employees'));
     }
 
-    public function store(Request $request) {
-        // Store task logic (validation, save to database)
+    public function fetchRoles(Request $request)
+    {
+        $roles = RoleDetail::where('department', $request->department)
+                           ->pluck('role')
+                           ->unique()
+                           ->values();
+
+        return response()->json($roles);
     }
+
+    public function fetchEmployees(Request $request)
+    {
+        $employees = EmployeeDetail::where('department', $request->department)
+                                   ->whereHas('role', function($query) use ($request) {
+                                       $query->where('role', $request->role);
+                                   })
+                                   ->get(['id', 'fullname', 'email']);
+
+        return response()->json($employees);
+    }
+
+    public function store(Request $request)
+    {
+        // Validate the input
+        $validated = $request->validate([
+            'task_title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'department' => 'required|string',
+            'role' => 'required|string',
+            'assigned_to' => 'required|integer',
+            'no_of_days' => 'required|integer',
+            'task_create_date' => 'required|date',
+            'task_start_date' => 'required|date',
+            'deadline' => 'required|date',
+        ]);
+
+        // Store the task
+        $task = Task::create($validated);
+
+        // Get the assigned employee's name
+        $employee = EmployeeDetail::find($task->assigned_to); // Use EmployeeDetail for getting employee info
+        if ($employee) {
+            $task->assigned_to_name = $employee->fullname;
+        } else {
+            $task->assigned_to_name = 'Unknown Employee';
+        }
+
+        return response()->json($task);
+    }
+
+    public function destroy($id)
+    {
+        Task::find($id)->delete();
+        return response()->json(['success' => true]);
+    }
+
+    //score board code 
    public function showScoreboard()
 {
     $tasks = Task::with('scoreDetails')->get(); // Fetch tasks with related score details
@@ -41,6 +107,9 @@ class TaskController extends Controller
 
         return back()->with('success', 'Task status updated and score recorded.');
     }
+
+
+    //scoreboard 
 public function showScoreDetails()
 {
     // Assuming you have a Task model that holds your task data
