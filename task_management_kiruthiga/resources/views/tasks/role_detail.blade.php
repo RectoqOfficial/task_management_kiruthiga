@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Role Detail | Task Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
 
 @extends('layouts.app')
@@ -14,58 +19,57 @@
 <div class="container mx-auto p-6 bg-gray-900 min-h-screen">
     <h2 class="text-3xl font-bold mb-6 text-center text-white">Role Details</h2>
 
-    <!-- Role Detail Form -->
-    <form id="roleDetailForm" class="mb-6 bg-gray-800 p-6 rounded-lg shadow-md">
-        <div class="space-y-4">
-            <div>
-                <label for="role" class="block text-sm text-white">Role</label>
-                <input type="text" id="role" name="role" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-900 text-white focus:ring-2 focus:ring-purple-500" required>
-            </div>
-            <div>
-                <label for="department" class="block text-sm text-white">Department</label>
-                <input type="text" id="department" name="department" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-900 text-white focus:ring-2 focus:ring-purple-500" required>
-           <div class="flex justify-center">
-    <button type="submit" class="w-full md:w-1/2 bg-violet-500 m-2 text-white px-6 py-2 rounded-md hover:bg-violet-600 transition duration-300">
-        Add Role
-    </button>
-</div>
-
-    </form>
-
-    <!-- Role Table with horizontal scrolling and responsiveness -->
-    <div class="overflow-x-auto mt-6">
-        <table class="min-w-full table-auto border-collapse bg-gray-800 rounded-lg shadow-md">
-            <thead>
-                <tr class="text-white">
-                    <th class="border px-4 py-2">ID</th>
-                    <th class="border px-4 py-2">Role</th>
-                    <th class="border px-4 py-2">Department</th>
-                    <th class="border px-4 py-2">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="roleTableBody">
-                @foreach($roles as $role)
-                <tr id="role_{{ $role->id }}" class="text-white hover:bg-gray-700 transition duration-300">
-                    <td class="border px-4 py-2">{{ $role->id }}</td>
-                    <td class="border px-4 py-2">{{ $role->role }}</td>
-                    <td class="border px-4 py-2">{{ $role->department }}</td>
-                    <td class="border px-4 py-2">
-                        {{-- <button onclick="editRole({{ $role->id }})" class="bg-yellow-500 text-white px-4 py-1 rounded-md hover:bg-yellow-600 transition duration-300">Edit</button> --}}
-                        <button onclick="deleteRole({{ $role->id }})" class="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition duration-300">Delete</button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+<!-- Role Detail Form -->
+<form id="roleDetailForm" class="group mb-6 p-6 rounded-lg shadow-xl bg-gradient-to-br from-gray-800 to-gray-900 bg-opacity-60 backdrop-blur-lg max-w-lg mx-auto transition duration-500 hover:ring-4 hover:ring-purple-500/50">
+    <div class="space-y-4">
+        <div>
+            <label for="role" class="block text-sm text-white">Role</label>
+            <input type="text" id="role" name="role" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-900 text-white focus:ring-2 focus:ring-purple-500 transition duration-300 hover:border-purple-400">
+        </div>
+        <div>
+            <label for="department" class="block text-sm text-white">Department</label>
+            <input type="text" id="department" name="department" class="w-full px-4 py-2 border border-gray-700 rounded-lg bg-gray-900 text-white focus:ring-2 focus:ring-purple-500 transition duration-300 hover:border-purple-400">
+        </div>
+        <div class="flex justify-center">
+            <button type="submit" class="w-full md:w-1/2 bg-violet-500 m-2 text-white px-6 py-2 rounded-md hover:bg-violet-600 hover:shadow-lg hover:shadow-purple-500 transition duration-300">
+                Add Role
+            </button>
+        </div>
     </div>
+</form>
+
+
+<!-- Role Table -->
+<div class="overflow-x-auto mt-6">
+    <table class="w-full border-collapse bg-gradient-to-br from-gray-800 to-gray-900 bg-opacity-60 backdrop-blur-lg rounded-lg shadow-lg text-sm md:text-base">
+        <thead>
+            <tr class="text-white bg-purple-700/60">
+                <th class="px-4 py-3 text-left border-b border-gray-700">ID</th>
+                <th class="px-4 py-3 text-left border-b border-gray-700">Role</th>
+                <th class="px-4 py-3 text-left border-b border-gray-700">Department</th>
+                <th class="px-4 py-3 text-left border-b border-gray-700">Actions</th>
+            </tr>
+        </thead>
+        <tbody id="roleTableBody">
+            @foreach($roles as $role)
+            <tr id="role_{{ $role->id }}" class="text-white hover:bg-purple-600/30 hover:ring-2 hover:ring-purple-500/50 transition duration-300 ease-in-out">
+                <td class="px-4 py-3 border-b border-gray-700">{{ $role->id }}</td>
+                <td class="px-4 py-3 border-b border-gray-700">{{ $role->role }}</td>
+                <td class="px-4 py-3 border-b border-gray-700">{{ $role->department }}</td>
+                <td class="px-4 py-3 border-b border-gray-700">
+                    <button onclick="deleteRole({{ $role->id }})" class="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 shadow-md hover:shadow-red-500/50 transition duration-300">Delete</button>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
 
-<!-- Script to handle AJAX requests -->
+
+<!-- Script for AJAX requests -->
 <script>
-    // Add new role
     document.getElementById('roleDetailForm').addEventListener('submit', function (e) {
         e.preventDefault();
-
         const role = document.getElementById('role').value;
         const department = document.getElementById('department').value;
 
@@ -75,10 +79,7 @@
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
-            body: JSON.stringify({
-                role: role,
-                department: department
-            })
+            body: JSON.stringify({ role, department })
         })
         .then(response => response.json())
         .then(data => {
@@ -89,7 +90,6 @@
                     <td class="border px-4 py-2">${role.role}</td>
                     <td class="border px-4 py-2">${role.department}</td>
                     <td class="border px-4 py-2">
-                     
                         <button onclick="deleteRole(${role.id})" class="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition duration-300">Delete</button>
                     </td>
                 </tr>`;
@@ -100,13 +100,10 @@
         .catch(error => console.log(error));
     });
 
-    // Delete role
     function deleteRole(id) {
         fetch(`/roles/${id}`, {
             method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            }
+            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
         })
         .then(response => response.json())
         .then(data => {
@@ -116,12 +113,6 @@
         })
         .catch(error => console.log(error));
     }
-
-    // Edit role function (to be implemented)
-    function editRole(id) {
-        alert('Edit functionality not yet implemented');
-    }
 </script>
 @endsection
-
 </html>
