@@ -7,7 +7,7 @@
     <title>Employee Details | Task Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 @extends('layouts.app')
@@ -214,5 +214,61 @@
             d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>`;
     }
 }
+ $(document).ready(function() {
+        $('#employeeDetailForm').submit(function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+          
+
+            $.ajax({
+                 url: $(this).attr('action'),     // Get the form action URL
+                type: 'POST',
+                 dataType: 'json',
+                  data: $(this).serialize(),
+               success: function(response) {
+    alert(response.message); // Show success message
+
+ // Extract role details safely
+                let roleDetails = response.employee.role 
+                    ? response.employee.role.role + ' - ' + response.employee.role.department 
+                    : 'N/A';
+
+     // Append new employee data to the table dynamically
+                $('#employeeTableBody').append(`
+                    <tr id="employee_${response.employee.id}" class="text-white hover:bg-gray-700 transition duration-300">
+                        <td class="border px-4 py-2">${response.employee.id}</td>
+                        <td class="border px-4 py-2">${response.employee.fullname}</td>
+                        <td class="border px-4 py-2">${response.employee.gender}</td>
+                        <td class="border px-4 py-2">${response.employee.date_of_joining}</td>
+                        <td class="border px-4 py-2">${response.employee.contact}</td>
+                        <td class="border px-4 py-2">${response.employee.email}</td>
+                        <td class="border px-4 py-2">${response.employee.department}</td>
+                        <td class="border px-4 py-2">${response.employee.designation}</td>
+                        <td class="border px-4 py-2">${response.employee.jobtype}</td>
+                        <td class="border px-4 py-2">${roleDetails}</td>
+                        <td class="border px-4 py-2">
+                            <button onclick="deleteEmployee(${response.employee.id})" 
+                                class="flex items-center gap-2 bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/50 transition duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                `);
+
+
+
+    // Optionally, update the UI without reloading
+    $('#employeeDetailForm')[0].reset(); // Reset form fields
+    // Append the new employee to the list dynamically (if applicable)
+},
+                error: function(xhr) {
+                    alert('Error: ' + xhr.responseText);
+                }
+            });
+        });
+    });
 </script>
 </html>  

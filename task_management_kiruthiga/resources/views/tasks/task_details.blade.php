@@ -110,7 +110,7 @@
         <tr>
             <td class="border px-4 py-2">{{ $task->id }}</td>
             <td class="border px-4 py-2">{{ $task->task_title }}</td>
-            <td class="border px-4 py-2">{{ $task->assigned_to_name }}</td>
+            <td class="border px-4 py-2">{{ $task->assigned_to }}</td>
             <td class="border px-4 py-2"><span class="text-yellow-500">Pending</span></td>
             <td class="border px-4 py-2">{{ $task->description }}</td>
             <td class="border px-4 py-2">{{ $task->task_start_date }}</td>

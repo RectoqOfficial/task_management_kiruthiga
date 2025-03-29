@@ -40,9 +40,17 @@ class EmployeeDetailController extends Controller
 
         $validatedData['password'] = Hash::make($request->password);
 
-        EmployeeDetail::create($validatedData);
+          // Store the new employee and save it in a variable
+    $employee = EmployeeDetail::create($validatedData);
+  // Fetch role details dynamically
+    $employee->role = $employee->role()->first(); 
 
-        return redirect()->route('employee_details.index')->with('success', 'Employee added successfully.');
+
+       // Return JSON response instead of redirect
+   return response()->json([
+        'message' => 'Employee added successfully!',
+        'employee' => $employee
+    ]);
     }
 
     // Delete an Employee
