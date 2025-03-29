@@ -238,7 +238,7 @@ function loadTaskDetails(event) {
     event.preventDefault(); // Prevent default behavior
 
     $.ajax({
-        url: "http://127.0.0.1:8000/tasks", // This should match your task details route
+        url: "http://127.0.0.1:8000/task", // This should match your task details route
         method: 'GET',
         success: function(response) {
             $('#contentArea').html(response); // Inject the response into the content area

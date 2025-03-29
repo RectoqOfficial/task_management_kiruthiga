@@ -33,6 +33,7 @@ Route::get('/task', function() {
 Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
 Route::get('/task', [TaskController::class, 'showTaskDetails'])->name('task.details');
 Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
 
 Route::get('/fetch-roles', [TaskController::class, 'fetchRoles'])->name('fetch.roles');
 Route::get('/fetch-employees', [TaskController::class, 'fetchEmployees'])->name('fetch.employees');

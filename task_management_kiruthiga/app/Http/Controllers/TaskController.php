@@ -9,6 +9,14 @@ use App\Models\Task;
 
 class TaskController extends Controller
 {
+    public function index()
+{
+//   $tasks = Task::paginate(10);    // Assuming Task is your model for tasks
+ // Fetch all tasks
+    $tasks = Task::all(); 
+    return view('tasks.index', compact('tasks'));  // Passing tasks to the view
+}
+
     public function showTaskDetails()
     {
         $roleDetails = RoleDetail::all();
@@ -21,8 +29,9 @@ class TaskController extends Controller
         $employees = EmployeeDetail::whereIn('department', $departments)
                                    ->whereIn('role_id', RoleDetail::pluck('id'))
                                    ->get();
-
-        return view('tasks.task_details', compact('departments', 'roles', 'employees'));
+ // Fetch all tasks
+    $tasks = Task::all();    // Fetch tasks to display on the page
+        return view('tasks.task_details', compact('departments', 'roles', 'employees','tasks'));
     }
 
     public function fetchRoles(Request $request)

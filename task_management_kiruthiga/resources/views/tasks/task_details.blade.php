@@ -105,216 +105,30 @@
                     <th class="border px-4 py-2 text-sm">Actions</th>
                 </tr>
             </thead>
-            <tbody id="taskTableBody"></tbody>
+           <tbody >
+    @foreach ($tasks as $task)
+        <tr>
+            <td class="border px-4 py-2">{{ $task->id }}</td>
+            <td class="border px-4 py-2">{{ $task->task_title }}</td>
+            <td class="border px-4 py-2">{{ $task->assigned_to_name }}</td>
+            <td class="border px-4 py-2"><span class="text-yellow-500">Pending</span></td>
+            <td class="border px-4 py-2">{{ $task->description }}</td>
+            <td class="border px-4 py-2">{{ $task->task_start_date }}</td>
+            <td class="border px-4 py-2">{{ $task->task_create_date }}</td>
+            <td class="border px-4 py-2">{{ $task->no_of_days }}</td>
+            <td class="border px-4 py-2"><textarea class="w-full px-2 py-1 border rounded-lg"></textarea></td>
+            <td class="border px-4 py-2">
+                <button onclick="deleteTask(this, {{ $task->id }})" class="px-3 py-1 bg-red-500 text-white">Delete</button>
+            </td>
+        </tr>
+    @endforeach
+</tbody>
+
         </table>
     </div>
 </div>
 
-{{-- <script>
-    let taskId = 1;
 
- function calculateDeadline() {
-    let startDate = document.getElementById("taskStartDate").value;
-    let days = document.getElementById("noOfDays").value;
-
-    if (startDate && days) {
-        let deadline = new Date(startDate);
-        deadline.setDate(deadline.getDate() + parseInt(days)-1); // Add days properly
-
-        // Format the deadline as YYYY-MM-DD for input field
-        let formattedDeadline = deadline.toISOString().split('T')[0];
-
-        document.getElementById("deadline").value = formattedDeadline;
-    }
-}
-
-function addTask(event) {
-      event.preventDefault(); // Prevent page reload
-    let taskTitle = document.getElementById("taskTitle").value;
-    let description = document.getElementById("description").value;
-    let department = document.getElementById("department").value;
-    let role = document.getElementById("role").value;
-    let assignedTo = document.getElementById("assigned_to").value;
-    let noOfDays = document.getElementById("noOfDays").value;
-    let taskCreateDate = document.getElementById("taskCreateDate").value;
-    let taskStartDate = document.getElementById("taskStartDate").value;
-    let deadline = document.getElementById("deadline").value;
-
-    if (!taskTitle || !description || !department || !role || !assignedTo || !noOfDays || !taskCreateDate || !taskStartDate) {
-        alert("Please fill in all fields.");
-        return;
-    }
-
-    let tableBody = document.getElementById("taskTableBody");
-    let row = document.createElement("tr");
-
-    row.innerHTML = ` 
-        <td class="border px-4 py-2">${taskId++}</td>
-        <td class="border px-4 py-2">${taskTitle}</td>
-        <td class="border px-4 py-2">${assignedTo}</td>
-        <td class="border px-4 py-2"><span class="text-yellow-500">Pending</span></td>
-        <td class="border px-4 py-2">${description}</td>
-        <td class="border px-4 py-2">${taskStartDate}</td>
-        <td class="border px-4 py-2">${taskCreateDate}</td>
-        <td class="border px-4 py-2">${noOfDays}</td>
-        <td class="border px-4 py-2">
-            <textarea class="w-full px-2 py-1 border rounded-lg" placeholder="Employee/Admin Message"></textarea>
-        </td>
-        <td class="border px-4 py-2">
-            <button onclick="deleteTask(this, ${taskId})" class="px-3 py-1 bg-red-500 text-white">Delete</button>
-        </td>
-    `;
-
-    tableBody.appendChild(row);
-    document.getElementById("taskForm").reset();
-    document.getElementById("deadline").value = "";
-}
-function deleteTask(button, taskId) {
-    $.ajax({
-        url: `/tasks/${taskId}`,
-        method: "DELETE",
-        data: { _token: "{{ csrf_token() }}" },
-        success: function () {
-            $(button).closest("tr").remove();
-        },
-        error: function (error) {
-            console.error("Error deleting task:", error);
-        }
-    });
-}
-
-$(document).ready(function () {
-    $("#taskForm").submit(function (event) {
-        event.preventDefault(); // Prevent the form from reloading the page
-        addTask();
-            let formData = {
-                _token: $("input[name='_token']").val(),
-                task_title: $("#taskTitle").val(),
-                description: $("#description").val(),
-                department: $("#department").val(),
-                role: $("#role").val(),
-                assigned_to: $("#assigned_to").val(),
-                no_of_days: $("#noOfDays").val(),
-                task_create_date: $("#taskCreateDate").val(),
-                task_start_date: $("#taskStartDate").val(),
-                deadline: $("#deadline").val(),
-            };
-
-            $.ajax({
-                url: "{{ route('tasks.store') }}",
-                method: "POST",
-                data: formData,
-                success: function (response) {
-                    let newRow = `
-                        <tr>
-                            <td class="border px-4 py-2">${response.id}</td>
-                            <td class="border px-4 py-2">${response.task_title}</td>
-                            <td class="border px-4 py-2">${response.assigned_to_name}</td>
-                            <td class="border px-4 py-2"><span class="text-yellow-500">Pending</span></td>
-                            <td class="border px-4 py-2">${response.description}</td>
-                            <td class="border px-4 py-2">${response.task_start_date}</td>
-                            <td class="border px-4 py-2">${response.task_create_date}</td>
-                            <td class="border px-4 py-2">${response.no_of_days}</td>
-                            <td class="border px-4 py-2"><textarea class="w-full px-2 py-1 border rounded-lg"></textarea></td>
-                            <td class="border px-4 py-2">
-                                <button onclick="deleteTask(this, ${response.id})" class="px-3 py-1 bg-red-500 text-white">Delete</button>
-                            </td>
-                        </tr>
-                    `;
-
-                    $("#taskTableBody").append(newRow);
-                    $("#taskForm")[0].reset();
-                    $("#deadline").val("");
-                }
-            });
-        });
-    });
-
-//for roles and department 
-     document.addEventListener("DOMContentLoaded", function () {
-        let departmentSelect = document.getElementById("department");
-        let roleSelect = document.getElementById("role");
-        let allRoles = Array.from(roleSelect.options).slice(1); // Exclude default "Select Role"
-
-        departmentSelect.addEventListener("change", function () {
-            let selectedDept = this.value;
-            roleSelect.innerHTML = '<option disabled selected>Select Role</option>'; // Reset roles
-
-            allRoles.forEach(option => {
-                if (option.getAttribute("data-department") === selectedDept) {
-                    roleSelect.appendChild(option.cloneNode(true));
-                }
-            });
-        });
-    });
-
-    //assinged to 
-$(document).ready(function() {
-    // Initially disable Role and Assigned To fields
-    $('#role').prop('disabled', true);
-    $('#assigned_to').prop('disabled', true);
-
-    // When department is selected, enable Role dropdown
-    $('#department').change(function() {
-        var department = $(this).val();
-        $('#role').prop('disabled', department ? false : true);
-        $('#assigned_to').prop('disabled', true); // Keep Assigned To disabled
-
-        if (department) {
-            $.ajax({
-                url: "{{ route('fetch.roles') }}",
-                type: "GET",
-                data: { department: department },
-                success: function(response) {
-                    $('#role').empty().append('<option selected disabled>Select Role</option>');
-
-                    if (response.length > 0) {
-                        $.each(response, function(index, role) {
-                            $('#role').append('<option value="' + role + '">' + role + '</option>');
-                        });
-                    } else {
-                        $('#role').append('<option disabled>No Roles Available</option>');
-                    }
-                }
-            });
-        }
-    });
- // Prevent selecting Role without Department
-    $('#role').focus(function() {
-        var department = $('#department').val();
-        if (!department) {
-            alert("Please select a department first!");
-            $('#department').focus(); // Move focus to department
-            $(this).blur(); // Remove focus from role
-        }
-    });
-    // When role is selected, enable Assigned To dropdown
-    $('#role').change(function() {
-        var role = $(this).val();
-        $('#assigned_to').prop('disabled', role ? false : true);
-
-        var department = $('#department').val();
-        if (department && role) {
-            $.ajax({
-                url: "{{ route('fetch.employees') }}",
-                type: "GET",
-                data: { department: department, role: role },
-                success: function(response) {
-                    $('#assigned_to').empty().append('<option selected disabled>Select Employee</option>');
-
-                    if (response.length > 0) {
-                        $.each(response, function(index, employee) {
-                            $('#assigned_to').append('<option value="' + employee.id + '">' + employee.fullname + ' (' + employee.email + ')</option>');
-                        });
-                    } else {
-                        $('#assigned_to').append('<option disabled>No Employees Available</option>');
-                    }
-                }
-            });
-        }
-    });
-});
-</script> --}}
 
 
 <script>
