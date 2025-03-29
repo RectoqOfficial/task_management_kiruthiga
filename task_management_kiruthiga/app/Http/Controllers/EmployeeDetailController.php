@@ -34,7 +34,7 @@ class EmployeeDetailController extends Controller
             'department' => 'required|string|max:255',
             'designation' => 'required|string|max:255',
             'jobtype' => ['required', Rule::in(['onsite', 'remote'])],
-           'role_id' => 'required|exists:role_details,id',
+            'role_id' => 'required|exists:role_details,id',
 
         ]);
 
