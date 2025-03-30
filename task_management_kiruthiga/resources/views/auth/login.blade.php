@@ -6,7 +6,7 @@
     <title>Login | Task Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
+<body class="bg-black flex items-center justify-center min-h-screen p-4">
 
     <div class="bg-gray-800 shadow-lg rounded-lg p-6 sm:p-8 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg text-center">
         <h2 class="text-2xl sm:text-3xl font-bold text-white">Login</h2>
@@ -20,18 +20,18 @@
             @csrf
             <div class="mb-3 sm:mb-4 text-left">
                 <input type="email" id="email" name="email" placeholder="Enter Email" 
-                       class="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                       class="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-red-500" required>
                 <p id="emailError" class="text-red-500 text-xs mt-1 hidden">Email is required.</p>
             </div>
 
             <div class="mb-3 sm:mb-4 text-left">
                 <input type="password" id="password" name="password" placeholder="Enter Password" 
-                       class="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                       class="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-red-500" required>
                 <p id="passwordError" class="text-red-500 text-xs mt-1 hidden">Password is required.</p>
             </div>
 
             <button type="submit" 
-                    class="w-full px-5 py-2 sm:py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 transition">
+                    class="w-full px-5 py-2 sm:py-3 bg-[#ff0003] text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition">
                 Login
             </button>
         </form>

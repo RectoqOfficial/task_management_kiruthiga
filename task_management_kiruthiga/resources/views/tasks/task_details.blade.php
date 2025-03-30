@@ -23,17 +23,17 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
         <div>
             <label class="block text-sm font-medium text-gray-300">Task Title</label>
-            <input type="text" name="task_title" id="taskTitle" class="w-full px-4 py-2 border border-gray-600 rounded-lg" required>
+            <input type="text" name="task_title" id="taskTitle" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
         </div>
 
         <div>
             <label class="block text-sm font-medium text-gray-300">Description</label>
-            <input type="text" name="description" id="description" class="w-full px-4 py-2 border border-gray-600 rounded-lg" required>
+            <input type="text" name="description" id="description" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
         </div>
 
         <div>
             <label class="block text-sm font-medium text-gray-300">Department</label>
-            <select  id="department" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg" required>
+            <select  id="department"class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
                 <option disabled selected>Select Department</option>
                 @foreach($departments as $department)
                     <option value="{{ $department }}">{{ $department }}</option>
@@ -43,7 +43,7 @@
 
         <div>
             <label class="block text-sm font-medium text-gray-300">Role</label>
-            <select  id="role" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg" required>
+            <select  id="role"class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
                 <option disabled selected>Select Role</option>
                 {{-- @foreach($roles as $role)
                     <option value="{{ $role }}">{{ $role }}</option>
@@ -53,7 +53,7 @@
 
         <div>
             <label class="block text-sm font-medium text-gray-300">Assigned To</label>
-            <select name="assigned_to" id="assigned_to" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg" required>
+            <select name="assigned_to" id="assigned_to" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
                 <option selected disabled>Select Employee</option>
                 {{-- @foreach($employees as $employee)
                     <option value="{{ $employee->id }}">{{ $employee->fullname }} ({{ $employee->email }})</option>
@@ -63,26 +63,33 @@
 
         <div>
             <label class="block text-sm font-medium text-gray-300">No. of Days</label>
-            <input type="number" name="no_of_days" id="noOfDays" class="w-full px-4 py-2 border border-gray-600 rounded-lg" required>
+            <input type="number" name="no_of_days" id="noOfDays" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
         </div>
 
         <div>
             <label class="block text-sm font-medium text-gray-300">Task Create Date</label>
-            <input type="date" name="task_create_date" id="taskCreateDate" class="w-full px-4 py-2 border border-gray-600 rounded-lg" required>
+            <input type="date" name="task_create_date" id="taskCreateDate" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
         </div>
 
         <div>
             <label class="block text-sm font-medium text-gray-300">Task Start Date</label>
-            <input type="date" name="task_start_date" id="taskStartDate" class="w-full px-4 py-2 border border-gray-600 rounded-lg" required onchange="calculateDeadline()">
+            <input type="date" name="task_start_date" id="taskStartDate" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required onchange="calculateDeadline()">
         </div>
 
         <div>
             <label class="block text-sm font-medium text-gray-300">Deadline</label>
-            <input type="text" name="deadline" id="deadline" class="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 cursor-not-allowed" readonly>
+            <input type="text" name="deadline" id="deadline" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" readonly>
         </div>
     </div>
 
-    <button type="submit" id="addTaskBtn" class="mt-4 px-6 py-2 bg-violet-300 text-white rounded-lg">Add Task</button>
+     <!-- Centered Submit Button -->
+<div class="flex justify-center mt-4">
+    <button type="submit" class="flex items-center gap-2 bg-[#ff0003] text-white px-6 py-2 rounded-md hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/50 transition duration-300">
+        <!-- Employee SVG Icon -->
+        
+       Add Task
+    </button>
+</div>
 </form>
 
     </div>
@@ -92,7 +99,7 @@
         <h3 class="text-xl font-semibold mb-3">Task List</h3>
         <table class="w-full border-collapse border border-gray-600 table-auto">
             <thead>
-                <tr class="bg-purple-700/60 tesxt-white">
+                <tr class="bg-[#ff0003] tesxt-white">
                     <th class="border px-4 py-2 text-sm">ID</th>
                     <th class="border px-4 py-2 text-sm">Task Title</th>
                     <th class="border px-4 py-2 text-sm">Assigned To</th>
@@ -118,7 +125,7 @@
             <td class="border px-4 py-2">{{ $task->no_of_days }}</td>
             <td class="border px-4 py-2"><textarea class="w-full px-2 py-1 border rounded-lg"></textarea></td>
             <td class="border px-4 py-2">
-                <button onclick="deleteTask(this, {{ $task->id }})" class="px-3 py-1 bg-red-500 text-white">Delete</button>
+                <button onclick="deleteTask(this, {{ $task->id }})"  class="flex items-center gap-2 bg-[#ff0003] text-white px-4 py-1 rounded-md hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/50 transition duration-300">Delete</button>
             </td>
         </tr>
     @endforeach

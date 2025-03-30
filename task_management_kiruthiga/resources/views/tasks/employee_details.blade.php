@@ -13,7 +13,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6 bg-gray-900 min-h-screen">
+<div class="container mx-auto p-6 bg-black min-h-screen">
     <h2 class="text-3xl font-bold mb-6 text-center text-white">Employee Details</h2>
 
  <!-- Employee Detail Form -->
@@ -24,11 +24,11 @@
     <div class="grid grid-cols-2 gap-4">
         <div>
             <label class="block text-sm text-white">Full Name</label>
-            <input type="text" name="fullname" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-purple-500" required>
+            <input type="text" name="fullname" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
         </div>
         <div>
             <label class="block text-sm text-white">Gender</label>
-            <select name="gender" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-purple-500" required>
+            <select name="gender" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
                 <option value="other">Other</option>
@@ -40,11 +40,11 @@
     <div class="grid grid-cols-2 gap-4">
         <div>
             <label class="block text-sm text-white">Date of Joining</label>
-            <input type="date" name="date_of_joining" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-purple-500" required>
+            <input type="date" name="date_of_joining" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
         </div>
         <div>
             <label class="block text-sm text-white">Contact</label>
-            <input type="text" name="contact" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-purple-500" required>
+            <input type="text" name="contact" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
         </div>
     </div>
 
@@ -52,11 +52,11 @@
     <div class="grid grid-cols-2 gap-4">
         <div>
             <label class="block text-sm text-white">Email</label>
-            <input type="email" name="email" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-purple-500" required>
+            <input type="email" name="email" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
         </div>
        <div class="relative">
     <label class="block text-sm text-white">Password</label>
-    <input type="password" id="password" name="password" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-purple-500 pr-10" required>
+    <input type="password" id="password" name="password" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500 pr-10" required>
     
     <!-- Eye Icon -->
     <span class="absolute right-3 top-9 cursor-pointer text-gray-400 hover:text-white" onclick="togglePassword()">
@@ -71,7 +71,7 @@
     <div class="grid grid-cols-2 gap-4">
         <div>
             <label class="block text-sm text-white">Department</label>
-            <select name="department" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-purple-500" required>
+            <select name="department" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
                 <option value="">Select Department</option>
                 @foreach($roleDetails as $role)
                     <option value="{{ $role->department }}">{{ $role->department }}</option>
@@ -80,7 +80,7 @@
         </div>
         <div>
             <label class="block text-sm text-white">Designation</label>
-            <select name="designation" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-purple-500" required>
+            <select name="designation" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
                 <option value="">Select Designation</option>
                 @foreach($roleDetails as $role)
                     <option value="{{ $role->role }}">{{ $role->role }}</option>
@@ -93,14 +93,14 @@
     <div class="grid grid-cols-2 gap-4">
         <div>
             <label class="block text-sm text-white">Job Type</label>
-            <select name="jobtype" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-purple-500" required>
+            <select name="jobtype" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
                 <option value="onsite">Onsite</option>
                 <option value="remote">Remote</option>
             </select>
         </div>
         <div>
             <label class="block text-sm text-white">Role</label>
-            <select name="role_id" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-purple-500" required>
+            <select name="role_id" class="w-full px-3 py-2 border border-gray-700 bg-gray-900 rounded-lg text-white focus:ring-2 focus:ring-red-500" required>
                 <option value="">Select Role</option>
                 @foreach($roleDetails as $role)
                     <option value="{{ $role->id }}">{{ $role->id }}</option>
@@ -111,7 +111,7 @@
 
   <!-- Centered Submit Button -->
 <div class="flex justify-center mt-4">
-    <button type="submit" class="flex items-center gap-2 bg-violet-500 text-white px-6 py-2 rounded-md hover:bg-violet-600 hover:shadow-lg hover:shadow-purple-500/50 transition duration-300">
+    <button type="submit" class="flex items-center gap-2 bg-[#ff0003] text-white px-6 py-2 rounded-md hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/50 transition duration-300">
         <!-- Employee SVG Icon -->
         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" class="w-5 h-5">
             <path d="M12 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 12c4.418 0 8 1.79 8 4v2H4v-2c0-2.21 3.582-4 8-4Z"/>
@@ -126,9 +126,9 @@
 
     <!-- Employee Table -->
     <div class="overflow-x-auto mt-6">
-        <table class="min-w-full table-auto border-collapse bg-gray-800 rounded-lg shadow-md">
+        <table class="min-w-full table-auto border-collapse bg-black-800 rounded-lg shadow-md">
             <thead>
-                <tr class="text-white bg-purple-700/60">
+                <tr class="text-white bg-[#ff0003]">
                     <th class="border px-4 py-2">ID</th>
                     <th class="border px-4 py-2">Full Name</th>
                     <th class="border px-4 py-2">Gender</th>
@@ -161,7 +161,7 @@
                     <td class="border px-4 py-2">
 
                        <button onclick="deleteEmployee({{ $employee->id }})" 
-    class="flex items-center gap-2 bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/50 transition duration-300">
+    class="flex items-center gap-2 bg-[#ff0003] text-white px-4 py-1 rounded-md hover:bg-red-600 hover:shadow-lg hover:shadow-red-500/50 transition duration-300">
     
     <!-- Trash SVG Icon -->
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
@@ -235,7 +235,7 @@
 
      // Append new employee data to the table dynamically
                 $('#employeeTableBody').append(`
-                    <tr id="employee_${response.employee.id}" class="text-white hover:bg-gray-700 transition duration-300">
+                    <tr id="employee_${response.employee.id}" class="text-white hover:bg-black-700 transition duration-300">
                         <td class="border px-4 py-2">${response.employee.id}</td>
                         <td class="border px-4 py-2">${response.employee.fullname}</td>
                         <td class="border px-4 py-2">${response.employee.gender}</td>

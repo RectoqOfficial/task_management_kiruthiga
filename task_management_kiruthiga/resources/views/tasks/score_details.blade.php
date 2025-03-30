@@ -9,13 +9,13 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6 bg-gray-900 min-h-screen">
+<div class="container mx-auto p-6 bg-black min-h-screen">
     <h2 class="text-3xl font-bold mb-6 text-center text-white">Scoreboard</h2>
 
     <div class="overflow-x-auto mt-6">
-        <table class="min-w-full table-auto border-collapse bg-gray-800 rounded-lg shadow-md">
+        <table class="min-w-full table-auto border-collapse bg-black rounded-lg shadow-md">
             <thead>
-                <tr class="text-white bg-purple-700/60">
+                <tr class="text-white bg-[#ff0003]">
                     <th class="border px-4 py-2">ID</th>
                     <th class="border px-4 py-2">Task Title</th>
                     <th class="border px-4 py-2">Status</th>
