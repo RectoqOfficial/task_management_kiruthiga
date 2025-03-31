@@ -14,46 +14,50 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
- public function login(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required'
-    ]);
+    // Handle Login Request
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
 
-    $admin = Admin::where('email', $request->email)->first();
+        $admin = Admin::where('email', $request->email)->first();
 
-    if (!$admin || !Hash::check($request->password, $admin->password)) {
-        return redirect()->back()->with('error', 'Invalid email or password');
+        if (!$admin || !Hash::check($request->password, $admin->password)) {
+            return redirect()->back()->with('error', 'Invalid email or password');
+        }
+
+        // Login with 'admin' guard
+        Auth::guard('admin')->login($admin);
+        $request->session()->regenerate(); // Important to persist session
+
+        // Ensure role exists
+        if (!$admin->role) {
+            Auth::guard('admin')->logout(); // Log out admin if no role
+            return redirect()->route('login')->with('error', 'No role assigned. Contact Admin.');
+        }
+
+        // Debug Log: Check the assigned role
+        \Log::info('Redirecting user...', ['role' => $admin->role->name]);
+
+        // Redirect based on role
+        $role = strtolower($admin->role->name);
+
+        if ($role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($role === 'employee') {
+            return redirect()->route('employee.dashboard');
+        } else {
+            Auth::guard('admin')->logout();
+            return redirect()->route('login')->with('error', 'Access Denied. Invalid Role.');
+        }
     }
-
-    Auth::login($admin); // Logging in the user
-
-    \Log::info('Login Successful', ['user' => Auth::user()]); // Debugging
-
-    if ($admin->role) {
-        \Log::info('User Role:', ['role' => $admin->role->name]);
-    }
-
-    // Redirect based on role
-    if (strtolower($admin->role->name) === 'admin') {
-        return redirect()->route('admin.dashboard'); 
-    } elseif (strtolower($admin->role->name) === 'employee') {
-        return redirect()->route('employee.dashboard');
-    } else {
-        Auth::logout();
-        return redirect()->route('login')->with('error', 'Access Denied. Invalid Role.');
-    }
-}
-
-
-
-
 
     // Handle Logout Request
     public function logout()
     {
-        Auth::logout();
+        Auth::guard('admin')->logout();
         return redirect()->route('login');
     }
 }

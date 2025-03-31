@@ -243,24 +243,25 @@ function loadTaskDetails(event) {
     event.preventDefault(); // Prevent default behavior
 
     $.ajax({
-        url: "/task", // This should match your task details route
+        url: "/tasks", // Updated URL to match the tasks route
         method: 'GET',
         success: function(response) {
             $('#contentArea').html(response); // Inject the response into the content area
-              closeMobileSidebar(); 
+            closeMobileSidebar(); 
         },
         error: function(xhr, status, error) {
             alert('Error loading task details! ' + error); // Show an error message
-              $('#contentArea').html('<p class="text-red-500">Failed to load Role Details.</p>');
+            $('#contentArea').html('<p class="text-red-500">Failed to load Task Details.</p>');
         }
     });
 }
+
 // Function to load Scoreboard content into the #contentArea div
 function loadScoreDetails(event) {
     event.preventDefault(); // Prevent default behavior
 
     $.ajax({
-        url: "/tasks/score_details", // The correct URL for the scoreboard route
+        url: "/scores", // Updated URL to match scoreboard route
         method: 'GET',
         success: function(response) {
             $('#contentArea').html(response); // Inject the response into the content area
@@ -268,10 +269,11 @@ function loadScoreDetails(event) {
         },
         error: function(xhr, status, error) {
             alert('Error loading scoreboard details! ' + error); // Show an error message
-              $('#contentArea').html('<p class="text-red-500">Failed to load Role Details.</p>');
+            $('#contentArea').html('<p class="text-red-500">Failed to load Scoreboard Details.</p>');
         }
     });
 }
+
 
     </script>
 </body>

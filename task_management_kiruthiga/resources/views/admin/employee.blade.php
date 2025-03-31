@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Departments & Roles</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 </head>
 @extends('layouts.app')
 
@@ -19,78 +21,77 @@
     @endif
 
     <!-- Employee Form -->
-    <form action="{{ route('employees.store') }}" method="POST" class="bg-gray-800 p-6 rounded-lg shadow-lg">
-        @csrf
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-                <label class="block">Full Name</label>
-                <input type="text" name="full_name" class="w-full p-2 rounded bg-gray-700 text-white" required>
-            </div>
-            <div>
-                <label class="block">Gender</label>
-                <select name="gender" class="w-full p-2 rounded bg-gray-700 text-white" required>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            <div>
-                <label class="block">Date of Joining</label>
-                <input type="date" name="date_of_joining" class="w-full p-2 rounded bg-gray-700 text-white" required>
-            </div>
+<form id="addEmployeeForm" method="POST" action="{{ route('admin.addEmployee') }}"  class="bg-gray-800 p-6 rounded-lg shadow-lg">
+    @csrf
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+            <label class="block">Full Name</label>
+            <input type="text" name="full_name" class="w-full p-2 rounded bg-gray-700 text-white" required>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <div>
-                <label class="block">Contact</label>
-                <input type="text" name="contact" class="w-full p-2 rounded bg-gray-700 text-white" required>
-            </div>
-            <div>
-                <label class="block">Email ID</label>
-                <input type="email" name="email_id" class="w-full p-2 rounded bg-gray-700 text-white" required>
-            </div>
-            <div>
-                <label class="block">Password</label>
-                <div class="relative">
-                    <input type="password" name="password" id="password" class="w-full p-2 rounded bg-gray-700 text-white pr-10" required>
-                    <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
-                        <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+        <div>
+            <label class="block">Gender</label>
+            <select name="gender" class="w-full p-2 rounded bg-gray-700 text-white" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
         </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <div>
-                <label class="block">Department</label>
-                <select name="department_id" id="departmentSelect" class="w-full p-2 rounded bg-gray-700 text-white" required>
-                    <option value="">Select Department</option>
-                    @foreach($departments as $department)
-                        <option value="{{ $department->id }}">{{ $department->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label class="block">Role</label>
-                <select name="role_id" id="roleSelect" class="w-full p-2 rounded bg-gray-700 text-white" required>
-                    <option value="">Select Role</option>
-                </select>
-            </div>
-            <div>
-                <label class="block">Job Type</label>
-                <select name="jobtype" class="w-full p-2 rounded bg-gray-700 text-white" required>
-                    <option value="Full-Time">Full-Time</option>
-                    <option value="Part-Time">Part-Time</option>
-                    <option value="Contract">Contract</option>
-                </select>
-            </div>
+        <div>
+            <label class="block">Date of Joining</label>
+            <input type="date" name="date_of_joining" class="w-full p-2 rounded bg-gray-700 text-white" required>
         </div>
+    </div>
 
-        <button type="submit" class="w-full md:w-auto mt-4 px-6 py-2 bg-[#ff0003] hover:bg-red-700 text-white rounded">Add Employee</button>
-    </form>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div>
+            <label class="block">Contact</label>
+            <input type="text" name="contact" class="w-full p-2 rounded bg-gray-700 text-white" required>
+        </div>
+        <div>
+            <label class="block">Email ID</label>
+            <input type="email" name="email_id" class="w-full p-2 rounded bg-gray-700 text-white" required>
+        </div>
+        <div>
+            <label class="block">Password</label>
+            <input type="password" name="password" class="w-full p-2 rounded bg-gray-700 text-white" required>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+        <div>
+            <label class="block">Department</label>
+            <select name="department_id" id="departmentSelect" class="w-full p-2 rounded bg-gray-700 text-white" required>
+                <option value="">Select Department</option>
+                @foreach($departments as $department)
+                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="block">Role</label>
+            <select name="role_id" id="roleSelect" class="w-full p-2 rounded bg-gray-700 text-white" required>
+                <option value="">Select Role</option>
+                @foreach($roles as $role)
+                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="block">Job Type</label>
+            <select name="jobtype" class="w-full p-2 rounded bg-gray-700 text-white" required>
+                <option value="Full-Time">Full-Time</option>
+                <option value="Part-Time">Part-Time</option>
+                <option value="Contract">Contract</option>
+            </select>
+        </div>
+    </div>
+
+    <button type="submit" class="w-full md:w-auto mt-4 px-6 py-2 bg-[#ff0003] hover:bg-red-700 text-white rounded">Add Employee</button>
+</form>
+
+<!-- Success Message -->
+<div id="successMessage" class="hidden bg-green-500 text-white p-2 mt-4 rounded">Employee added successfully!</div>
+
 
     <hr class="my-6 border-gray-600">
 
@@ -123,13 +124,14 @@
                         <td class="p-3 border">{{ $employee->department->name }}</td>
                         <td class="p-3 border">{{ $employee->role->name }}</td>
                         <td class="p-3 border">{{ $employee->jobtype }}</td>
-                        <td class="p-3 border text-center">
-                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this employee?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
-                            </form>
-                        </td>
+                      <td class="p-3 border text-center">
+    <form id="deleteForm_{{ $employee->id }}" action="{{ route('employees.destroy', $employee->id) }}" method="POST" style="display: none;">
+        @csrf
+        @method('DELETE')
+    </form>
+    <button onclick="deleteEmployee(event, {{ $employee->id }})" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
+</td>
+
                     </tr>
                 @endforeach
             </tbody>
@@ -140,27 +142,59 @@
 
 
 <script>
-    document.getElementById('departmentSelect').addEventListener('change', function () {
-        var departmentId = this.value;
-        var roleSelect = document.getElementById('roleSelect');
+$(document).ready(function () {
+    $('#addEmployeeForm').on('submit', function (e) {
+        e.preventDefault();
         
-        // Clear existing options
-        roleSelect.innerHTML = '<option value="">Select Role</option>';
+        var formData = $(this).serialize();  // Collect form data
         
-        if (departmentId) {
-            fetch(`/get-roles/${departmentId}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(role => {
-                        var option = document.createElement('option');
-                        option.value = role.id;
-                        option.textContent = role.name;
-                        roleSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Error fetching roles:', error));
+       $.ajax({
+    url: "{{ route('admin.addEmployee') }}",
+    type: 'POST',
+    data: formData,
+    success: function (response) {
+        if (response.success) {
+            $('#successMessage').removeClass('hidden').text(response.message);
+            // Optionally, reload the employee list dynamically
+        } else {
+            alert('Error adding employee');
         }
+    },
+    error: function (xhr, status, error) {
+        alert('An error occurred');
+    }
+});
     });
+});
+
+
+function deleteEmployee(event, employeeId) {
+    event.preventDefault(); // Prevent page reload
+
+    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+    if (confirm("Are you sure you want to delete this employee?")) {
+        fetch(`/employees/${employeeId}`, {
+            method: "DELETE",
+            headers: {
+                "X-CSRF-TOKEN": csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Employee deleted successfully!");
+                event.target.closest("tr").remove(); // Remove row from table
+            } else {
+                alert("Error: " + data.error);
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+}
+
+
+
       document.getElementById('togglePassword').addEventListener('click', function () {
         var passwordInput = document.getElementById('password');
         var eyeIcon = document.getElementById('eyeIcon');

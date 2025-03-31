@@ -50,14 +50,18 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'Task created successfully.');
     }
 
-    public function update(Request $request, $id)
-    {
-        $task = Task::findOrFail($id);
-        $request->validate(['status' => 'required|string']);
-        $task->update(['status' => $request->status]);
+   public function update(Request $request, $id)
+{
+    $task = Task::findOrFail($id);
+    $task->status = $request->status;
+    $task->save();
 
-        return redirect()->route('tasks.index')->with('success', 'Task updated successfully.');
+    if ($request->ajax()) {
+        return response()->json(['success' => true, 'status' => $task->status]);
     }
+
+    return redirect()->back();
+}
 
     public function getRolesByDepartment(Request $request)
     {

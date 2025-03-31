@@ -27,4 +27,9 @@ class Task extends Model
     {
         return $this->belongsTo(Employee::class, 'assigned_to');
     }
+    public function score()
+{
+    return $this->hasOne(Score::class, 'task_id');
+}
+
 }

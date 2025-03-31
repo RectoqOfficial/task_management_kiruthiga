@@ -14,4 +14,8 @@ class Role extends Model
     {
         return $this->belongsTo(Department::class);
     }
+      public function admins()  // ✅ Add this
+    {
+        return $this->hasMany(Admin::class, 'role_id');
+    }
 }

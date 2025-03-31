@@ -26,16 +26,24 @@
                     <option value="{{ $department->id }}">{{ $department->name }}</option>
                 @endforeach
             </select>
+<label class="block mt-4 mb-2">Role</label>
+<select name="role_id" id="role_id" required class="w-full p-2 rounded text-black">
+    <option value="">Select Role</option>
+    @foreach($roles as $role)
+        <option value="{{ $role->id }}">{{ $role->name }}</option>
+    @endforeach
+</select>
 
-            <label class="block mt-4 mb-2">Role</label>
-            <select name="role_id" id="role_id" required class="w-full p-2 rounded text-black">
-                <option value="">Select Role</option>
-            </select>
+<label class="block mt-4 mb-2">Assigned To</label>
+<select name="assigned_to" id="assigned_to" required class="w-full p-2 rounded text-black">
+    <option value="">Select Employee</option>
+    @foreach($employees as $employee)
+        <option value="{{ $employee->id }}">
+            {{ $employee->full_name }} ({{ $employee->email_id }})
+        </option>
+    @endforeach
+</select>
 
-            <label class="block mt-4 mb-2">Assigned To</label>
-            <select name="assigned_to" id="assigned_to" required class="w-full p-2 rounded text-black">
-                <option value="">Select Employee</option>
-            </select>
 
             <label class="block mt-4 mb-2">Task Start Date</label>
             <input type="date" name="task_start_date" id="task_start_date" required class="w-full p-2 rounded text-black">
@@ -96,19 +104,20 @@
                             <td class="border border-gray-600 p-2">{{ $task->task_start_date }}</td>
                             <td class="border border-gray-600 p-2">{{ $task->no_of_days }}</td>
                             <td class="border border-gray-600 p-2">{{ $task->deadline }}</td>
-                            <td class="border border-gray-600 p-2">
-                                <form action="{{ route('tasks.update', $task->id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <select name="status" class="p-1 text-black rounded">
-                                        <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                        <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-                                        <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                                        <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
-                                    </select>
-                                    <button type="submit" class="px-2 py-1 bg-green-600 text-white rounded ml-2">Update</button>
-                                </form>
-                            </td>
+                           <td class="border border-gray-600 p-2">
+    <form class="status-update-form" data-task-id="{{ $task->id }}">
+        @csrf
+        @method('PATCH')
+        <select name="status" class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
+            <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+            <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
+            <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+            <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
+        </select>
+        <button type="submit" class="px-2 py-1 bg-green-600 text-white rounded ml-2">Update</button>
+    </form>
+</td>
+
                         </tr>
                     @endforeach
                 </tbody>
@@ -164,6 +173,38 @@
                 document.getElementById('deadline').value = deadline.toISOString().split('T')[0];
             }
         }
+        document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".status-update-form").forEach(form => {
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            let taskId = this.dataset.taskId;
+            let statusSelect = this.querySelector(".status-select");
+            let newStatus = statusSelect.value;
+            let formData = new FormData(this);
+            let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+            fetch(`/tasks/${taskId}`, {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Task status updated successfully!");
+                } else {
+                    alert("Failed to update status.");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    });
+});
+
     </script>
 
 </body>

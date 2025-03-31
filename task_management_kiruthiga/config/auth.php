@@ -34,15 +34,16 @@ return [
     | Supported: "session"
     |
     */
-
-  'guards' => [
+'guards' => [
     'web' => [
         'driver' => 'session',
-        'provider' => 'users',
+        'provider' => 'users', // Default for regular users
     ],
-
+    'admin' => [
+        'driver' => 'session',
+        'provider' => 'admins', // Custom guard for admins
+    ],
 ],
-
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -66,9 +67,10 @@ return [
         'driver' => 'eloquent',
         'model' => App\Models\User::class,
     ],
-   'web' => [
-        'driver' => 'session',
-        'provider' => 'admins', // Ensure this is correct
+  
+      'admins' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Admin::class,
     ],
 ],
 
@@ -98,10 +100,7 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-          'admins' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\Admin::class,
-    ],
+       
     ],
 
     /*

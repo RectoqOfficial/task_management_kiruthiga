@@ -15,7 +15,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AdminDashboardController;
-
+use App\Http\Controllers\EmployeeDashboardController;
 Route::prefix('admin')->group(function () {
 
 
@@ -30,17 +30,32 @@ Route::prefix('admin')->group(function () {
     Route::resource('roles', RoleController::class);
 });
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])
-        ->name('admin.dashboard');
+// // Admin Routes (Protected by Auth Middleware)
+// Route::middleware(['auth'])->prefix('admin')->group(function () {
+//     // Department Routes
+//     Route::resource('departments', DepartmentController::class);
+
+//     // Role Routes
+//     Route::resource('roles', RoleController::class);
+// });
+Route::middleware(['auth:admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 });
+// Employee Dashboard
+Route::get('/employee/dashboard', [EmployeeDashboardController::class, 'index'])
+    ->name('employee.dashboard')
+    ->middleware('auth');
+
 
 use App\Http\Controllers\EmployeeController;
 
 Route::get('/admin/employees', [EmployeeController::class, 'index'])->name('employees.index');
-Route::post('/admin/employees', [EmployeeController::class, 'store'])->name('employees.store');
 
-Route::get('/get-roles/{department_id}', [EmployeeController::class, 'getRolesByDepartment']);
+Route::post('/admin/addEmployee', [EmployeeController::class, 'store'])->name('admin.addEmployee');
+
+Route::get('/get-roles/{departmentId}', [EmployeeController::class, 'getRolesByDepartment']);
+
+
 Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
 
@@ -52,5 +67,12 @@ Route::patch('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.upda
 Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
 Route::get('/get-roles-by-department', [TaskController::class, 'getRolesByDepartment'])->name('getRolesByDepartment');
-Route::get('/get-employees-by-role', [TaskController::class, 'getEmployeesByRole'])->name('getEmployeesByRole');
+Route::get('/get-employees-by-role/{role}', [TaskController::class, 'getEmployeesByRole']);
+
 Route::match(['put', 'patch'], '/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
+
+use App\Http\Controllers\ScoreController;
+
+Route::get('/scores', [ScoreController::class, 'index'])->name('scores.index');
+Route::post('/scores/update/{task_id}', [ScoreController::class, 'updateScore'])->name('scores.update');
+
