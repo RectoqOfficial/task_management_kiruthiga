@@ -18,6 +18,7 @@
 </head>
 
 <body class="bg-black flex h-screen ">
+{{ session('user_role') }}
 
     <!-- Sidebar -->
   <div id="sidebar" class="w-64 bg-black h-screen p-4 hidden md:block">
@@ -26,12 +27,11 @@
      <!-- Sidebar -->
 
     <li class="px-4 py-3">
-        <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadRoleDetails(event)" data-icon="role">
-            <span class="icon-container w-5 h-5"></span>
-            <span class="ml-4">Role Details</span>
-        </a>
-    </li>
-
+                <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDepartmentDetails(event)">
+                    <span class="icon-container w-5 h-5"></span>
+                    <span class="ml-4">Department & Role Details</span>
+                </a>
+            </li>
     <li class="px-4 py-3">
         <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeDetails(event)" data-icon="employee">
             <span class="icon-container w-5 h-5"></span>
@@ -87,11 +87,11 @@
     <a class="text-lg font-bold text-white block text-center mb-6" href="#">ADMIN PANEL</a>
     <ul>
         <li class="px-4 py-3">
-            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadRoleDetails(event)">
+            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDepartmentDetails(event)">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
                 </svg>
-                <span class="ml-4">Role Details</span>
+                <span class="ml-4">Department & Role Details</span>
             </a>
         </li>
 
@@ -201,40 +201,42 @@
 
 
 // Function to load Role Details content into the #contentArea div
-function loadRoleDetails(event) {
-    event.preventDefault(); // Prevent default behavior
+function loadDepartmentDetails(event) {
+    event.preventDefault(); // Prevent the default behavior of the link/button click
 
     $.ajax({
-        url: "/roles", // The correct URL for the 'roles' route
-        method: 'GET',
-         dataType: 'html', // Expecting HTML response
-        success: function(response) {
-            $('#contentArea').html(response); 
-             closeMobileSidebar(); // Inject the response into the content area
+        url: "/admin/departments",  // The correct endpoint for fetching department details
+        method: "GET",  // HTTP GET request
+        dataType: "html",  // Expecting an HTML response
+        success: function (response) {
+            $("#contentArea").html(response);  // Inject the response into the target div
+            closeMobileSidebar();  // Close sidebar (if applicable)
         },
-        error: function(xhr, status, error) {
-            alert('Error loading role details! ' + error); // Show an error message
-              $('#contentArea').html('<p class="text-red-500">Failed to load Role Details.</p>');
-        }
+        error: function (xhr, status, error) {
+            alert("Error loading department details! " + error);  // Show error message
+            $("#contentArea").html('<p class="text-red-500">Failed to load Department Details.</p>'); // Display failure message
+        },
     });
 }
+
 // Function to load Employee Details content into the #contentArea div
 function loadEmployeeDetails(event) {
     event.preventDefault(); // Prevent default behavior
 
     $.ajax({
-        url: "/employee-details", // This matches the route you defined
+        url: "http://127.0.0.1:8000/admin/employees", // Updated URL
         method: 'GET',
         success: function(response) {
             $('#contentArea').html(response); // Inject the response into the content area
-              closeMobileSidebar(); 
+            closeMobileSidebar(); 
         },
         error: function(xhr, status, error) {
             alert('Error loading employee details! ' + error); // Show an error message
-              $('#contentArea').html('<p class="text-red-500">Failed to load Role Details.</p>');
+            $('#contentArea').html('<p class="text-red-500">Failed to load Employee Details.</p>');
         }
     });
 }
+
 
 // Function to load Task Details content into the #contentArea div
 function loadTaskDetails(event) {

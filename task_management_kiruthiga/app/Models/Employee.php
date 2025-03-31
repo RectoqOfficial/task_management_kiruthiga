@@ -4,15 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Task extends Model
+class Employee extends Authenticatable
 {
     use HasFactory;
 
     protected $fillable = [
-        'task_title', 'description', 'department_id', 'role_id', 'assigned_to',
-        'task_create_date', 'task_start_date', 'no_of_days', 'deadline', 'status'
+        'full_name', 'gender', 'date_of_joining', 'contact', 'email_id', 'password',
+        'department_id', 'role_id', 'jobtype'
     ];
+
+    protected $hidden = ['password']; // Hide password from JSON responses
 
     public function department()
     {
@@ -22,9 +25,5 @@ class Task extends Model
     public function role()
     {
         return $this->belongsTo(Role::class);
-    }
-     public function employee()
-    {
-        return $this->belongsTo(Employee::class, 'assigned_to');
     }
 }
