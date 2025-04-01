@@ -10,62 +10,133 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body class="bg-black text-white p-6">
+<div class="max-w-5xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center">Task Management</h1>
 
-    <div class="max-w-5xl mx-auto">
-        <h1 class="text-3xl font-bold mb-6 text-center">Task Management</h1>
+    <!-- Task Creation Form -->
+    <form action="{{ route('tasks.store') }}" method="POST" id="taskForm" class="mb-6 bg-gray-800 p-4 rounded-lg">
+        @csrf
 
-        <!-- Task Creation Form -->
-        <form action="{{ route('tasks.store') }}" method="POST" id="taskForm" class="mb-6 bg-gray-800 p-4 rounded-lg">
-            @csrf
-            <label class="block mb-2">Task Title</label>
-            <input type="text" name="task_title" required class="w-full p-2 rounded text-black">
+        <!-- Task Title -->
+        <div class="mb-4">
+            <label class="block text-white mb-2">Task Title</label>
+            <input type="text" name="task_title" required class="w-full p-3 rounded text-black bg-gray-700">
+        </div>
 
-            <label class="block mt-4 mb-2">Description</label>
-            <textarea name="description" required class="w-full p-2 rounded text-black"></textarea>
+        <!-- Description -->
+        <div class="mb-4">
+            <label class="block text-white mb-2">Description</label>
+            <textarea name="description" required class="w-full p-3 rounded text-black bg-gray-700"></textarea>
+        </div>
 
-            <label class="block mt-4 mb-2">Department</label>
-            <select name="department_id" id="department_id" required class="w-full p-2 rounded text-black">
-                <option value="">Select Department</option>
-                @foreach ($departments as $department)
-                    <option value="{{ $department->id }}">{{ $department->name }}</option>
-                @endforeach
-            </select>
+        <!-- Flex container for three fields -->
+        <div class="flex space-x-4 mb-4">
+            <!-- Department -->
+            <div class="flex-1">
+                <label class="block text-white mb-2">Department</label>
+                <select name="department_id" id="department_id" required class="w-full p-3 rounded text-black bg-gray-700">
+                    <option value="">Select Department</option>
+                    @foreach ($departments as $department)
+                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-            <label class="block mt-4 mb-2">Role</label>
-            <select name="role_id" id="role_id" required class="w-full p-2 rounded text-black">
-                <option value="">Select Role</option>
-                @foreach($roles as $role)
-                    <option value="{{ $role->id }}">{{ $role->name }}</option>
-                @endforeach
-            </select>
+            <!-- Role -->
+            <div class="flex-1">
+                <label class="block text-white mb-2">Role</label>
+                <select name="role_id" id="role_id" required class="w-full p-3 rounded text-black bg-gray-700">
+                    <option value="">Select Role</option>
+                    @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-            <label class="block mt-4 mb-2">Assigned To</label>
-            <select name="assigned_to" id="assigned_to" required class="w-full p-2 rounded text-black">
-                <option value="">Select Employee</option>
-                @foreach($employees as $employee)
-                    <option value="{{ $employee->id }}">
-                        {{ $employee->full_name }} ({{ $employee->email_id }})
-                    </option>
-                @endforeach
-            </select>
+            <!-- Assigned To -->
+            <div class="flex-1">
+                <label class="block text-white mb-2">Assigned To</label>
+                <select name="assigned_to" id="assigned_to" required class="w-full p-3 rounded text-black bg-gray-700">
+                    <option value="">Select Employee</option>
+                    @foreach($employees as $employee)
+                        <option value="{{ $employee->id }}">
+                            {{ $employee->full_name }} ({{ $employee->email_id }})
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
 
-            <label class="block mt-4 mb-2">Task Start Date</label>
-            <input type="date" name="task_start_date" id="task_start_date" required class="w-full p-2 rounded text-black">
+        <!-- Task Start Date -->
+        <div class="mb-4">
+            <label class="block text-white mb-2">Task Start Date</label>
+            <input type="date" name="task_start_date" id="task_start_date" required class="w-full p-3 rounded text-black bg-gray-700">
+        </div>
 
-            <label class="block mt-4 mb-2">No. of Days</label>
-            <input type="number" name="no_of_days" id="no_of_days" required class="w-full p-2 rounded text-black">
+        <!-- No. of Days -->
+        <div class="mb-4">
+            <label class="block text-white mb-2">No. of Days</label>
+            <input type="number" name="no_of_days" id="no_of_days" required class="w-full p-3 rounded text-black bg-gray-700">
+        </div>
 
-            <label class="block mt-4 mb-2">Deadline</label>
-            <input type="date" name="deadline" id="deadline" readonly class="w-full p-2 rounded text-black">
+        <!-- Deadline -->
+        <div class="mb-4">
+            <label class="block text-white mb-2">Deadline</label>
+            <input type="date" name="deadline" id="deadline" readonly class="w-full p-3 rounded text-black bg-gray-700">
+        </div>
 
-            <button type="submit" class="mt-4 w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded">
-                Create Task
+        <button type="submit" class="mt-4 w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded">
+            Create Task
+        </button>
+    </form>
+</div>
+
+<div class="bg-gray-800 p-4 rounded-lg">
+    <h2 class="text-xl font-semibold mb-4">Task List</h2>
+    <div class="bg-gray-800 p-4 rounded-lg mb-6">
+        <h2 class="text-xl font-semibold mb-4">Filter Tasks</h2>
+        <form id="taskFilterForm" class="flex flex-wrap space-x-4">
+            <!-- Task Title Filter -->
+            <div class="mb-4">
+                <label for="filter_task_title" class="block text-white mb-2">Task Title</label>
+                <input type="text" id="filter_task_title" class="p-3 rounded bg-gray-700 text-white w-full" placeholder="Search by Task Title">
+            </div>
+
+            <!-- Assigned To Filter -->
+            <div class="mb-4">
+                <label for="filter_assigned_to" class="block text-white mb-2">Assigned To</label>
+                <select id="filter_assigned_to" class="p-3 rounded bg-gray-700 text-white w-full">
+                    <option value="">All Employees</option>
+                    @foreach($employees as $employee)
+                        <option value="{{ $employee->id }}">{{ $employee->full_name }} ({{ $employee->email_id }})</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Status Filter -->
+            <div class="mb-4">
+                <label for="filter_status" class="block text-white mb-2">Status</label>
+                <select id="filter_status" class="p-3 rounded bg-gray-700 text-white w-full">
+                    <option value="">All Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Started">Started</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Review">Review</option>
+                </select>
+            </div>
+
+            <!-- Filter Button -->
+            <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
+                Filter
             </button>
         </form>
     </div>
+</div>
 
-    <div class="bg-gray-800 p-4 rounded-lg">
-        <h2 class="text-xl font-semibold mb-4">Task List</h2>
+
+
+
+
         <div class="overflow-x-auto">
             <table class="w-full border border-gray-600 text-center">
                 <thead>
@@ -293,6 +364,61 @@ $(document).on('submit', '#taskForm', function(event) {
         });
     }
 
+//filter
+$(document).ready(function () {
+    // Listen for the filter form submission
+    $('#taskFilterForm').on('submit', function (e) {
+        e.preventDefault(); // Prevent form submission
+
+        // Get the values from the filters
+        let taskTitle = $('#filter_task_title').val().toLowerCase();
+        let assignedTo = $('#filter_assigned_to').val();
+        let status = $('#filter_status').val();
+
+        // Loop through each table row and hide/show based on filter criteria
+        $('table tbody tr').each(function () {
+            let taskRow = $(this);
+            let taskTitleCell = taskRow.find('td:nth-child(2)').text().toLowerCase();
+            let assignedToCell = taskRow.find('td:nth-child(4)').text().toLowerCase();
+            let statusCell = taskRow.find('td:nth-child(5)').text().toLowerCase();
+
+            let showRow = true;
+
+            // Check if the row matches the taskTitle filter
+            if (taskTitle && !taskTitleCell.includes(taskTitle)) {
+                showRow = false;
+            }
+
+            // Check if the row matches the assignedTo filter
+            if (assignedTo && !assignedToCell.includes(assignedTo)) {
+                showRow = false;
+            }
+
+            // Check if the row matches the status filter
+            if (status && !statusCell.includes(status)) {
+                showRow = false;
+            }
+
+            // Show or hide the row based on filter results
+            if (showRow) {
+                taskRow.show();
+            } else {
+                taskRow.hide();
+            }
+        });
+    });
+});
+$('#filter_task_title').on('keyup', function () {
+    let searchText = $(this).val().toLowerCase();
+    $('table tbody tr').each(function () {
+        let taskTitle = $(this).find('td:nth-child(2)').text().toLowerCase();
+        if (taskTitle.includes(searchText)) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
+    });
+});
 
     </script>
 </body>
