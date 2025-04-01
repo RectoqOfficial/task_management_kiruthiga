@@ -145,110 +145,16 @@
 function loadMyTasks(event) {
     event.preventDefault(); // Prevent page reload
 
+    // Send AJAX request to fetch tasks
     $.ajax({
-        url: "/my-tasks", // Laravel route to fetch employee-specific tasks
-        type: "GET",
-        dataType: "json",
+        url: '{{ route("tasks.getTasks") }}', // Define the route for fetching tasks
+        method: 'GET',
         success: function(response) {
-            if (response.tasks.length === 0) {
-                $("#contentArea").html("<p class='text-blue-500'>No tasks assigned to you.</p>");
-                return;
-            }
-
-            let content = `
-                <h2 class="text-2xl font-bold mb-4">My Tasks</h2>
-                <table class="w-full border border-gray-600 text-center">
-                    <thead>
-                        <tr class="bg-[#ff0003] text-white">
-                            <th class="border border-gray-600 p-2">ID</th>
-                            <th class="border border-gray-600 p-2">Task Title</th>
-                            <th class="border border-gray-600 p-2">Description</th>
-
-                            <th class="border border-gray-600 p-2">Status</th>
-                            <th class="border border-gray-600 p-2">Task Create Date</th>
-                            <th class="border border-gray-600 p-2">Task Start Date</th>
-                            <th class="border border-gray-600 p-2">No. of Days</th>
-                            <th class="border border-gray-600 p-2">Deadline</th>
-                            <th class="border border-gray-600 p-2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>`;
-
-            response.tasks.forEach(task => {
-                content += `
-                    <tr class="bg-gray-900 hover:bg-gray-700">
-                        <td class="border border-gray-600 p-2">${task.id}</td>
-                        <td class="border border-gray-600 p-2">${task.task_title}</td>
-                        <td class="border border-gray-600 p-2">${task.description}</td>
-
-                        <td class="border border-gray-600 p-2">
-                            <span class="px-2 py-1 text-black rounded ${getStatusClass(task.status)}">
-                                ${task.status}
-                            </span>
-                        </td>
-                        <td class="border border-gray-600 p-2">${task.task_create_date}</td>
-                        <td class="border border-gray-600 p-2">
-                            <input type="date" name="task_start_date" value="${task.task_start_date}" class="w-full p-1 rounded text-black" />
-                        </td>
-                        <td class="border border-gray-600 p-2">${task.no_of_days}</td>
-                        <td class="border border-gray-600 p-2">${task.deadline}</td>
-                        <td class="border border-gray-600 p-2">
-                            <form class="status-update-form" data-task-id="${task.id}">
-                                <select name="status" class="p-1 text-black rounded status-select" data-task-id="${task.id}">
-                                    <option value="Pending" ${task.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                                    <option value="Started" ${task.status === 'Started' ? 'selected' : ''}>Started</option>
-                                    <option value="Completed" ${task.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                                    <option value="Review" ${task.status === 'Review' ? 'selected' : ''}>Review</option>
-                                </select>
-                                <button type="submit" class="px-2 py-1 bg-green-600 text-white rounded ml-2 update-status-btn">Update</button>
-                            </form>
-                        </td>
-                    </tr>`;
-            });
-
-            content += `</tbody></table>`;
-
-            $("#contentArea").html(content); // Update the content area
-        },
-        error: function(xhr) {
-            console.error(xhr.responseText);
-            $("#contentArea").html("<p class='text-red-500'>Failed to load tasks. Please try again later.</p>");
+            // Update the content area with the tasks view
+            $("#contentArea").html(response);
         }
     });
 }
-
-// Helper function for status colors
-function getStatusClass(status) {
-    switch (status.toLowerCase()) {
-        case "pending": return "bg-yellow-500";
-        case "started": return "bg-blue-500";
-        case "completed": return "bg-green-500";
-        case "review": return "bg-orange-500";
-        default: return "bg-gray-500";
-    }
-}
-
-// Event listener for status update
-$(document).on("submit", ".status-update-form", function(event) {
-    event.preventDefault(); // Prevent form submission
-    
-    let taskId = $(this).data("task-id");
-    let status = $(this).find("select[name='status']").val();
-
-    $.ajax({
-        url: `/tasks/${taskId}/update-status`, // Laravel route to update task status
-        type: "PATCH",
-        data: { status: status, _token: $('meta[name="csrf-token"]').attr('content') }, // Ensure CSRF token is present
-        success: function(response) {
-            alert("Task status updated successfully!");
-            loadMyTasks(event); // Reload tasks after update
-        },
-        error: function(xhr) {
-            console.error(xhr.responseText);
-            alert("Failed to update task status. Please try again.");
-        }
-    });
-});
 
 
 

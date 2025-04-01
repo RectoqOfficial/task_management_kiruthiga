@@ -84,7 +84,8 @@ Route::get('/get-roles-by-department', [TaskController::class, 'getRolesByDepart
 Route::get('/get-employees-by-role/{role}', [TaskController::class, 'getEmployeesByRole']);
 
 Route::match(['put', 'patch'], '/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
-Route::get('/my-tasks', [TaskController::class, 'myTasks'])->name('my.tasks');
+Route::get('/employee/tasks', [TaskController::class, 'getTasks'])->name('tasks.getTasks');
+
 
 use App\Http\Controllers\ScoreController;
 

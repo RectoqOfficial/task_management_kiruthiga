@@ -23,7 +23,7 @@
                             <th class="border border-gray-600 p-2">Overdue Count</th>
                             <th class="border border-gray-600 p-2">Redo Count</th>
                             <th class="border border-gray-600 p-2">Score</th>
-                            <th class="border border-gray-600 p-2">Actions</th>
+                            {{-- <th class="border border-gray-600 p-2">Actions</th> --}}
                         </tr>
                     </thead>
     <tbody>
@@ -35,12 +35,12 @@
             <td class="border border-gray-600 p-2">{{ $task->score->overdue_count ?? 0 }}</td>
             <td class="border border-gray-600 p-2">{{ $task->score->redo_count ?? 0 }}</td>
             <td class="border border-gray-600 p-2 font-bold">{{ $task->score->score ?? 'N/A' }}</td>
-            <td class="border border-gray-600 p-2">
+            {{-- <td class="border border-gray-600 p-2">
                 <form action="{{ route('scores.update', $task->id) }}" method="POST">
                     @csrf
                     <button type="submit" class="px-2 py-1 bg-green-600 text-white rounded">Update Score</button>
                 </form>
-            </td>
+            </td> --}}
         </tr>
     @endforeach
 </tbody>

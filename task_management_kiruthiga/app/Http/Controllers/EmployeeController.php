@@ -78,36 +78,36 @@ public function destroy($id)
         return response()->json(['success' => false, 'message' => 'Employee not found']);
     }
 }
-//filter
-public function filterEmployees(Request $request)
-{
-    $query = Employee::query();
+// //filter
+// public function filterEmployees(Request $request)
+// {
+//     $query = Employee::query();
 
-    // Apply filters if present
-    if ($request->has('email') && $request->email) {
-        $query->where('email_id', 'like', '%' . $request->email . '%');
-    }
+//     // Apply filters if present
+//     if ($request->has('email') && $request->email) {
+//         $query->where('email_id', 'like', '%' . $request->email . '%');
+//     }
 
-    if ($request->has('department_id') && $request->department_id) {
-        $query->where('department_id', $request->department_id);
-    }
+//     if ($request->has('department_id') && $request->department_id) {
+//         $query->where('department_id', $request->department_id);
+//     }
 
-    if ($request->has('role_id') && $request->role_id) {
-        $query->where('role_id', $request->role_id);
-    }
+//     if ($request->has('role_id') && $request->role_id) {
+//         $query->where('role_id', $request->role_id);
+//     }
 
-    if ($request->has('search') && $request->search) {
-        $query->where('full_name', 'like', '%' . $request->search . '%');
-    }
+//     if ($request->has('search') && $request->search) {
+//         $query->where('full_name', 'like', '%' . $request->search . '%');
+//     }
 
-    // Get filtered employees
-    $employees = $query->with('department', 'role')->get();
+//     // Get filtered employees
+//     $employees = $query->with('department', 'role')->get();
 
-    // Return filtered employees in JSON format
-    return response()->json([
-        'employees' => $employees
-    ]);
-}
+//     // Return filtered employees in JSON format
+//     return response()->json([
+//         'employees' => $employees
+//     ]);
+// }
 
 
 }

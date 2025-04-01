@@ -143,14 +143,21 @@ class TaskController extends Controller
     }
 
     // Fetch tasks assigned to the logged-in user
-    public function myTasks()
-    {
-        $tasks = Task::where('assigned_to', auth()->id()) // Fetch tasks assigned to logged-in user
-                     ->select(['id', 'task_title', 'description', 'task_start_date', 'deadline', 'status']) // Exclude 'assigned_to'
-                     ->get();
-
-        return response()->json(['tasks' => $tasks]);
+public function getTasks()
+{
+    // Check if the user is authenticated
+    if (!auth()->check()) {
+        return response()->json(['error' => 'User not authenticated'], 401);
     }
+
+    // Fetch tasks assigned to the logged-in employee by their email
+    $tasks = Task::where('assigned_to', auth()->user()->email)->get(); 
+
+    // Return the tasks view
+    return view('employee.task', compact('tasks'));
+}
+
+
 
     // Show task details
     public function show($taskId)
