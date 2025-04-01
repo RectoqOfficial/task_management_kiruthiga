@@ -102,8 +102,8 @@
 
     <!-- Employee Table -->
     <div class="overflow-x-auto">
-        <table class="w-full text-left border border-gray-600 text-sm md:text-base" id="employeeList">
-            <thead class="bg-gray-800 text-white">
+        <table class="w-full text-left border bg-[#ff0003] text-sm md:text-base" id="employeeList">
+            <thead class="bg-[#ff0003] text-white">
                 <tr>
                     <th class="p-3 border">ID</th>
                     <th class="p-3 border">Full Name</th>
