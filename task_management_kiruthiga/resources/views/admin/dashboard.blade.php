@@ -245,22 +245,26 @@ function loadEmployeeDetails(event) {
 
 
 // Function to load Task Details content into the #contentArea div
+// Function to load Task Details content into the #contentArea div
 function loadTaskDetails(event) {
-    event.preventDefault(); // Prevent default behavior
+    event.preventDefault(); // Prevent default behavior (navigation)
 
     $.ajax({
-        url: "/tasks", // Updated URL to match the tasks route
+        url: "/tasks", // The route for fetching tasks
         method: 'GET',
         success: function(response) {
             $('#contentArea').html(response); // Inject the response into the content area
-            closeMobileSidebar(); 
+            closeMobileSidebar(); // If you have a mobile sidebar
         },
         error: function(xhr, status, error) {
-            alert('Error loading task details! ' + error); // Show an error message
+            alert('Error loading task details! ' + error); // Error handling
             $('#contentArea').html('<p class="text-red-500">Failed to load Task Details.</p>');
         }
     });
 }
+
+
+
 
 // Function to load Scoreboard content into the #contentArea div
 function loadScoreDetails(event) {
