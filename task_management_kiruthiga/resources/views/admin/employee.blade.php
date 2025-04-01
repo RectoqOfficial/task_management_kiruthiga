@@ -6,10 +6,9 @@
     <title>Departments & Roles</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
- 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 @extends('layouts.app')
 
@@ -24,81 +23,119 @@
     @endif
 
     <!-- Employee Form -->
-<form id="addEmployeeForm" method="POST" action="{{ route('admin.addEmployee') }}"  class="bg-gray-800 p-6 rounded-lg shadow-lg">
-    @csrf
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-            <label class="block">Full Name</label>
-            <input type="text" name="full_name" class="w-full p-2 rounded bg-gray-700 text-white" required>
+    <form id="addEmployeeForm" method="POST" action="{{ route('admin.addEmployee') }}" class="bg-gray-800 p-6 rounded-lg shadow-lg">
+        @csrf
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block">Full Name</label>
+                <input type="text" name="full_name" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+            </div>
+            <div>
+                <label class="block">Gender</label>
+                <select name="gender" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div>
+                <label class="block">Date of Joining</label>
+                <input type="date" name="date_of_joining" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+            </div>
         </div>
-        <div>
-            <label class="block">Gender</label>
-            <select name="gender" class="w-full p-2 rounded bg-gray-700 text-white" required>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
-        <div>
-            <label class="block">Date of Joining</label>
-            <input type="date" name="date_of_joining" class="w-full p-2 rounded bg-gray-700 text-white" required>
-        </div>
-    </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <div>
-            <label class="block">Contact</label>
-            <input type="text" name="contact" class="w-full p-2 rounded bg-gray-700 text-white" required>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div>
+                <label class="block">Contact</label>
+                <input type="text" name="contact" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+            </div>
+            <div>
+                <label class="block">Email ID</label>
+                <input type="email" name="email_id" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+            </div>
+<div class="relative">
+    <label class="block">Password</label>
+    <input id="password" type="password" name="password" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+    
+    <!-- Eye icon for toggling password visibility -->
+    <span id="togglePassword" class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-white">
+        <i class="fa fa-eye"></i>
+    </span>
+</div>
         </div>
-        <div>
-            <label class="block">Email ID</label>
-            <input type="email" name="email_id" class="w-full p-2 rounded bg-gray-700 text-white" required>
-        </div>
-        <div>
-            <label class="block">Password</label>
-            <input type="password" name="password" class="w-full p-2 rounded bg-gray-700 text-white" required>
-        </div>
-    </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <div>
-            <label class="block">Department</label>
-            <select name="department_id" id="departmentSelect" class="w-full p-2 rounded bg-gray-700 text-white" required>
-                <option value="">Select Department</option>
-                @foreach($departments as $department)
-                    <option value="{{ $department->id }}">{{ $department->name }}</option>
-                @endforeach
-            </select>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div>
+                <label class="block">Department</label>
+                <select name="department_id" id="departmentSelect" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                    <option value="">Select Department</option>
+                    @foreach($departments as $department)
+                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block">Role</label>
+                <select name="role_id" id="roleSelect" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                    <option value="">Select Role</option>
+                    @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block">Job Type</label>
+                <select name="jobtype" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required>
+                    <option value="Full-Time">Full-Time</option>
+                    <option value="Part-Time">Part-Time</option>
+                    <option value="Contract">Contract</option>
+                </select>
+            </div>
         </div>
-        <div>
-            <label class="block">Role</label>
-            <select name="role_id" id="roleSelect" class="w-full p-2 rounded bg-gray-700 text-white" required>
-                <option value="">Select Role</option>
-                @foreach($roles as $role)
-                    <option value="{{ $role->id }}">{{ $role->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <label class="block">Job Type</label>
-            <select name="jobtype" class="w-full p-2 rounded bg-gray-700 text-white" required>
-                <option value="Full-Time">Full-Time</option>
-                <option value="Part-Time">Part-Time</option>
-                <option value="Contract">Contract</option>
-            </select>
-        </div>
-    </div>
 
-    <button type="submit" class="w-full md:w-auto mt-4 px-6 py-2 bg-[#ff0003] hover:bg-red-700 text-white rounded">SUBMIT</button>
-</form>
-
-<!-- Success Message -->
-<!-- Success message that will show after employee is added -->
-<div id="successMessage" class="hidden text-green-600"></div>
-
-
+        <button type="submit" class="w-full md:w-auto mt-4 px-6 py-2 bg-[#ff0003] hover:bg-red-700 text-white rounded">SUBMIT</button>
+    </form>
 
     <hr class="my-6 border-gray-600">
+
+    <!-- Filters Section -->
+    <div class="mb-6">
+        <div class="flex gap-4">
+            <!-- Email Filter -->
+            <div>
+                <label for="filterEmail" class="block text-sm">Email</label>
+                <input type="text" id="filterEmail" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Search by email">
+            </div>
+
+            <!-- Department Filter -->
+            <div>
+                <label for="filterDepartment" class="block text-sm">Department</label>
+                <select id="filterDepartment" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <option value="">Select Department</option>
+                    @foreach($departments as $department)
+                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Role Filter -->
+            <div>
+                <label for="filterRole" class="block text-sm">Role</label>
+                <select id="filterRole" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <option value="">Select Role</option>
+                    @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Search Filter -->
+            <div>
+                <label for="searchEmployee" class="block text-sm">Search</label>
+                <input type="text" id="searchEmployee" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Search by name">
+            </div>
+        </div>
+    </div>
 
     <!-- Employee Table -->
     <div class="overflow-x-auto">
@@ -129,18 +166,17 @@
                         <td class="p-3 border">{{ $employee->department->name }}</td>
                         <td class="p-3 border">{{ $employee->role->name }}</td>
                         <td class="p-3 border">{{ $employee->jobtype }}</td>
- <td class="p-3 border text-center">
-    <button onclick="deleteEmployee(event, {{ $employee->id }})" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-        Delete
-    </button>
-</td>
+                        <td class="p-3 border text-center">
+                            <button onclick="deleteEmployee(event, {{ $employee->id }})" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+
 </div>
-@endsection
+
 
 <script>
 $(document).ready(function () {
@@ -257,5 +293,79 @@ function deleteEmployee(event, employeeId) {
     }
 }
 
+//filter
+$(document).ready(function () {
+    // Event listener for filter changes
+    $('#filterEmail, #filterDepartment, #filterRole, #searchEmployee').on('input change', function () {
+        filterTable();
+    });
 
+    // Function to fetch and filter the employee table
+    function filterTable() {
+        var email = $('#filterEmail').val();
+        var departmentId = $('#filterDepartment').val();
+        var roleId = $('#filterRole').val();
+        var search = $('#searchEmployee').val();
+
+        // Send AJAX request with filter parameters
+        $.ajax({
+            url: "/admin/employees/filter", // Update with the appropriate route
+            method: "GET",
+            data: {
+                email: email,
+                department_id: departmentId,
+                role_id: roleId,
+                search: search
+            },
+            success: function (response) {
+                // Clear current table body
+                $('#employeeList tbody').empty();
+
+                // Add the filtered employees to the table
+                response.employees.forEach(function(employee) {
+                    var newRow = `
+                        <tr class="bg-gray-700 hover:bg-gray-600">
+                            <td class="p-3 border">${employee.id}</td>
+                            <td class="p-3 border">${employee.full_name}</td>
+                            <td class="p-3 border">${employee.gender}</td>
+                            <td class="p-3 border">${employee.date_of_joining}</td>
+                            <td class="p-3 border">${employee.contact}</td>
+                            <td class="p-3 border">${employee.email_id}</td>
+                            <td class="p-3 border">${employee.department.name}</td>
+                            <td class="p-3 border">${employee.role.name}</td>
+                            <td class="p-3 border">${employee.jobtype}</td>
+                            <td class="p-3 border text-center">
+                                <button onclick="deleteEmployee(event, ${employee.id})" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    $('#employeeList tbody').append(newRow);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching filtered data:", error);
+            }
+        });
+    }
+});
+  /* Target the calendar icon specifically and make it white */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+    }
+    //eye icon
+    // Toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function() {
+        // Toggle the input type between password and text
+        const type = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = type;
+
+        // Toggle eye icon (open/close)
+        this.innerHTML = type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>';
+    });
 </script>
+@endsection

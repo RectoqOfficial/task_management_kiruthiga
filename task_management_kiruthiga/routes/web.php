@@ -67,6 +67,8 @@ Route::get('/admin/employees/roles/{departmentId}', [EmployeeController::class, 
 // Delete an employee (This will be an AJAX route)
 Route::delete('/admin/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 
+//filter
+Route::get('/admin/employees/filter', [EmployeeController::class, 'filterEmployees'])->name('admin.filterEmployees');
 
 
 use App\Http\Controllers\TaskController;
