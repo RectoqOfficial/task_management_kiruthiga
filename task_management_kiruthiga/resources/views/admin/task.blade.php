@@ -67,27 +67,16 @@
             </div>
         </div>
 
-        <!-- Task Start Date -->
-        <div class="mb-4">
-            <label class="block text-white mb-2">Task Start Date</label>
-            <input type="date" name="task_start_date" id="task_start_date" required class="w-full p-3 rounded text-black bg-gray-700">
-        </div>
-
         <!-- No. of Days -->
         <div class="mb-4">
             <label class="block text-white mb-2">No. of Days</label>
             <input type="number" name="no_of_days" id="no_of_days" required class="w-full p-3 rounded text-black bg-gray-700">
         </div>
 
-        <!-- Deadline -->
-        <div class="mb-4">
-            <label class="block text-white mb-2">Deadline</label>
-            <input type="date" name="deadline" id="deadline" readonly class="w-full p-3 rounded text-black bg-gray-700">
-        </div>
+       <button type="submit" id="createTaskBtn" onclick="console.log('Create Task Clicked');" class="mt-4 w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded">
+    Create Task
+</button>
 
-        <button type="submit" class="mt-4 w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded">
-            Create Task
-        </button>
     </form>
 </div>
 
@@ -133,10 +122,6 @@
     </div>
 </div>
 
-
-
-
-
         <div class="overflow-x-auto">
             <table class="w-full border border-gray-600 text-center">
                 <thead>
@@ -160,47 +145,47 @@
             <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
             <td class="border border-gray-600 p-2">{{ $task->description }}</td>
             <td class="border border-gray-600 p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
+            
+            <!-- Status Column with Dropdown -->
             <td class="border border-gray-600 p-2">
-                <span class="px-2 py-1 text-black rounded 
-                    @if($task->status == 'Pending') bg-yellow-500 
-                    @elseif($task->status == 'Started') bg-blue-500 
-                    @elseif($task->status == 'Completed') bg-green-500 
-                    @elseif($task->status == 'Review') bg-orange-500 
-                    @endif">
-                    {{ $task->status }}
-                </span>
+                <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
+                    <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
+                    <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                    <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
+                </select>
             </td>
+
             <td class="border border-gray-600 p-2">{{ $task->task_create_date }}</td>
+            
+            <!-- Task Start Date (Editable) -->
             <td class="border border-gray-600 p-2">
-                <input type="date" name="task_start_date" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-black" />
+     <input type="date" name="task_start_date" id="task_start_date-{{ $task->id }}" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-black task-start-date" data-task-id="{{ $task->id }}" />
+
             </td>
+         <!-- Number of Days (If needed) -->
             <td class="border border-gray-600 p-2">{{ $task->no_of_days }}</td>
-            <td class="border border-gray-600 p-2">{{ $task->deadline }}</td>
+            <!-- Calculate Deadline Based on Task Start Date -->
             <td class="border border-gray-600 p-2">
-                <!-- Status Dropdown with Default as "Pending" -->
-                <form class="status-update-form" data-task-id="{{ $task->id }}">
+                <input type="date" name="deadline" id="deadline-{{ $task->id }}" value="{{ $task->deadline }}" readonly class="w-full p-1 rounded text-black bg-gray-700 task-deadline" data-task-id="{{ $task->id }}"  class="task-deadline" />
+            </td>
+
+   
+
+            <!-- Action Column (Delete Button) -->
+            <td class="border border-gray-600 p-2">
+                <form class="task-delete-form" data-task-id="{{ $task->id }}">
                     @csrf
-                    @method('PATCH')
-                    <select name="status" class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
-                        <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-                        <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                        <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
-                    </select>
-                    <button type="submit" class="px-2 py-1 bg-green-600 text-white rounded ml-2">Update</button>
+                    @method('DELETE')
+                    <button type="button" class="px-2 py-1 bg-red-600 text-white rounded ml-2 delete-task-btn">
+                        Delete
+                    </button>
                 </form>
-                <!-- Delete Button (Only Visible for Admins) -->
-                {{-- @if(auth()->check() && auth()->user()->role == 'admin') --}}
-                   <form id="delete-task-form-{{ $task->id }}" method="POST" style="display:inline-block;" class="task-delete-form">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="px-2 py-1 bg-red-600 text-white rounded ml-2" onclick="deleteTask(event, {{ $task->id }})">Delete</button>
-</form>
-                {{-- @endif --}}
             </td>
         </tr>
     @endforeach
 </tbody>
+
 
             </table>
         </div>
@@ -209,113 +194,91 @@
 
 
     <script>
-        document.getElementById('department_id').addEventListener('change', function() {
-            fetch('/get-roles-by-department?department_id=' + this.value)
-                .then(response => response.json())
-                .then(data => {
-                    let roleSelect = document.getElementById('role_id');
-                    roleSelect.innerHTML = '<option value="">Select Role</option>';
-                    data.forEach(role => {
-                        let option = new Option(role.name, role.id);
-                        roleSelect.appendChild(option);
-                    });
-                });
-        });
-
-        document.getElementById('role_id').addEventListener('change', function() {
-            let roleId = this.value;
-
-            if (roleId) {
-                fetch(`/get-employees-by-role?role_id=${roleId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        let employeeSelect = document.getElementById('assigned_to');
-                        employeeSelect.innerHTML = '<option value="">Select Employee</option>';
-
-                        data.forEach(employee => {
-                            let option = new Option(employee.email, employee.id);
-                            employeeSelect.appendChild(option);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching employees:', error));
-            }
-        });
-
-        document.getElementById('task_start_date').addEventListener('change', calculateDeadline);
-        document.getElementById('no_of_days').addEventListener('input', calculateDeadline);
-
-        function calculateDeadline() {
-            let startDate = document.getElementById('task_start_date').value;
-            let days = document.getElementById('no_of_days').value;
-
-            if (startDate && days) {
-                let deadline = new Date(startDate);
-                deadline.setDate(deadline.getDate() + parseInt(days));
-                document.getElementById('deadline').value = deadline.toISOString().split('T')[0];
-            }
-        }
-    // Update Task Status AJAX
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".status-update-form").forEach(form => {
-        form.addEventListener("submit", function(event) {
-            event.preventDefault();  // Prevent page reload
-
-            let taskId = this.dataset.taskId;  // Get task ID from the form data attribute
-            let statusSelect = this.querySelector(".status-select");  // Get the status dropdown
-            let newStatus = statusSelect.value;  // Get the selected status
-            let formData = new FormData(this);  // Form data (this can include other inputs too)
-            let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
-
-            // Append the new status manually to FormData
-            formData.append('status', newStatus);
-
-            // Send AJAX request to update the task status
-            fetch(`/tasks/${taskId}`, {
-                method: "PATCH",  // Use PATCH method
-                headers: {
-                    "X-CSRF-TOKEN": csrfToken,
-                    "X-Requested-With": "XMLHttpRequest"
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Update the task status cell without reloading
-                    let statusCell = document.querySelector(`tr[data-task-id='${taskId}'] td.status`);
-                    if (statusCell) {
-                        statusCell.innerHTML = `<span class="px-2 py-1 text-black rounded bg-${getStatusColor(newStatus)}">${newStatus}</span>`;
-                    }
-                    alert("Task status updated successfully!");
-                } else {
-                    alert("Failed to update status: " + data.message);
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert("An error occurred while updating the task status.");
+       document.getElementById('department_id').addEventListener('change', function() {
+    fetch('/get-roles-by-department?department_id=' + this.value)
+        .then(response => response.json())
+        .then(data => {
+            let roleSelect = document.getElementById('role_id');
+            roleSelect.innerHTML = '<option value="">Select Role</option>';
+            data.forEach(role => {
+                let option = new Option(role.name, role.id);
+                roleSelect.appendChild(option);
             });
         });
-    });
+});
 
-    // Utility function to get color based on status
-    function getStatusColor(status) {
-        switch (status) {
-            case 'Pending': return 'yellow-500';
-            case 'Started': return 'blue-500';
-            case 'Completed': return 'green-500';
-            case 'Review': return 'orange-500';
-            default: return 'gray-500';
-        }
+document.getElementById('role_id').addEventListener('change', function() {
+    let roleId = this.value;
+
+    if (roleId) {
+        fetch(`/get-employees-by-role?role_id=${roleId}`)
+            .then(response => response.json())
+            .then(data => {
+                let employeeSelect = document.getElementById('assigned_to');
+                employeeSelect.innerHTML = '<option value="">Select Employee</option>';
+                
+                data.forEach(employee => {
+                    let option = new Option(`${employee.full_name} (${employee.email})`, employee.id);
+                    employeeSelect.appendChild(option);
+                });
+            });
     }
 });
 
+//3. Task Start Date and Deadline Calculation
+document.querySelectorAll('.task-start-date').forEach(input => {
+    input.addEventListener('change', function() {
+        const taskId = this.getAttribute('data-task-id');
+        const startDate = new Date(this.value);
+        const noOfDaysElement = document.querySelector(`#no_of_days-${taskId}`);
+        const deadlineElement = document.querySelector(`#deadline-${taskId}`);
 
+        if (!noOfDaysElement || !deadlineElement) {
+            console.error(`Error: Missing elements for taskId: ${taskId}`);
+            return;
+        }
 
+        if (isNaN(startDate.getTime())) {
+            console.error(`Error: Invalid start date for taskId: ${taskId}`);
+            return;
+        }
+
+        const noOfDays = parseInt(noOfDaysElement.textContent) || 0; // Make sure noOfDays is a number
+        const deadlineDate = new Date(startDate);
+        deadlineDate.setDate(deadlineDate.getDate() + noOfDays);
+
+        // Format deadline as YYYY-MM-DD
+        const deadlineFormatted = deadlineDate.toISOString().split('T')[0];
+
+        // Update the deadline field
+        deadlineElement.value = deadlineFormatted;
+    });
+});
+
+// Ensure that the "no_of_days" field exists and is used to calculate the deadline if applicable
+document.querySelectorAll('.task-start-date').forEach(input => {
+    input.addEventListener('change', calculateDeadline);
+});
+
+// Function to calculate the deadline based on start date and no_of_days
+function calculateDeadline() {
+    let taskId = this.getAttribute('data-task-id');
+    let startDate = document.querySelector(`#task_start_date-${taskId}`).value;
+    let noOfDays = document.querySelector(`#no_of_days-${taskId}`).value;
+
+    // Ensure both fields have valid values
+    if (startDate && noOfDays) {
+        let deadline = new Date(startDate);
+        deadline.setDate(deadline.getDate() + parseInt(noOfDays));
+        document.querySelector(`#deadline-${taskId}`).value = deadline.toISOString().split('T')[0];
+    }
+}
+
+//submit buttton
 $(document).on('submit', '#taskForm', function(event) {
-    event.preventDefault(); 
+    event.preventDefault();
 
-    let formData = $(this).serialize(); 
+    let formData = $(this).serialize();
     $.ajax({
         url: $(this).attr('action'),
         method: 'POST',
@@ -325,44 +288,121 @@ $(document).on('submit', '#taskForm', function(event) {
         },
         success: function(response) {
             if (response.success) {
-                alert(response.message); // Display success message from the response
-                // Optionally update the UI to reflect the newly created task
+                alert(response.message);  
+               
             } else {
-                alert(response.message); // Display error message from the response
+                alert("Error creating task.");
             }
         },
-        error: function(error) {
-            alert('Error submitting task');
-            console.log(error); // Log the error for debugging purposes
+        error: function(xhr) {
+            alert("Something went wrong! Check console.");
+            console.log(xhr.responseText);
         }
     });
 });
 
 
 
+//stauts
+$(document).ready(function () {
+    $(".status-select").change(function () {
+        let taskId = $(this).data("task-id");
+        let newStatus = $(this).val();
+        let $this = $(this); // Reference to the dropdown
 
-
-
-    function deleteTask(event, taskId) {
-        event.preventDefault();
-
-        // Use AJAX to send the DELETE request
         $.ajax({
-            url: '/tasks/' + taskId,
-            type: 'DELETE',
+            url: "/tasks/" + taskId + "/update-status", // Adjust route as needed
+            type: "PATCH",
             data: {
-                _token: $('meta[name="csrf-token"]').attr('content'),
+                _token: "{{ csrf_token() }}",
+                status: newStatus
             },
-            success: function(response) {
-                alert(response.message);
-                // Optionally, remove the task from the table or reload the page
-                $('#task-row-' + taskId).remove();
+            success: function (response) {
+                let bgColor = "";
+                if (newStatus === "Pending") bgColor = "bg-yellow-500";
+                else if (newStatus === "Started") bgColor = "bg-blue-500";
+                else if (newStatus === "Completed") bgColor = "bg-green-500";
+                else if (newStatus === "Review") bgColor = "bg-orange-500";
+
+                // Apply background color directly to the dropdown
+                $this.removeClass().addClass(`p-1 text-black rounded status-select ${bgColor}`);
             },
-            error: function(response) {
-                alert('Error deleting task: ' + response.responseJSON.message);
+            error: function () {
+                alert("Error updating status. Please try again.");
             }
         });
-    }
+    });
+});
+
+
+document.querySelectorAll('.task-start-date').forEach(input => {
+    input.addEventListener('change', function() {
+        const taskId = this.getAttribute('data-task-id');
+        const startDate = new Date(this.value);
+        const noOfDaysElement = document.querySelector(`#no_of_days-${taskId}`);
+        const deadlineElement = document.querySelector(`#deadline-${taskId}`);
+
+        if (!noOfDaysElement) {
+            console.error(`Error: Element with id="no_of_days-${taskId}" not found.`);
+            return;
+        }
+        if (!deadlineElement) {
+            console.error(`Error: Element with id="deadline-${taskId}" not found.`);
+            return;
+        }
+        if (isNaN(startDate.getTime())) {
+            console.error(`Error: Invalid start date selected.`);
+            return;
+        }
+
+        const noOfDays = parseInt(noOfDaysElement.textContent);
+        const deadlineDate = new Date(startDate);
+        deadlineDate.setDate(deadlineDate.getDate() + noOfDays);
+
+        // Format deadline as YYYY-MM-DD
+        const deadlineFormatted = deadlineDate.toISOString().split('T')[0];
+
+        // Update the deadline field
+        deadlineElement.value = deadlineFormatted;
+
+        console.log(`Task ${taskId}: Start Date - ${this.value}, Deadline - ${deadlineFormatted}`);
+    });
+});
+
+
+ 
+
+
+    //delet 
+    $(document).ready(function () {
+    $(document).on("click", ".delete-task-btn", function () {
+        let taskId = $(this).closest("form").data("task-id");
+        let $row = $(this).closest("tr"); // Get the row for removal
+
+        if (confirm("Are you sure you want to delete this task?")) {
+            $.ajax({
+                url: "/tasks/" + taskId + "/delete", // Adjust route if needed
+                type: "DELETE",
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $row.fadeOut(500, function () {
+                            $(this).remove(); // Remove the row from the table
+                        });
+                    } else {
+                        alert("Failed to delete task.");
+                    }
+                },
+                error: function () {
+                    alert("Error occurred while deleting task.");
+                }
+            });
+        }
+    });
+});
+
 
 //filter
 $(document).ready(function () {

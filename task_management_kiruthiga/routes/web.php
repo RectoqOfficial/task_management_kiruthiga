@@ -74,14 +74,18 @@ Route::get('/admin/employees/filter', [EmployeeController::class, 'filterEmploye
 use App\Http\Controllers\TaskController;
 
 Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
-Route::post('/tasks/store', [TaskController::class, 'store'])->name('tasks.store');
-Route::patch('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
-Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+
+Route::patch('/tasks/{id}/update-status', [TaskController::class, 'updateStatus']);
+Route::delete('/tasks/{id}/delete', [TaskController::class, 'destroy']);
+
 Route::get('/task/{task}', [TaskController::class, 'show'])->name('tasks.show');
 Route::middleware('auth', 'role:admin')->delete('/tasks/{task}', [TaskController::class, 'destroy']);
 
 Route::get('/get-roles-by-department', [TaskController::class, 'getRolesByDepartment'])->name('getRolesByDepartment');
-Route::get('/get-employees-by-role/{role}', [TaskController::class, 'getEmployeesByRole']);
+Route::get('/get-employees-by-role', [TaskController::class, 'getEmployeesByRole']);
+Route::get('/get-employees-by-role', [EmployeeController::class, 'getEmployeesByRole']);
+
 
 Route::match(['put', 'patch'], '/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
 Route::get('/employee/tasks', [TaskController::class, 'getTasks'])->name('tasks.getTasks');

@@ -67,6 +67,13 @@ public function addEmployee(Request $request)
 
      return response()->json(['roles' => $roles]);
     }
+public function getEmployeesByRole(Request $request)
+{
+    $roleId = $request->query('role_id');
+    $employees = Employee::where('role_id', $roleId)->get();
+    
+    return response()->json($employees);
+}
 
 public function destroy($id)
 {

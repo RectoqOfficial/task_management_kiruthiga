@@ -158,6 +158,7 @@ function loadMyTasks(event) {
 
 
 
+
         function loadMyProfile(event) {
             event.preventDefault();
             $("#contentArea").html("<h2 class='text-xl'>My Profile</h2><p>Your profile details.</p>");
