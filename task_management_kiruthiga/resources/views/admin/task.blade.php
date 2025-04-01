@@ -26,24 +26,24 @@
                     <option value="{{ $department->id }}">{{ $department->name }}</option>
                 @endforeach
             </select>
-<label class="block mt-4 mb-2">Role</label>
-<select name="role_id" id="role_id" required class="w-full p-2 rounded text-black">
-    <option value="">Select Role</option>
-    @foreach($roles as $role)
-        <option value="{{ $role->id }}">{{ $role->name }}</option>
-    @endforeach
-</select>
+            
+            <label class="block mt-4 mb-2">Role</label>
+            <select name="role_id" id="role_id" required class="w-full p-2 rounded text-black">
+                <option value="">Select Role</option>
+                @foreach($roles as $role)
+                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                @endforeach
+            </select>
 
-<label class="block mt-4 mb-2">Assigned To</label>
-<select name="assigned_to" id="assigned_to" required class="w-full p-2 rounded text-black">
-    <option value="">Select Employee</option>
-    @foreach($employees as $employee)
-        <option value="{{ $employee->id }}">
-            {{ $employee->full_name }} ({{ $employee->email_id }})
-        </option>
-    @endforeach
-</select>
-
+            <label class="block mt-4 mb-2">Assigned To</label>
+            <select name="assigned_to" id="assigned_to" required class="w-full p-2 rounded text-black">
+                <option value="">Select Employee</option>
+                @foreach($employees as $employee)
+                    <option value="{{ $employee->id }}">
+                        {{ $employee->full_name }} ({{ $employee->email_id }})
+                    </option>
+                @endforeach
+            </select>
 
             <label class="block mt-4 mb-2">Task Start Date</label>
             <input type="date" name="task_start_date" id="task_start_date" required class="w-full p-2 rounded text-black">
@@ -65,7 +65,7 @@
         <div class="overflow-x-auto">
             <table class="w-full border border-gray-600 text-center">
                 <thead>
-                     <tr class="bg-[#ff0003] text-white">
+                    <tr class="bg-[#ff0003] text-white">
                         <th class="border border-gray-600 p-2">ID</th>
                         <th class="border border-gray-600 p-2">Task Title</th>
                         <th class="border border-gray-600 p-2">Description</th>
@@ -84,12 +84,9 @@
                             <td class="border border-gray-600 p-2">{{ $task->id }}</td>
                             <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
                             <td class="border border-gray-600 p-2">{{ $task->description }}</td>
-<td class="border border-gray-600 p-2">
-    {{ $task->employee->email_id ?? 'Not Assigned' }}
-</td>
-
-
-
+                            <td class="border border-gray-600 p-2">
+                                {{ $task->employee->email_id ?? 'Not Assigned' }}
+                            </td>
                             <td class="border border-gray-600 p-2">
                                 <span class="px-2 py-1 text-black rounded 
                                     @if($task->status == 'Pending') bg-yellow-500 
@@ -101,23 +98,24 @@
                                 </span>
                             </td>
                             <td class="border border-gray-600 p-2">{{ $task->task_create_date }}</td>
-                            <td class="border border-gray-600 p-2">{{ $task->task_start_date }}</td>
+                            <td class="border border-gray-600 p-2">
+                                <input type="date" name="task_start_date" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-black" />
+                            </td>
                             <td class="border border-gray-600 p-2">{{ $task->no_of_days }}</td>
                             <td class="border border-gray-600 p-2">{{ $task->deadline }}</td>
-                           <td class="border border-gray-600 p-2">
-    <form class="status-update-form" data-task-id="{{ $task->id }}">
-        @csrf
-        @method('PATCH')
-        <select name="status" class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
-            <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-            <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-            <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-            <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
-        </select>
-        <button type="submit" class="px-2 py-1 bg-green-600 text-white rounded ml-2">Update</button>
-    </form>
-</td>
-
+                            <td class="border border-gray-600 p-2">
+                                <form class="status-update-form" data-task-id="{{ $task->id }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <select name="status" class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
+                                        <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
+                                        <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                        <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
+                                    </select>
+                                    <button type="submit" class="px-2 py-1 bg-green-600 text-white rounded ml-2">Update</button>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -139,26 +137,24 @@
                 });
         });
 
-  document.getElementById('role_id').addEventListener('change', function() {
-    let roleId = this.value;
+        document.getElementById('role_id').addEventListener('change', function() {
+            let roleId = this.value;
 
-    if (roleId) {
-        fetch(`/get-employees-by-role?role_id=${roleId}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log("Employees Data:", data); // Debugging
-                let employeeSelect = document.getElementById('assigned_to');
-                employeeSelect.innerHTML = '<option value="">Select Employee</option>';
+            if (roleId) {
+                fetch(`/get-employees-by-role?role_id=${roleId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let employeeSelect = document.getElementById('assigned_to');
+                        employeeSelect.innerHTML = '<option value="">Select Employee</option>';
 
-                data.forEach(employee => {
-                    let option = new Option(employee.email, employee.id); // Use email instead of ID
-                    employeeSelect.appendChild(option);
-                });
-            })
-            .catch(error => console.error('Error fetching employees:', error));
-    }
-});
-
+                        data.forEach(employee => {
+                            let option = new Option(employee.email, employee.id);
+                            employeeSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching employees:', error));
+            }
+        });
 
         document.getElementById('task_start_date').addEventListener('change', calculateDeadline);
         document.getElementById('no_of_days').addEventListener('input', calculateDeadline);
@@ -173,38 +169,38 @@
                 document.getElementById('deadline').value = deadline.toISOString().split('T')[0];
             }
         }
+
         document.addEventListener("DOMContentLoaded", function() {
-    document.querySelectorAll(".status-update-form").forEach(form => {
-        form.addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent the default form submission
+            document.querySelectorAll(".status-update-form").forEach(form => {
+                form.addEventListener("submit", function(event) {
+                    event.preventDefault();
 
-            let taskId = this.dataset.taskId;
-            let statusSelect = this.querySelector(".status-select");
-            let newStatus = statusSelect.value;
-            let formData = new FormData(this);
-            let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+                    let taskId = this.dataset.taskId;
+                    let statusSelect = this.querySelector(".status-select");
+                    let newStatus = statusSelect.value;
+                    let formData = new FormData(this);
+                    let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
 
-            fetch(`/tasks/${taskId}`, {
-                method: "POST",
-                headers: {
-                    "X-CSRF-TOKEN": csrfToken,
-                    "X-Requested-With": "XMLHttpRequest"
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Task status updated successfully!");
-                } else {
-                    alert("Failed to update status.");
-                }
-            })
-            .catch(error => console.error("Error:", error));
+                    fetch(`/tasks/${taskId}`, {
+                        method: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": csrfToken,
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Task status updated successfully!");
+                        } else {
+                            alert("Failed to update status.");
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+                });
+            });
         });
-    });
-});
-
     </script>
 
 </body>

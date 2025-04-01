@@ -78,5 +78,14 @@ class TaskController extends Controller
 
     return response()->json($employees);
 }
+public function myTasks()
+{
+    $tasks = Task::where('assigned_to', auth()->id()) // Fetch tasks assigned to logged-in user
+                 ->select(['id', 'task_title', 'description', 'task_start_date', 'deadline', 'status']) // Exclude 'assigned_to'
+                 ->get();
+
+    return response()->json(['tasks' => $tasks]);
+}
+
 
 }

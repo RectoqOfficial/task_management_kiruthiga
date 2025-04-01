@@ -17,34 +17,39 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\EmployeeDashboardController;
 Route::prefix('admin')->group(function () {
-
-
     // Department Routes
     Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
     Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
-    Route::resource('departments', DepartmentController::class);
+    Route::resource('departments', DepartmentController::class)->except(['index', 'store']); // Removing redundant routes
 
     // Role Routes
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
-    Route::resource('roles', RoleController::class);
+    Route::resource('roles', RoleController::class)->except(['index', 'store']); // Removing redundant routes
 });
 
-// // Admin Routes (Protected by Auth Middleware)
-// Route::middleware(['auth'])->prefix('admin')->group(function () {
-//     // Department Routes
-//     Route::resource('departments', DepartmentController::class);
 
-//     // Role Routes
-//     Route::resource('roles', RoleController::class);
-// });
-Route::middleware(['auth:admin'])->group(function () {
-    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
+Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
+Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('departments.update');
+
+
+
+Route::middleware('auth:admin')->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
 });
-// Employee Dashboard
-Route::get('/employee/dashboard', [EmployeeDashboardController::class, 'index'])
-    ->name('employee.dashboard')
-    ->middleware('auth');
+
+Route::middleware('auth:employee')->group(function () {
+    Route::get('/employee/dashboard', function () {
+        return view('employee.dashboard');
+    })->name('employee.dashboard');
+});
+// In routes/web.php
+Route::get('/admin/departments', [DepartmentController::class, 'index'])->name('admin.departments');
+
 
 
 use App\Http\Controllers\EmployeeController;
@@ -70,6 +75,7 @@ Route::get('/get-roles-by-department', [TaskController::class, 'getRolesByDepart
 Route::get('/get-employees-by-role/{role}', [TaskController::class, 'getEmployeesByRole']);
 
 Route::match(['put', 'patch'], '/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
+Route::get('/my-tasks', [TaskController::class, 'myTasks'])->name('my.tasks');
 
 use App\Http\Controllers\ScoreController;
 

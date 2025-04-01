@@ -209,11 +209,13 @@ function loadDepartmentDetails(event) {
         method: "GET",  // HTTP GET request
         dataType: "html",  // Expecting an HTML response
         success: function (response) {
+               console.log("✅ Department details loaded successfully!");
             $("#contentArea").html(response);  // Inject the response into the target div
             closeMobileSidebar();  // Close sidebar (if applicable)
         },
         error: function (xhr, status, error) {
-            alert("Error loading department details! " + error);  // Show error message
+            console.error(" AJAX Error: ", xhr.responseText);
+            alert("Error loading department details: " + xhr.responseText);  // Show error message
             $("#contentArea").html('<p class="text-red-500">Failed to load Department Details.</p>'); // Display failure message
         },
     });
