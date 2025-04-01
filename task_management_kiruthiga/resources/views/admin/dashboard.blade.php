@@ -95,14 +95,14 @@
             </a>
         </li>
 
-        <li class="px-4 py-3">
-            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeDetails(event)">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2-2-2"></path>
-                </svg>
-                <span class="ml-4">Employee Details</span>
-            </a>
-        </li>
+       <li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeDetails(event)">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2-2-2"></path>
+        </svg>
+        <span class="ml-4">Employee Details</span>
+    </a>
+</li>
 
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadTaskDetails(event)">
@@ -225,18 +225,22 @@ function loadDepartmentDetails(event) {
 function loadEmployeeDetails(event) {
     event.preventDefault(); // Prevent default behavior
 
-    $.ajax({
-        url: "http://127.0.0.1:8000/admin/employees", // Updated URL
-        method: 'GET',
-        success: function(response) {
-            $('#contentArea').html(response); // Inject the response into the content area
-            closeMobileSidebar(); 
-        },
-        error: function(xhr, status, error) {
-            alert('Error loading employee details! ' + error); // Show an error message
-            $('#contentArea').html('<p class="text-red-500">Failed to load Employee Details.</p>');
-        }
-    });
+   $.ajax({
+    url: '/admin/employees',
+    method: 'GET',
+    success: function(response) {
+        console.log(response); // Log response to see what data is returned
+        $('#contentArea').html(response);
+        closeMobileSidebar();
+    },
+    error: function(xhr, status, error) {
+        console.error('Error loading employee details:', error);
+        alert('Error loading employee details! ' + error);
+        console.log(xhr.responseText); // Log the actual error response for better debugging
+        $('#contentArea').html('<p class="text-red-500">Failed to load Employee Details.</p>');
+    }
+});
+
 }
 
 

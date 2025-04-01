@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Department;
@@ -10,68 +9,75 @@ use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
 {
+     // Display employee list page
     public function index()
     {
+        // Fetch employees with their departments and roles
         $employees = Employee::with(['department', 'role'])->get();
+        
+        // Fetch all departments and roles for dropdown selection
         $departments = Department::all();
         $roles = Role::all();
 
         return view('admin.employee', compact('employees', 'departments', 'roles'));
     }
-   
 
-public function store(Request $request)
+public function addEmployee(Request $request)
 {
     $request->validate([
-        'full_name' => 'required|string',
-        'gender' => 'required',
+        'full_name' => 'required|string|max:255',
+        'gender' => 'required|string|max:255',
         'date_of_joining' => 'required|date',
-        'contact' => 'required|numeric|digits_between:10,15',
-      'email_id' => 'required|email|unique:employees,email_id',
-        'password' => 'required|min:6',
+        'contact' => 'required|string|max:15',
+        'email_id' => 'required|email|unique:employees,email_id',
+        'password' => 'required|string|min:8',
         'department_id' => 'required|exists:departments,id',
-        'role_id' => 'required|exists:roles,id', // Fixed issue here
-         'jobtype' => 'required|in:Full-Time,Part-Time,Contract',
+        'role_id' => 'required|exists:roles,id',
+        'jobtype' => 'required|string',
     ]);
 
-    Employee::create([
+    // Create a new employee record
+    $employee = new Employee([
         'full_name' => $request->full_name,
         'gender' => $request->gender,
         'date_of_joining' => $request->date_of_joining,
         'contact' => $request->contact,
-     'email_id' => strtolower(trim($request->email_id)),
-        'password' => Hash::make($request->password), // Store password securely
+        'email_id' => $request->email_id,
+        'password' => bcrypt($request->password),
         'department_id' => $request->department_id,
         'role_id' => $request->role_id,
         'jobtype' => $request->jobtype,
     ]);
-     // Check if the request is AJAX
-    if ($request->ajax()) {
-        return response()->json([
-            'success' => true,
-            'message' => 'Employee added successfully!',
-            'employee' => $employee // Return the newly created employee
-        ]);
+    $employee->save();
+
+    // Return success response with the new employee data
+    return response()->json([
+        'success' => true,
+        'message' => 'Employee added successfully.',
+        'employee' => $employee,  // Include the newly created employee data
+    ]);
+}
+
+
+
+    public function getRolesByDepartment($departmentId)
+    {
+        // Fetch roles based on the department ID
+        $roles = Role::where('department_id', $departmentId)->get();
+
+     return response()->json(['roles' => $roles]);
     }
-  // Return success message without redirecting
-    return back()->with('success', 'Employee added successfully!');
-}
-
-public function getRolesByDepartment($departmentId)
-{
-    // Fetch roles based on the department ID
-    $roles = Role::where('department_id', $departmentId)->get();
-
-    return response()->json($roles);
-}
-
 
 public function destroy($id)
 {
-    $employee = Employee::findOrFail($id);
-    $employee->delete();
-
-    return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
+    $employee = Employee::find($id);
+    if ($employee) {
+        $employee->delete();
+        return response()->json(['success' => true]);
+    } else {
+        return response()->json(['success' => false, 'message' => 'Employee not found']);
+    }
 }
+
 
 }

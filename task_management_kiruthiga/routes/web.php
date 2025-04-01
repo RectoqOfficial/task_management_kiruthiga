@@ -35,13 +35,13 @@ Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update
 Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('departments.update');
 
 
-
+//admin middleware
 Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 });
-
+//employee middleware
 Route::middleware('auth:employee')->group(function () {
     Route::get('/employee/dashboard', function () {
         return view('employee.dashboard');
@@ -51,17 +51,22 @@ Route::middleware('auth:employee')->group(function () {
 Route::get('/admin/departments', [DepartmentController::class, 'index'])->name('admin.departments');
 
 
-
 use App\Http\Controllers\EmployeeController;
 
-Route::get('/admin/employees', [EmployeeController::class, 'index'])->name('employees.index');
 
-Route::post('/admin/addEmployee', [EmployeeController::class, 'store'])->name('admin.addEmployee');
-
-Route::get('/get-roles/{departmentId}', [EmployeeController::class, 'getRolesByDepartment']);
+// Display employee list page
 
 
-Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+Route::get('/admin/employees', [EmployeeController::class, 'index'])->name('admin.employees');
+// Add a new employee (This will be an AJAX route)
+Route::post('/admin/employees/add', [EmployeeController::class, 'addEmployee'])->name('admin.addEmployee');
+
+// Get roles based on selected department (This will be an AJAX route)
+Route::get('/admin/employees/roles/{departmentId}', [EmployeeController::class, 'getRolesByDepartment'])->name('admin.getRolesByDepartment');
+
+// Delete an employee (This will be an AJAX route)
+Route::delete('/admin/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
+
 
 
 use App\Http\Controllers\TaskController;
