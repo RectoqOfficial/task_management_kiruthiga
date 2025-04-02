@@ -45,7 +45,9 @@ Route::middleware('auth:employee')->group(function () {
     Route::get('/employee/dashboard', function () {
         return view('employee.dashboard');
     })->name('employee.dashboard');
-});
+});Route::get('/employee/dashboard/stats', [EmployeeDashboardController::class, 'getDashboardStats'])
+     ->name('employee.dashboard.stats');
+
 // In routes/web.php
 Route::get('/admin/departments', [DepartmentController::class, 'index'])->name('admin.departments');
 

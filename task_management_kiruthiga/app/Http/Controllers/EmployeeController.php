@@ -98,6 +98,22 @@ public function destroy($id)
         // Load the profile view and pass employee data
         return view('employee.profile', compact('employee'));
     }
+public function myTasks()
+{
+    $futureTasks = Task::where('employee_id', auth()->id())
+                       ->where('deadline', '>=', now()) // Future tasks
+                       ->orderBy('deadline', 'asc')
+                       ->get();
+
+    $pastTasks = Task::where('employee_id', auth()->id())
+                     ->where('deadline', '<', now()) // Past tasks
+                     ->orderBy('deadline', 'desc')
+                     ->get();
+
+    return view('employee.tasks', compact('futureTasks', 'pastTasks'));
+}
+
+
 
 // //filter
 // public function filterEmployees(Request $request)

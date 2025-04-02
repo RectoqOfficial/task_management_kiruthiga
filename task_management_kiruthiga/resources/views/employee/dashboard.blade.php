@@ -123,8 +123,29 @@
         <div class="flex items-center w-full justify-between px-4 md:px-0">
             <h1 class="text-2xl font-bold text-center md:text-left w-full">Welcome, Employee</h1>
         </div>
-        
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full p-4">
+    <!-- My Tasks Count Card -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md text-center">
+        <h3 class="text-xl font-bold text-white">My Tasks</h3>
+        <p id="taskCount" class="text-3xl font-semibold text-red-400 mt-2">0</p>
+    </div>
+
+    <!-- Tasks in Progress Count Card -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md text-center">
+        <h3 class="text-xl font-bold text-white">Tasks In Progress</h3>
+        <p id="progressTaskCount" class="text-3xl font-semibold text-yellow-400 mt-2">0</p>
+    </div>
+
+    <!-- My Score Card -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md text-center">
+        <h3 class="text-xl font-bold text-white">My Score</h3>
+        <p id="taskScore" class="text-3xl font-semibold text-green-400 mt-2">0</p>
+    </div>
+</div>
         <p class="mt-2 text-gray-400 text-center">Manage your tasks efficiently.</p>
+        
+  
+
 
         <!-- Dynamic Content Area -->
         <div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[100vh] text-white overflow-auto">
@@ -224,6 +245,28 @@ function loadMyTasks(event) {
     });
 }
 
+
+//dashboard
+$(document).ready(function () {
+    // Fetch dashboard stats when the page loads
+    fetchDashboardStats();
+});
+
+function fetchDashboardStats() {
+    $.ajax({
+        url: "{{ route('employee.dashboard.stats') }}", // Ensure this route exists in web.php
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            $("#taskCount").text(data.task_count);
+            $("#progressTaskCount").text(data.in_progress_tasks);
+            $("#taskScore").text(data.task_score);
+        },
+        error: function (xhr) {
+            console.error("Error fetching stats:", xhr.responseText);
+        }
+    });
+}
     </script>
 
 </body>
