@@ -172,23 +172,35 @@
         });
 });
 
-document.getElementById('role_id').addEventListener('change', function() {
-    let roleId = this.value;
+$(document).ready(function () {
+    $('#role_id').change(function () {
+        let roleId = $(this).val();
 
-    if (roleId) {
-        fetch(`/get-employees-by-role?role_id=${roleId}`)
-            .then(response => response.json())
-            .then(data => {
-                let employeeSelect = document.getElementById('assigned_to');
-                employeeSelect.innerHTML = '<option value="">Select Employee</option>';
-                
-                data.forEach(employee => {
-                    let option = new Option(`${employee.full_name} (${employee.email})`, employee.id);
-                    employeeSelect.appendChild(option);
-                });
-            });
+        if (roleId) {
+         $.ajax({
+    url: "{{ route('getEmployeesByRole') }}", // Ensure this is inside a Blade file
+    type: "GET",
+    data: { role_id: roleId },
+    success: function (response) {
+        let assignedToDropdown = $('#assigned_to');
+        assignedToDropdown.empty();
+        assignedToDropdown.append('<option value="">Select Employee</option>');
+
+        response.forEach(function (employee) {
+            assignedToDropdown.append(
+                `<option value="${employee.id}">${employee.full_name} (${employee.email_id})</option>`
+            );
+        });
+    },
+    error: function (xhr) {
+        console.error('Error fetching employees:', xhr.responseText);
     }
 });
+
+        }
+    });
+});
+
 
 //3. Task Start Date and Deadline Calculation
 document.querySelectorAll('.task-start-date').forEach(input => {

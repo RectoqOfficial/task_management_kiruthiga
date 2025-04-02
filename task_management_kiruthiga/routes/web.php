@@ -75,7 +75,7 @@ Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('tasks.show');
 Route::middleware('auth', 'role:admin')->delete('/tasks/{task}', [TaskController::class, 'destroy']);
 
 Route::get('/get-roles-by-department', [TaskController::class, 'getRolesByDepartment'])->name('getRolesByDepartment');
-Route::get('/get-employees-by-role', [TaskController::class, 'getEmployeesByRole']);
+Route::get('/employees-by-role', [TaskController::class, 'getEmployeesByRole'])->name('getEmployeesByRole');
 Route::get('/get-employees-by-role', [EmployeeController::class, 'getEmployeesByRole']);
 
 Route::match(['put', 'patch'], '/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');

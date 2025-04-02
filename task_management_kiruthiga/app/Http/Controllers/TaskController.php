@@ -147,7 +147,7 @@ try {
     public function getEmployeesByRole(Request $request)
     {
         $roleId = $request->query('role_id');
-        $employees = Employee::where('role_id', $roleId)->get(['id', 'full_name', 'email']);
+        $employees = Employee::where('role_id', $roleId)->get(['id', 'full_name', 'email_id']);
         return response()->json($employees);
     }
 
