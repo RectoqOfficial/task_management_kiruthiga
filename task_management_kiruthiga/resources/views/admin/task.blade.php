@@ -136,7 +136,10 @@
                         <td class="border border-gray-600 p-2">
                             <input type="date" name="task_start_date" id="task_start_date-{{ $task->id }}" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-black task-start-date" data-task-id="{{ $task->id }}" />
                         </td>
-                        <td class="border border-gray-600 p-2">{{ $task->no_of_days }}</td>
+<td class="border border-gray-600 p-2">
+    <input type="number" name="no_of_days" id="no_of_days-{{ $task->id }}" value="{{ $task->no_of_days }}" class="w-full p-1 rounded text-black no-of-days-input" data-task-id="{{ $task->id }}" />
+</td>
+
                         <td class="border border-gray-600 p-2">
                             <input type="date" name="deadline" id="deadline-{{ $task->id }}" value="{{ $task->deadline }}" readonly class="w-full p-1 rounded text-black bg-gray-700 task-deadline" data-task-id="{{ $task->id }}" />
                         </td>
@@ -202,11 +205,10 @@ $(document).ready(function () {
 });
 
 
-//3. Task Start Date and Deadline Calculation
 document.querySelectorAll('.task-start-date').forEach(input => {
     input.addEventListener('change', function() {
         const taskId = this.getAttribute('data-task-id');
-        const startDate = new Date(this.value);
+        const startDateValue = this.value;
         const noOfDaysElement = document.querySelector(`#no_of_days-${taskId}`);
         const deadlineElement = document.querySelector(`#deadline-${taskId}`);
 
@@ -215,12 +217,22 @@ document.querySelectorAll('.task-start-date').forEach(input => {
             return;
         }
 
-        if (isNaN(startDate.getTime())) {
+        if (!startDateValue) {
             console.error(`Error: Invalid start date for taskId: ${taskId}`);
             return;
         }
 
-        const noOfDays = parseInt(noOfDaysElement.textContent) || 0; // Make sure noOfDays is a number
+        // Convert start date to a Date object
+        const startDate = new Date(startDateValue);
+
+        // Get no_of_days value correctly
+        const noOfDays = parseInt(noOfDaysElement.value, 10);
+        if (isNaN(noOfDays)) {
+            console.error(`Error: Invalid number of days for taskId: ${taskId}`);
+            return;
+        }
+
+        // Calculate deadline by adding no_of_days to startDate
         const deadlineDate = new Date(startDate);
         deadlineDate.setDate(deadlineDate.getDate() + noOfDays);
 
@@ -231,25 +243,6 @@ document.querySelectorAll('.task-start-date').forEach(input => {
         deadlineElement.value = deadlineFormatted;
     });
 });
-
-// Ensure that the "no_of_days" field exists and is used to calculate the deadline if applicable
-document.querySelectorAll('.task-start-date').forEach(input => {
-    input.addEventListener('change', calculateDeadline);
-});
-
-// Function to calculate the deadline based on start date and no_of_days
-function calculateDeadline() {
-    let taskId = this.getAttribute('data-task-id');
-    let startDate = document.querySelector(`#task_start_date-${taskId}`).value;
-    let noOfDays = document.querySelector(`#no_of_days-${taskId}`).value;
-
-    // Ensure both fields have valid values
-    if (startDate && noOfDays) {
-        let deadline = new Date(startDate);
-        deadline.setDate(deadline.getDate() + parseInt(noOfDays));
-        document.querySelector(`#deadline-${taskId}`).value = deadline.toISOString().split('T')[0];
-    }
-}
 
 //submit buttton
 $(document).on('submit', '#taskForm', function(event) {

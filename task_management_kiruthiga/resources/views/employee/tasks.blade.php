@@ -10,13 +10,13 @@
                     <th class="border border-gray-600 p-2">ID</th>
                     <th class="border border-gray-600 p-2">Task Title</th>
                     <th class="border border-gray-600 p-2">Description</th>
-                    <th class="border border-gray-600 p-2">Assigned To</th>
+                   
                     <th class="border border-gray-600 p-2">Status</th>
                     <th class="border border-gray-600 p-2">Task Create Date</th>
                     <th class="border border-gray-600 p-2">Task Start Date</th>
                     <th class="border border-gray-600 p-2">No. of Days</th>
                     <th class="border border-gray-600 p-2">Deadline</th>
-                    <th class="border border-gray-600 p-2">Actions</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -25,7 +25,7 @@
                         <td class="border border-gray-600 p-2">{{ $task->id }}</td>
                         <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
                         <td class="border border-gray-600 p-2">{{ $task->description }}</td>
-                        <td class="border border-gray-600 p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
+
                         <td class="border border-gray-600 p-2">
                             <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
                                 <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
@@ -42,15 +42,7 @@
                         <td class="border border-gray-600 p-2">
                             <input type="date" name="deadline" id="deadline-{{ $task->id }}" value="{{ $task->deadline }}" readonly class="w-full p-1 rounded text-black bg-gray-700 task-deadline" data-task-id="{{ $task->id }}" />
                         </td>
-                        <td class="border border-gray-600 p-2">
-                            <form class="task-delete-form" data-task-id="{{ $task->id }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button" class="px-2 py-1 bg-red-600 text-white rounded ml-2 delete-task-btn">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
+                       
                     </tr>
                 @endforeach
             </tbody>

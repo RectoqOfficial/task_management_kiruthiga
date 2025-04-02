@@ -29,7 +29,6 @@ public function store(Request $request)
 {
     \Log::info('Task creation request:', $request->all());
 
-    // Validate the incoming request data
     $request->validate([
         'task_title' => 'required|string|max:255',
         'description' => 'required|string',
@@ -40,35 +39,17 @@ public function store(Request $request)
         'no_of_days' => 'required|integer|min:1',
     ]);
 
-    // If task start date is provided, use it to calculate the deadline
-$taskStartDate = $request->task_start_date ? new \DateTime($request->task_start_date) : new \DateTime();
+    // Use the provided start date, or default to today
+    $taskStartDate = $request->task_start_date ? new \DateTime($request->task_start_date) : new \DateTime();
     $noOfDays = $request->no_of_days;
 
-    // Check if both task_start_date and no_of_days are valid
-    if (!$taskStartDate && $noOfDays) {
-        return response()->json(['success' => false, 'message' => 'Task start date is required when no_of_days is provided.'], 400);
-    }
-// Check if no_of_days is provided
-if (!$noOfDays) {
-    return response()->json(['success' => false, 'message' => 'Number of days is missing or invalid.'], 400);
-}
-
-
-    // Calculate the deadline based on task start date and number of days
- // Calculate the deadline
-try {
-    $taskStartDate->modify("+$noOfDays days");
-    $deadline = $taskStartDate->format('Y-m-d');
-} catch (\Exception $e) {
-    return response()->json(['success' => false, 'message' => 'Error calculating the deadline: ' . $e->getMessage()], 400);
-}
-
-    // Ensure that deadline is calculated or provided
-    if ($deadline === null) {
-        return response()->json(['success' => false, 'message' => 'Deadline could not be calculated.'], 400);
+    try {
+        $taskStartDate->modify("+$noOfDays days");
+        $deadline = $taskStartDate->format('Y-m-d');
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => 'Error calculating the deadline'], 400);
     }
 
-    // Try creating the task
     try {
         $task = Task::create([
             'task_title' => $request->task_title,
@@ -82,19 +63,21 @@ try {
             'deadline' => $deadline,
             'status' => 'Pending',
         ]);
- // Create default score entry for this task
-    Score::create([
-        'task_id' => $task->id,
-        'redo_count' => 0,
-        'overdue_count' => 0,
-        'score' => 100,
-    ]);
+
+        Score::create([
+            'task_id' => $task->id,
+            'redo_count' => 0,
+            'overdue_count' => 0,
+            'score' => 100,
+        ]);
+
         return response()->json(['success' => true, 'message' => 'Task created successfully', 'task' => $task], 201);
     } catch (\Exception $e) {
         \Log::error('Error creating task: ' . $e->getMessage());
-        return response()->json(['success' => false, 'message' => 'Error creating task: ' . $e->getMessage()], 500);
+        return response()->json(['success' => false, 'message' => 'Error creating task'], 500);
     }
 }
+
 
 
 
@@ -196,14 +179,34 @@ public function viewTask($id)
     ]);
 }
 
-
 public function updateStartDate(Request $request, $id)
 {
+    $request->validate([
+        'task_start_date' => 'required|date',
+    ]);
+
     $task = Task::findOrFail($id);
+
+    if (!$task) {
+        return response()->json(['message' => 'Task not found'], 404);
+    }
+
+    // Update start date
     $task->task_start_date = $request->task_start_date;
+
+    // Ensure no_of_days exists before calculating deadline
+    if (!empty($task->no_of_days)) {
+        $task->deadline = date('Y-m-d', strtotime($request->task_start_date . " + {$task->no_of_days} days"));
+    }
+
     $task->save();
 
-    return response()->json(['message' => 'Task start date updated successfully']);
+    return response()->json([
+        'success' => true,
+        'message' => 'Task start date updated successfully',
+        'task' => $task
+    ]);
 }
+
 
 }
