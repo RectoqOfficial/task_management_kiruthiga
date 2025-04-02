@@ -30,11 +30,7 @@
                 <p id="passwordError" class="text-red-500 text-xs mt-1 hidden">Password is required.</p>
             </div>
 
-    <label>Login As</label>
-    <select name="role" required class="w-full p-2 rounded text-black">
-        <option value="admin">Admin</option>
-        <option value="employee">Employee</option>
-    </select>
+   
             <button type="submit" 
                     class="w-full px-5 py-2 sm:py-3 bg-[#ff0003] text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition">
                 Login

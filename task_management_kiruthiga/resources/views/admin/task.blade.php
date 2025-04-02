@@ -79,117 +79,82 @@
 
     </form>
 </div>
-
 <div class="bg-gray-800 p-4 rounded-lg">
     <h2 class="text-xl font-semibold mb-4">Task List</h2>
-    <div class="bg-gray-800 p-4 rounded-lg mb-6">
-        <h2 class="text-xl font-semibold mb-4">Filter Tasks</h2>
-        <form id="taskFilterForm" class="flex flex-wrap space-x-4">
-            <!-- Task Title Filter -->
-            <div class="mb-4">
-                <label for="filter_task_title" class="block text-white mb-2">Task Title</label>
-                <input type="text" id="filter_task_title" class="p-3 rounded bg-gray-700 text-white w-full" placeholder="Search by Task Title">
-            </div>
 
-            <!-- Assigned To Filter -->
-            <div class="mb-4">
-                <label for="filter_assigned_to" class="block text-white mb-2">Assigned To</label>
-                <select id="filter_assigned_to" class="p-3 rounded bg-gray-700 text-white w-full">
-                    <option value="">All Employees</option>
-                    @foreach($employees as $employee)
-                        <option value="{{ $employee->id }}">{{ $employee->full_name }} ({{ $employee->email_id }})</option>
-                    @endforeach
-                </select>
-            </div>
+    <!-- Filter Form -->
+    <form id="taskFilterForm" class="mb-4 flex space-x-4">
+        <input type="text" id="filter_task_title" placeholder="Search by Task Title" class="w-1/3 p-2 rounded text-black bg-gray-700">
+        <select id="filter_assigned_to" class="w-1/3 p-2 rounded text-black bg-gray-700">
+            <option value="">Filter by Assigned To</option>
+            @foreach ($employees as $employee)
+                <option value="{{ strtolower($employee->full_name) }}">{{ $employee->full_name }}</option>
+            @endforeach
+        </select>
+        <select id="filter_status" class="w-1/3 p-2 rounded text-black bg-gray-700">
+            <option value="">Filter by Status</option>
+            <option value="pending">Pending</option>
+            <option value="started">Started</option>
+            <option value="completed">Completed</option>
+            <option value="review">Review</option>
+        </select>
+        <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded">Filter</button>
+    </form>
 
-            <!-- Status Filter -->
-            <div class="mb-4">
-                <label for="filter_status" class="block text-white mb-2">Status</label>
-                <select id="filter_status" class="p-3 rounded bg-gray-700 text-white w-full">
-                    <option value="">All Status</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Started">Started</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Review">Review</option>
-                </select>
-            </div>
-
-            <!-- Filter Button -->
-            <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
-                Filter
-            </button>
-        </form>
+    <div class="overflow-x-auto">
+        <table class="w-full border border-gray-600 text-center">
+            <thead>
+                <tr class="bg-[#ff0003] text-white">
+                    <th class="border border-gray-600 p-2">ID</th>
+                    <th class="border border-gray-600 p-2">Task Title</th>
+                    <th class="border border-gray-600 p-2">Description</th>
+                    <th class="border border-gray-600 p-2">Assigned To</th>
+                    <th class="border border-gray-600 p-2">Status</th>
+                    <th class="border border-gray-600 p-2">Task Create Date</th>
+                    <th class="border border-gray-600 p-2">Task Start Date</th>
+                    <th class="border border-gray-600 p-2">No. of Days</th>
+                    <th class="border border-gray-600 p-2">Deadline</th>
+                    <th class="border border-gray-600 p-2">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($tasks as $task)
+                    <tr class="bg-gray-900 hover:bg-gray-700">
+                        <td class="border border-gray-600 p-2">{{ $task->id }}</td>
+                        <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
+                        <td class="border border-gray-600 p-2">{{ $task->description }}</td>
+                        <td class="border border-gray-600 p-2">{{ $task->employee->full_name ?? 'Not Assigned' }}</td>
+                        <td class="border border-gray-600 p-2">
+                            <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
+                                <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
+                                <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
+                            </select>
+                        </td>
+                        <td class="border border-gray-600 p-2">{{ $task->task_create_date }}</td>
+                        <td class="border border-gray-600 p-2">
+                            <input type="date" name="task_start_date" id="task_start_date-{{ $task->id }}" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-black task-start-date" data-task-id="{{ $task->id }}" />
+                        </td>
+                        <td class="border border-gray-600 p-2">{{ $task->no_of_days }}</td>
+                        <td class="border border-gray-600 p-2">
+                            <input type="date" name="deadline" id="deadline-{{ $task->id }}" value="{{ $task->deadline }}" readonly class="w-full p-1 rounded text-black bg-gray-700 task-deadline" data-task-id="{{ $task->id }}" />
+                        </td>
+                        <td class="border border-gray-600 p-2">
+                            <form class="task-delete-form" data-task-id="{{ $task->id }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="px-2 py-1 bg-red-600 text-white rounded ml-2 delete-task-btn">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </div>
-
-        <div class="overflow-x-auto">
-            <table class="w-full border border-gray-600 text-center">
-                <thead>
-                    <tr class="bg-[#ff0003] text-white">
-                        <th class="border border-gray-600 p-2">ID</th>
-                        <th class="border border-gray-600 p-2">Task Title</th>
-                        <th class="border border-gray-600 p-2">Description</th>
-                        <th class="border border-gray-600 p-2">Assigned To</th>
-                        <th class="border border-gray-600 p-2">Status</th>
-                        <th class="border border-gray-600 p-2">Task Create Date</th>
-                        <th class="border border-gray-600 p-2">Task Start Date</th>
-                        <th class="border border-gray-600 p-2">No. of Days</th>
-                        <th class="border border-gray-600 p-2">Deadline</th>
-                        <th class="border border-gray-600 p-2">Actions</th>
-                    </tr>
-                </thead>
-<tbody>
-    @foreach ($tasks as $task)
-        <tr class="bg-gray-900 hover:bg-gray-700">
-            <td class="border border-gray-600 p-2">{{ $task->id }}</td>
-            <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
-            <td class="border border-gray-600 p-2">{{ $task->description }}</td>
-            <td class="border border-gray-600 p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
-            
-            <!-- Status Column with Dropdown -->
-            <td class="border border-gray-600 p-2">
-                <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
-                    <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-                    <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                    <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
-                </select>
-            </td>
-
-            <td class="border border-gray-600 p-2">{{ $task->task_create_date }}</td>
-            
-            <!-- Task Start Date (Editable) -->
-            <td class="border border-gray-600 p-2">
-     <input type="date" name="task_start_date" id="task_start_date-{{ $task->id }}" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-black task-start-date" data-task-id="{{ $task->id }}" />
-
-            </td>
-         <!-- Number of Days (If needed) -->
-            <td class="border border-gray-600 p-2">{{ $task->no_of_days }}</td>
-            <!-- Calculate Deadline Based on Task Start Date -->
-            <td class="border border-gray-600 p-2">
-                <input type="date" name="deadline" id="deadline-{{ $task->id }}" value="{{ $task->deadline }}" readonly class="w-full p-1 rounded text-black bg-gray-700 task-deadline" data-task-id="{{ $task->id }}"  class="task-deadline" />
-            </td>
-
-   
-
-            <!-- Action Column (Delete Button) -->
-            <td class="border border-gray-600 p-2">
-                <form class="task-delete-form" data-task-id="{{ $task->id }}">
-                    @csrf
-                    @method('DELETE')
-                    <button type="button" class="px-2 py-1 bg-red-600 text-white rounded ml-2 delete-task-btn">
-                        Delete
-                    </button>
-                </form>
-            </td>
-        </tr>
-    @endforeach
-</tbody>
-
-
-            </table>
-        </div>
-    </div>
 
 
 
