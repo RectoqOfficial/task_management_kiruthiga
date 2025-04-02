@@ -19,11 +19,11 @@
                         <tr class="bg-[#ff0003] text-white">
                             <th class="border border-gray-600 p-2">ID</th>
                             <th class="border border-gray-600 p-2">Task Title</th>
+                              <th class="border border-gray-600 p-2">Task Member</th>
                             <th class="border border-gray-600 p-2">Status</th>
                             <th class="border border-gray-600 p-2">Overdue Count</th>
                             <th class="border border-gray-600 p-2">Redo Count</th>
                             <th class="border border-gray-600 p-2">Score</th>
-                            {{-- <th class="border border-gray-600 p-2">Actions</th> --}}
                         </tr>
                     </thead>
     <tbody>
@@ -31,16 +31,12 @@
         <tr class="bg-gray-900 hover:bg-gray-700">
             <td class="border border-gray-600 p-2">{{ $task->id }}</td>
             <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
+            <td class="border border-gray-600 p-2">{{ $task->assigned_to}}</td>
             <td class="border border-gray-600 p-2">{{ $task->status }}</td>
             <td class="border border-gray-600 p-2">{{ $task->score->overdue_count ?? 0 }}</td>
             <td class="border border-gray-600 p-2">{{ $task->score->redo_count ?? 0 }}</td>
             <td class="border border-gray-600 p-2 font-bold">{{ $task->score->score ?? 'N/A' }}</td>
-            {{-- <td class="border border-gray-600 p-2">
-                <form action="{{ route('scores.update', $task->id) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="px-2 py-1 bg-green-600 text-white rounded">Update Score</button>
-                </form>
-            </td> --}}
+         
         </tr>
     @endforeach
 </tbody>

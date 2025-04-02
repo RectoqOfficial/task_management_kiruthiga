@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->text('description');
             $table->foreignId('department_id')->constrained()->onDelete('cascade');
             $table->foreignId('role_id')->constrained()->onDelete('cascade');
-            $table->string('assigned_to'); // Employee Email
+    $table->string('assigned_to'); // Stores Employee Email
             $table->date('task_create_date');
             $table->date('task_start_date');
             $table->integer('no_of_days');

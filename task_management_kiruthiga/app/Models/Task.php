@@ -23,10 +23,11 @@ class Task extends Model
     {
         return $this->belongsTo(Role::class);
     }
-     public function employee()
+       public function employee()
     {
-        return $this->belongsTo(Employee::class, 'assigned_to');
+        return $this->belongsTo(Employee::class, 'assigned_to', 'email_id');
     }
+
     public function score()
 {
     return $this->hasOne(Score::class, 'task_id');
