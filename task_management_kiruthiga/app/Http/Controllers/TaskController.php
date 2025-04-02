@@ -8,6 +8,7 @@ use App\Models\Department;
 use App\Models\Role;
 use App\Models\Employee;
 use App\Models\User;
+use App\Models\Score; 
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
@@ -81,7 +82,13 @@ try {
             'deadline' => $deadline,
             'status' => 'Pending',
         ]);
-
+ // Create default score entry for this task
+    Score::create([
+        'task_id' => $task->id,
+        'redo_count' => 0,
+        'overdue_count' => 0,
+        'score' => 100,
+    ]);
         return response()->json(['success' => true, 'message' => 'Task created successfully', 'task' => $task], 201);
     } catch (\Exception $e) {
         \Log::error('Error creating task: ' . $e->getMessage());

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\Score;
 class Task extends Model
 {
     use HasFactory;
@@ -31,6 +31,23 @@ class Task extends Model
     public function score()
 {
     return $this->hasOne(Score::class, 'task_id');
+}
+ // Automatically create a score entry when a task is created
+  protected static function booted()
+{
+    static::created(function ($task) {
+        try {
+            Score::create([
+                'task_id' => $task->id,
+                'redo_count' => 0,
+                'overdue_count' => 0,
+                'score' => 100,
+            ]);
+            \Log::info("Score created for Task ID: " . $task->id);
+        } catch (\Exception $e) {
+            \Log::error("Failed to create score for Task ID: " . $task->id . " | Error: " . $e->getMessage());
+        }
+    });
 }
 
 }

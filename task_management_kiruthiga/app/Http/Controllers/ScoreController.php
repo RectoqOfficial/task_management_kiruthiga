@@ -16,43 +16,60 @@ class ScoreController extends Controller
 }
 
 
-    public function updateScore($task_id)
-    {
-        $task = Task::findOrFail($task_id);
-        $score = Score::where('task_id', $task_id)->first();
+public function updateScore($task_id)
+{
+    $task = Task::findOrFail($task_id);
+    
+    // ✅ Log task update attempt
+    \Log::info('Updating score for task:', [
+        'task_id' => $task_id,
+        'task_status' => $task->status,
+        'completed_at' => $task->completed_at,
+        'deadline' => $task->deadline
+    ]);
+    $score = Score::where('task_id', $task_id)->first();
 
-        if (!$score) {
-            $score = new Score();
-            $score->task_id = $task->id;
-            $score->redo_count = 0;
-            $score->overdue_count = 0;
-        }
+    if (!$score) {
+        $score = new Score();
+        $score->task_id = $task->id;
+        $score->redo_count = 0;
+        $score->overdue_count = 0;
+        $score->score = 100; // Default max score
+    }
 
-        // Score Calculation
-        if ($task->status == 'Completed') {
-            if ($task->completed_at > $task->deadline) {
-                $score->overdue_count++;
-                $score->score = 80;
-            } else {
-                $score->score = max(100 - ($score->redo_count * 10), 0);
-            }
-        } elseif ($task->status == 'Redo') {
-            $score->redo_count++;
+    if ($task->status == 'Completed' && $task->completed_at) {
+        if ($task->completed_at > $task->deadline) {
+            $score->overdue_count++;
+            $score->score = 80;
+        } else {
             $score->score = max(100 - ($score->redo_count * 10), 0);
         }
-
-        $score->save();
-        return redirect()->route('scores.index')->with('success', 'Score updated successfully.');
+    } elseif ($task->status == 'Redo') {
+        $score->redo_count++;
+        $score->score = max(100 - ($score->redo_count * 10), 0);
     }
-     public function myScore()
-    {
-        if (!Auth::guard('employee')->check()) {
-            return redirect()->route('employee.login')->with('error', 'Please log in to view your score.');
-        }
 
-        $employee = Auth::guard('employee')->user();
-        $tasks = Task::where('assigned_to', $employee->id)->get();
+    $score->save();
+      // ✅ Log successful score update
+    \Log::info('Score updated successfully:', [
+        'task_id' => $task->id,
+        'new_score' => $score->score,
+        'redo_count' => $score->redo_count,
+        'overdue_count' => $score->overdue_count
+    ]);
+    return redirect()->route('scores.index')->with('success', 'Score updated successfully.');
+}
 
-        return view('employee.score', compact('tasks'));
+   public function myScore()
+{
+    if (!Auth::guard('employee')->check()) {
+        return redirect()->route('employee.login')->with('error', 'Please log in to view your score.');
     }
+
+    $employee = Auth::guard('employee')->user();
+    $tasks = Task::with('score')->where('assigned_to', $employee->id)->get();
+
+    return view('employee.score', compact('tasks'));
+}
+
 }
