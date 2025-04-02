@@ -16,17 +16,16 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\EmployeeDashboardController;
-Route::prefix('admin')->group(function () {
-    // Department Routes
-    Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
-    Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
-    Route::resource('departments', DepartmentController::class)->except(['index', 'store']); // Removing redundant routes
+// Department Routes
+Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
+Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
+Route::resource('departments', DepartmentController::class)->except(['index', 'store']); // Removing redundant routes
 
-    // Role Routes
-    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
-    Route::resource('roles', RoleController::class)->except(['index', 'store']); // Removing redundant routes
-});
+// Role Routes
+Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+Route::resource('roles', RoleController::class)->except(['index', 'store']); // Removing redundant routes
+
 
 
 Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
@@ -56,20 +55,12 @@ use App\Http\Controllers\EmployeeController;
 
 // Display employee list page
 
-
+// Routes for the employee management and AJAX actions
 Route::get('/admin/employees', [EmployeeController::class, 'index'])->name('admin.employees');
-// Add a new employee (This will be an AJAX route)
 Route::post('/admin/employees/add', [EmployeeController::class, 'addEmployee'])->name('admin.addEmployee');
-
-// Get roles based on selected department (This will be an AJAX route)
 Route::get('/admin/employees/roles/{departmentId}', [EmployeeController::class, 'getRolesByDepartment'])->name('admin.getRolesByDepartment');
-
-// Delete an employee (This will be an AJAX route)
 Route::delete('/admin/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
-
-//filter
 Route::get('/admin/employees/filter', [EmployeeController::class, 'filterEmployees'])->name('admin.filterEmployees');
-
 
 use App\Http\Controllers\TaskController;
 
@@ -79,7 +70,8 @@ Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
 Route::patch('/tasks/{id}/update-status', [TaskController::class, 'updateStatus']);
 Route::delete('/tasks/{id}/delete', [TaskController::class, 'destroy']);
 
-Route::get('/task/{task}', [TaskController::class, 'show'])->name('tasks.show');
+Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('tasks.show');
+
 Route::middleware('auth', 'role:admin')->delete('/tasks/{task}', [TaskController::class, 'destroy']);
 
 Route::get('/get-roles-by-department', [TaskController::class, 'getRolesByDepartment'])->name('getRolesByDepartment');
@@ -88,7 +80,10 @@ Route::get('/get-employees-by-role', [EmployeeController::class, 'getEmployeesBy
 
 
 Route::match(['put', 'patch'], '/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
+
 Route::get('/employee/tasks', [TaskController::class, 'getTasks'])->name('tasks.getTasks');
+// In routes/web.php
+Route::get('/employee/tasks', [EmployeeController::class, 'getTasks'])->name('tasks.getTasks');
 
 
 use App\Http\Controllers\ScoreController;
