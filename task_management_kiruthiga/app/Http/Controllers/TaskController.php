@@ -25,6 +25,7 @@ class TaskController extends Controller
     }
 
     // Store a new task (Admin creates a task without task_start_date)
+// Store a new task (Admin creates a task without task_start_date)
 public function store(Request $request)
 {
     \Log::info('Task creation request:', $request->all());
@@ -44,7 +45,9 @@ public function store(Request $request)
     $noOfDays = $request->no_of_days;
 
     try {
-        $taskStartDate->modify("+$noOfDays days");
+        $taskStartDate->modify("+$noOfDays days"); // Add days
+        $taskStartDate->modify("-1 day"); // Subtract 1 day
+
         $deadline = $taskStartDate->format('Y-m-d');
     } catch (\Exception $e) {
         return response()->json(['success' => false, 'message' => 'Error calculating the deadline'], 400);
@@ -77,6 +80,7 @@ public function store(Request $request)
         return response()->json(['success' => false, 'message' => 'Error creating task'], 500);
     }
 }
+
 
 
 
@@ -206,6 +210,31 @@ public function updateStartDate(Request $request, $id)
         'message' => 'Task start date updated successfully',
         'task' => $task
     ]);
+}
+public function updateDeadline(Request $request, $id)
+{
+    $task = Task::find($id);
+    if (!$task) {
+        return response()->json(['success' => false, 'message' => 'Task not found']);
+    }
+
+    $task->deadline = $request->deadline;
+    $task->save();
+
+    return response()->json(['success' => true, 'message' => 'Deadline updated successfully']);
+}
+public function updateRemarks(Request $request, $id)
+{
+    $task = Task::findOrFail($id);
+
+    $request->validate([
+        'remarks' => 'required|string|max:500'
+    ]);
+
+    $task->remarks = $request->remarks;
+    $task->save();
+
+    return response()->json(['success' => true, 'message' => 'Remark updated successfully', 'remarks' => $task->remarks]);
 }
 
 

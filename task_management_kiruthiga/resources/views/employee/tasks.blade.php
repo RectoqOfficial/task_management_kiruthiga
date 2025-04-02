@@ -16,6 +16,7 @@
                     <th class="border border-gray-600 p-2">Task Start Date</th>
                     <th class="border border-gray-600 p-2">No. of Days</th>
                     <th class="border border-gray-600 p-2">Deadline</th>
+                     <th class="border border-gray-600 p-2">Remarks</th>
 
                 </tr>
             </thead>
@@ -42,6 +43,13 @@
                         <td class="border border-gray-600 p-2">
                             <input type="date" name="deadline" id="deadline-{{ $task->id }}" value="{{ $task->deadline }}" readonly class="w-full p-1 rounded text-black bg-gray-700 task-deadline" data-task-id="{{ $task->id }}" />
                         </td>
+ <td class="border border-gray-600 p-2">
+    <textarea class="w-full p-1 rounded text-black remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
+    <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="{{ $task->id }}">
+        Save
+    </button>
+</td>
+
                        
                     </tr>
                 @endforeach
@@ -119,6 +127,34 @@
         });
     });
 });
+
+//update remarks
+document.querySelectorAll('.save-remark-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const taskId = this.getAttribute('data-task-id');
+        const remarkInput = document.querySelector(`.remark-input[data-task-id="${taskId}"]`);
+        const remarks = remarkInput.value;
+
+        fetch(`/tasks/${taskId}/update-remarks`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ remarks })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Remark updated successfully');
+            } else {
+                alert('Failed to update remark');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+});
+
 
 </script>
 @endsection

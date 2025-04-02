@@ -5,13 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Score;
+use App\Models\Department;
+use App\Models\Role;
+use App\Models\Employee;
 class Task extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'task_title', 'description', 'department_id', 'role_id', 'assigned_to',
-        'task_create_date', 'task_start_date', 'no_of_days', 'deadline', 'status'
+        'task_create_date', 'task_start_date', 'no_of_days', 'deadline', 'status', 'remarks'
     ];
 
     public function department()

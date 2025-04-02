@@ -85,6 +85,8 @@ Route::get('/employee/task/{id}', [TaskController::class, 'viewTask'])->name('em
 Route::post('/employee/task/update-status/{id}', [TaskController::class, 'updateStatus']);
 Route::post('/employee/task/update-start-date/{id}', [TaskController::class, 'updateStartDate']);
 Route::delete('/employee/task/delete/{id}', [TaskController::class, 'deleteTask']);
+Route::post('/employee/task/update-deadline/{id}', [TaskController::class, 'updateDeadline']);
+Route::post('/tasks/{id}/update-remarks', [TaskController::class, 'updateRemarks'])->name('tasks.updateRemarks');
 
 
 use App\Http\Controllers\ScoreController;

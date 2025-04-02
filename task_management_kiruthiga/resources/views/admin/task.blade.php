@@ -8,6 +8,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="{{ asset('js/tasks.js') }}"></script>
+
 </head>
 <body class="bg-black text-white p-6">
 <div class="max-w-5xl mx-auto">
@@ -114,6 +116,7 @@
                     <th class="border border-gray-600 p-2">Task Start Date</th>
                     <th class="border border-gray-600 p-2">No. of Days</th>
                     <th class="border border-gray-600 p-2">Deadline</th>
+                    <th class="border border-gray-600 p-2">Remarks</th>
                     <th class="border border-gray-600 p-2">Actions</th>
                 </tr>
             </thead>
@@ -143,6 +146,13 @@
                         <td class="border border-gray-600 p-2">
                             <input type="date" name="deadline" id="deadline-{{ $task->id }}" value="{{ $task->deadline }}" readonly class="w-full p-1 rounded text-black bg-gray-700 task-deadline" data-task-id="{{ $task->id }}" />
                         </td>
+<td class="border border-gray-600 p-2">
+    <textarea class="w-full p-1 rounded text-black remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
+    <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="{{ $task->id }}">
+        Save
+    </button>
+</td>
+
                         <td class="border border-gray-600 p-2">
                             <form class="task-delete-form" data-task-id="{{ $task->id }}">
                                 @csrf
@@ -204,15 +214,16 @@ $(document).ready(function () {
     });
 });
 
-
+//calculate deadline based on no_od_days
 document.querySelectorAll('.task-start-date').forEach(input => {
     input.addEventListener('change', function() {
         const taskId = this.getAttribute('data-task-id');
         const startDateValue = this.value;
         const noOfDaysElement = document.querySelector(`#no_of_days-${taskId}`);
         const deadlineElement = document.querySelector(`#deadline-${taskId}`);
+        const deadlineDisplay = document.querySelector(`#deadline-display-${taskId}`); // Table display
 
-        if (!noOfDaysElement || !deadlineElement) {
+        if (!noOfDaysElement || !deadlineElement || !deadlineDisplay) {
             console.error(`Error: Missing elements for taskId: ${taskId}`);
             return;
         }
@@ -232,17 +243,38 @@ document.querySelectorAll('.task-start-date').forEach(input => {
             return;
         }
 
-        // Calculate deadline by adding no_of_days to startDate
+        // Calculate deadline by adding no_of_days to startDate and subtracting 1 day
         const deadlineDate = new Date(startDate);
-        deadlineDate.setDate(deadlineDate.getDate() + noOfDays);
+        deadlineDate.setDate(deadlineDate.getDate() + noOfDays - 1);
 
         // Format deadline as YYYY-MM-DD
         const deadlineFormatted = deadlineDate.toISOString().split('T')[0];
 
-        // Update the deadline field
+        // Update the deadline input field and table display
         deadlineElement.value = deadlineFormatted;
+        deadlineDisplay.textContent = deadlineFormatted;
+
+        // Send AJAX request to save the new deadline in the database
+        fetch(`/employee/task/update-deadline/${taskId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ deadline: deadlineFormatted })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log('Deadline updated successfully');
+            } else {
+                console.error('Failed to update deadline');
+            }
+        })
+        .catch(error => console.error('Error:', error));
     });
 });
+
 
 //submit buttton
 $(document).on('submit', '#taskForm', function(event) {
@@ -427,6 +459,32 @@ $('#filter_task_title').on('keyup', function () {
         } else {
             $(this).hide();
         }
+    });
+});
+//update remarks
+document.querySelectorAll('.save-remark-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const taskId = this.getAttribute('data-task-id');
+        const remarkInput = document.querySelector(`.remark-input[data-task-id="${taskId}"]`);
+        const remarks = remarkInput.value;
+
+        fetch(`/tasks/${taskId}/update-remarks`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ remarks })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Remark updated successfully');
+            } else {
+                alert('Failed to update remark');
+            }
+        })
+        .catch(error => console.error('Error:', error));
     });
 });
 
