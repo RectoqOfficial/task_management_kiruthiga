@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container mx-auto p-6">
-    <h2 class="text-2xl font-bold text-white">My Tasks</h2>
+    <h2 class="text-2xl font-bold text-white mb-4">My Tasks</h2>
     <div class="overflow-x-auto">
-        <table class="w-full border border-gray-600 text-center">
+        <table class="min-w-full border border-gray-600 text-center">
             <thead>
                 <tr class="bg-[#ff0003] text-white">
                     <th class="border border-gray-600 p-2">ID</th>

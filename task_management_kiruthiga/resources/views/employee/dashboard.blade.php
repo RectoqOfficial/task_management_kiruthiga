@@ -134,10 +134,32 @@
 
     <!-- JavaScript Functions -->
     <script>
-        function toggleSidebar() {
-            let sidebar = document.getElementById('mobileSidebar');
-            sidebar.classList.toggle('-translate-x-full');
-        }
+
+
+
+function toggleSidebar() {
+    let sidebar = document.getElementById("mobileSidebar");
+    if (sidebar.classList.contains("-translate-x-full")) {
+        sidebar.classList.remove("-translate-x-full");
+    } else {
+        sidebar.classList.add("-translate-x-full");
+    }
+}
+
+function closeMobileSidebar() {
+    let sidebar = document.getElementById("mobileSidebar");
+    if (!sidebar.classList.contains("-translate-x-full")) {
+        sidebar.classList.add("-translate-x-full");
+    }
+}
+
+// Close the sidebar when a menu item is clicked
+document.querySelectorAll("#mobileSidebar ul li a").forEach(item => {
+    item.addEventListener("click", function () {
+        closeMobileSidebar();
+    });
+});
+
 
         function loadDashboard(event) {
             event.preventDefault();

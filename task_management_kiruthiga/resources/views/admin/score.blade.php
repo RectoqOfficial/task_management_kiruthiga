@@ -35,7 +35,7 @@
             <td class="border border-gray-600 p-2">{{ $task->status }}</td>
             <td class="border border-gray-600 p-2">{{ $task->score->overdue_count ?? 0 }}</td>
             <td class="border border-gray-600 p-2">{{ $task->score->redo_count ?? 0 }}</td>
-            <td class="border border-gray-600 p-2 font-bold">{{ $task->score->score ?? 'N/A' }}</td>
+            <td class="border border-gray-600 p-2 font-bold">{{ $task->score->score ?? 0 }}</td>
          
         </tr>
     @endforeach
