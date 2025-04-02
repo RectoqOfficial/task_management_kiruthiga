@@ -151,27 +151,38 @@ try {
         return response()->json($employees);
     }
 
-    // Fetch tasks assigned to the logged-in user (Fixed: Using auth()->id() instead of email)
-     public function getEmployeeTasks()
+    // // Fetch tasks assigned to the logged-in user (Fixed: Using auth()->id() instead of email)
+    //  public function getEmployeeTasks()
+    // {
+    //     // Assuming the user is authenticated
+    //     $user = auth()->user();
+
+    //     // Fetch tasks for the logged-in employee
+    //     $tasks = Task::where('employee_id', $user->id)->get();  // Replace 'employee_id' with the actual column in your tasks table
+
+    //     // Return the tasks as a view or JSON response
+    //     return view('employee.tasks', compact('tasks'));
+    // }
+ // Fetch all tasks assigned to the logged-in employee
+    public function myTasks()
     {
-        // Assuming the user is authenticated
-        $user = auth()->user();
-
-        // Fetch tasks for the logged-in employee
-        $tasks = Task::where('employee_id', $user->id)->get();  // Replace 'employee_id' with the actual column in your tasks table
-
-        // Return the tasks as a view or JSON response
-        return view('employee.tasks', compact('tasks'));
+        $tasks = Task::where('assigned_to', Auth::id())->get();
+        return view('employee.task', compact('tasks'));
     }
-
-    // Show task details
-    public function show($taskId)
+  // Fetch a specific task when the employee clicks on a task
+    public function viewTask($id)
     {
-        try {
-            $task = Task::findOrFail($taskId);
-            return view('tasks.show', compact('task'));
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error loading task details!'], 500);
-        }
+        $task = Task::findOrFail($id);
+        return response()->json($task);
     }
+    // // Show task details
+    // public function show($taskId)
+    // {
+    //     try {
+    //         $task = Task::findOrFail($taskId);
+    //         return view('tasks.show', compact('task'));
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => 'Error loading task details!'], 500);
+    //     }
+    // }
 }

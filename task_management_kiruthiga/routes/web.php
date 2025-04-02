@@ -78,13 +78,9 @@ Route::get('/get-roles-by-department', [TaskController::class, 'getRolesByDepart
 Route::get('/get-employees-by-role', [TaskController::class, 'getEmployeesByRole']);
 Route::get('/get-employees-by-role', [EmployeeController::class, 'getEmployeesByRole']);
 
-
 Route::match(['put', 'patch'], '/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
-
-Route::get('/employee/tasks', [TaskController::class, 'getTasks'])->name('tasks.getTasks');
-// In routes/web.php
-Route::get('/employee/tasks', [EmployeeController::class, 'getTasks'])->name('tasks.getTasks');
-
+Route::get('/employee/tasks', [TaskController::class, 'myTasks'])->name('employee.tasks');
+Route::get('/employee/task/{id}', [TaskController::class, 'viewTask'])->name('employee.task.view');
 
 use App\Http\Controllers\ScoreController;
 

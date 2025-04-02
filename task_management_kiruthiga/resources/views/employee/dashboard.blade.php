@@ -142,20 +142,25 @@
             event.preventDefault();
             $("#contentArea").html("<h2 class='text-xl'>Employee Dashboard</h2><p>Dashboard content goes here.</p>");
         }
+// function loadMyTasks(event) {
+//     event.preventDefault(); // Prevent page reload
+//   $("#contentArea").html("<h2 class='text-xl'>My Task</h2><p>Your task details.</p>");
+    
+// }
 function loadMyTasks(event) {
     event.preventDefault(); // Prevent page reload
 
-    // Send AJAX request to fetch tasks
     $.ajax({
-        url: '{{ route("tasks.getTasks") }}', // Define the route for fetching tasks
-        method: 'GET',
+        url: "{{ route('employee.tasks') }}",
+        type: "GET",
         success: function(response) {
-            // Update the content area with the tasks view
             $("#contentArea").html(response);
+        },
+        error: function(xhr) {
+            console.error(xhr.responseText);
         }
     });
 }
-
 
 
 

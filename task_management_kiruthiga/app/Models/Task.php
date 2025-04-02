@@ -25,7 +25,7 @@ class Task extends Model
     }
        public function employee()
     {
-        return $this->belongsTo(Employee::class, 'assigned_to', 'email_id');
+        return $this->belongsTo(Employee::class, 'assigned_to');
     }
 
     public function score()
