@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\Score;
@@ -43,5 +43,16 @@ class ScoreController extends Controller
 
         $score->save();
         return redirect()->route('scores.index')->with('success', 'Score updated successfully.');
+    }
+     public function myScore()
+    {
+        if (!Auth::guard('employee')->check()) {
+            return redirect()->route('employee.login')->with('error', 'Please log in to view your score.');
+        }
+
+        $employee = Auth::guard('employee')->user();
+        $tasks = Task::where('assigned_to', $employee->id)->get();
+
+        return view('employee.score', compact('tasks'));
     }
 }

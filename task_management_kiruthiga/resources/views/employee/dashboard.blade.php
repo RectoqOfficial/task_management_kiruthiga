@@ -99,11 +99,12 @@
                 </a>
             </li>
 
-            <li class="px-4 py-3">
-                <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyScore(event)">
-                    <span class="ml-4">My Score</span>
-                </a>
-            </li>
+          <li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyScore(event)">
+        <span class="ml-4">My Score</span>
+    </a>
+</li>
+
 
             <li class="px-4 py-3">
                 <a href="{{ route('logout') }}" 
@@ -185,10 +186,22 @@ function loadMyTasks(event) {
 }
 
 
-        function loadMyScore(event) {
-            event.preventDefault();
-            $("#contentArea").html("<h2 class='text-xl'>My Score</h2><p>Your performance score.</p>");
+      function loadMyScore(event) {
+    event.preventDefault();
+
+    $.ajax({
+        url: "/employee/score",
+        type: "GET",
+        success: function(response) {
+            $("#contentArea").html(response);
+        },
+        error: function(xhr) {
+            console.error(xhr.responseText);
+            alert("Error loading score.");
         }
+    });
+}
+
     </script>
 
 </body>

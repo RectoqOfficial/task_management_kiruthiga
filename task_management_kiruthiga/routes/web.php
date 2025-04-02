@@ -92,3 +92,4 @@ use App\Http\Controllers\ScoreController;
 Route::get('/scores', [ScoreController::class, 'index'])->name('scores.index');
 Route::post('/scores/update/{task_id}', [ScoreController::class, 'updateScore'])->name('scores.update');
 
+Route::get('/employee/score', [ScoreController::class, 'myScore'])->name('employee.score');
