@@ -81,6 +81,10 @@ Route::get('/get-employees-by-role', [EmployeeController::class, 'getEmployeesBy
 Route::match(['put', 'patch'], '/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
 Route::get('/employee/tasks', [TaskController::class, 'myTasks'])->name('employee.tasks');
 Route::get('/employee/task/{id}', [TaskController::class, 'viewTask'])->name('employee.task.view');
+Route::post('/employee/task/update-status/{id}', [TaskController::class, 'updateStatus']);
+Route::post('/employee/task/update-start-date/{id}', [TaskController::class, 'updateStartDate']);
+Route::delete('/employee/task/delete/{id}', [TaskController::class, 'deleteTask']);
+
 
 use App\Http\Controllers\ScoreController;
 

@@ -151,38 +151,52 @@ try {
         return response()->json($employees);
     }
 
-    // // Fetch tasks assigned to the logged-in user (Fixed: Using auth()->id() instead of email)
-    //  public function getEmployeeTasks()
-    // {
-    //     // Assuming the user is authenticated
-    //     $user = auth()->user();
-
-    //     // Fetch tasks for the logged-in employee
-    //     $tasks = Task::where('employee_id', $user->id)->get();  // Replace 'employee_id' with the actual column in your tasks table
-
-    //     // Return the tasks as a view or JSON response
-    //     return view('employee.tasks', compact('tasks'));
-    // }
+   
  // Fetch all tasks assigned to the logged-in employee
-    public function myTasks()
-    {
-        $tasks = Task::where('assigned_to', Auth::id())->get();
-        return view('employee.task', compact('tasks'));
+public function myTasks()
+{
+    if (!Auth::guard('employee')->check()) {
+        return redirect()->route('employee.login')->with('error', 'Please log in to view your tasks.');
     }
+
+    $employee = Auth::guard('employee')->user();
+
+    $tasks = Task::where('assigned_to', $employee->id)->get();
+
+    return view('employee.tasks', compact('tasks'));
+}
+
+
+
   // Fetch a specific task when the employee clicks on a task
-    public function viewTask($id)
-    {
-        $task = Task::findOrFail($id);
-        return response()->json($task);
+public function viewTask($id)
+{
+    $employee = Auth::user();
+
+    // Ensure the task is assigned to the logged-in employee
+    $task = Task::where('id', $id)
+        ->where('assigned_to', $employee->id)
+        ->first();
+
+    if (!$task) {
+        return response()->json(['error' => 'Task not found or unauthorized access'], 404);
     }
-    // // Show task details
-    // public function show($taskId)
-    // {
-    //     try {
-    //         $task = Task::findOrFail($taskId);
-    //         return view('tasks.show', compact('task'));
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'Error loading task details!'], 500);
-    //     }
-    // }
+
+    return response()->json([
+        'task_title'   => $task->task_title,
+        'description'  => $task->description,
+        'deadline'     => $task->deadline,
+    ]);
+}
+
+
+public function updateStartDate(Request $request, $id)
+{
+    $task = Task::findOrFail($id);
+    $task->task_start_date = $request->task_start_date;
+    $task->save();
+
+    return response()->json(['message' => 'Task start date updated successfully']);
+}
+
 }

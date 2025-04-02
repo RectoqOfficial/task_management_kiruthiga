@@ -148,19 +148,23 @@
     
 // }
 function loadMyTasks(event) {
-    event.preventDefault(); // Prevent page reload
+    event.preventDefault(); // Prevent full page reload
 
     $.ajax({
-        url: "{{ route('employee.tasks') }}",
+        url: "{{ route('employee.tasks') }}", // Ensure the route is defined in web.php
         type: "GET",
+        dataType: "html", // Expecting HTML response
         success: function(response) {
-            $("#contentArea").html(response);
+            console.log("Tasks loaded successfully!");
+            $("#contentArea").html(response); // Inject the response into the content area
         },
-        error: function(xhr) {
-            console.error(xhr.responseText);
+        error: function(xhr, status, error) {
+            console.error("Error loading tasks:", xhr.responseText);
+            alert("Failed to load tasks. Check console for details.");
         }
     });
 }
+
 
 
 
