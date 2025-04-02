@@ -6,7 +6,7 @@ use App\Models\Employee;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Auth;
 class EmployeeController extends Controller
 {
      // Display employee list page
@@ -85,6 +85,20 @@ public function destroy($id)
         return response()->json(['success' => false, 'message' => 'Employee not found']);
     }
 }
+ public function profile()
+    {
+        // Check if the employee is logged in
+        if (!Auth::guard('employee')->check()) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Get the logged-in employee
+        $employee = Auth::guard('employee')->user();
+
+        // Load the profile view and pass employee data
+        return view('employee.profile', compact('employee'));
+    }
+
 // //filter
 // public function filterEmployees(Request $request)
 // {

@@ -168,10 +168,22 @@ function loadMyTasks(event) {
 
 
 
-        function loadMyProfile(event) {
-            event.preventDefault();
-            $("#contentArea").html("<h2 class='text-xl'>My Profile</h2><p>Your profile details.</p>");
+      function loadMyProfile(event) {
+    event.preventDefault();
+
+    $.ajax({
+        url: "/employee/profile",
+        type: "GET",
+        success: function(response) {
+            $("#contentArea").html(response);
+        },
+        error: function(xhr) {
+            console.error(xhr.responseText);
+            alert("Error loading profile.");
         }
+    });
+}
+
 
         function loadMyScore(event) {
             event.preventDefault();
