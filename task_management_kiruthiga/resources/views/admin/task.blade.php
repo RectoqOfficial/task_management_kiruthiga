@@ -12,7 +12,7 @@
 
 </head>
 <body class="bg-black text-white p-6">
-<div class="container mx-auto p-6 bg-black text-white min-h-screen">
+<div class="max-w-5xl mx-auto">
     <h1 class="text-3xl font-bold mb-6 text-center">Task Management</h1>
 
     <!-- Task Creation Form -->
@@ -22,7 +22,7 @@
         <!-- Task Title -->
         <div class="mb-4">
             <label class="block text-white mb-2">Task Title</label>
-            <input type="text" name="task_title" required class="w-full p-3 rounded text-black bg-gray-700">
+            <input type="text" name="task_title" required class="w-full p-3 rounded text-white bg-gray-700">
         </div>
 
         <!-- Description -->
@@ -32,11 +32,11 @@
         </div>
 
         <!-- Flex container for three fields -->
-        <div class="flex flex-wrap space-y-4 md:space-y-0 md:space-x-4 mb-4">
+        <div class="flex space-x-4 mb-4">
             <!-- Department -->
-            <div class="w-full md:flex-1">
+            <div class="flex-1">
                 <label class="block text-white mb-2">Department</label>
-                <select name="department_id" id="department_id" required class="w-full p-3 rounded text-black bg-gray-700">
+                <select name="department_id" id="department_id" required class="w-full p-3 rounded text-white bg-gray-700">
                     <option value="">Select Department</option>
                     @foreach ($departments as $department)
                         <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -45,9 +45,9 @@
             </div>
 
             <!-- Role -->
-            <div class="w-full md:flex-1">
+            <div class="flex-1">
                 <label class="block text-white mb-2">Role</label>
-                <select name="role_id" id="role_id" required class="w-full p-3 rounded text-black bg-gray-700">
+                <select name="role_id" id="role_id" required class="w-full p-3 rounded text-white bg-gray-700">
                     <option value="">Select Role</option>
                     @foreach($roles as $role)
                         <option value="{{ $role->id }}">{{ $role->name }}</option>
@@ -56,9 +56,9 @@
             </div>
 
             <!-- Assigned To -->
-            <div class="w-full md:flex-1">
+            <div class="flex-1">
                 <label class="block text-white mb-2">Assigned To</label>
-                <select name="assigned_to" id="assigned_to" required class="w-full p-3 rounded text-black bg-gray-700">
+                <select name="assigned_to" id="assigned_to" required class="w-full p-3 rounded text-white bg-gray-700">
                     <option value="">Select Employee</option>
                     @foreach($employees as $employee)
                         <option value="{{ $employee->id }}">
@@ -72,7 +72,7 @@
         <!-- No. of Days -->
         <div class="mb-4">
             <label class="block text-white mb-2">No. of Days</label>
-            <input type="number" name="no_of_days" id="no_of_days" required class="w-full p-3 rounded text-black bg-gray-700">
+            <input type="number" name="no_of_days" id="no_of_days" required class="w-full p-3 rounded text-white bg-gray-700">
         </div>
 
        <button type="submit" id="createTaskBtn" onclick="console.log('Create Task Clicked');" class="mt-4 w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded">
@@ -81,10 +81,12 @@
 
     </form>
 </div>
-<div class="container mx-auto p-1 bg-black text-white min-h-screen">
+<div class="max-w-5xl mx-auto">
     <h2 class="text-xl font-semibold mb-4">Task List</h2>
 
- <div class="overflow-x-auto">
+
+
+    <div class="overflow-x-auto">
         <table class="w-full border border-gray-600 text-center">
             <thead>
                 <tr class="bg-[#ff0003] text-white">
@@ -121,7 +123,7 @@
                             <input type="date" name="task_start_date" id="task_start_date-{{ $task->id }}" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-black task-start-date" data-task-id="{{ $task->id }}" />
                         </td>
 <td class="border border-gray-600 p-2">
-    <input type="number" name="no_of_days" id="no_of_days-{{ $task->id }}" value="{{ $task->no_of_days }}" class="w-full p-1 rounded text-black no-of-days-input" data-task-id="{{ $task->id }}" />
+    <input type="number" name="no_of_days" id="no_of_days-{{ $task->id }}" value="{{ $task->no_of_days }}" class="w-full p-1 rounded text-white no-of-days-input" data-task-id="{{ $task->id }}" />
 </td>
 
                         <td class="border border-gray-600 p-2">
@@ -388,39 +390,58 @@ document.querySelectorAll('.task-start-date').forEach(input => {
 
 
 //filter
-document.addEventListener("DOMContentLoaded", function () {
-    const filterAssignedTo = document.getElementById("filterAssignedTo");
-    const filterTaskTitle = document.getElementById("filterTaskTitle");
-    const filterStatus = document.getElementById("filterStatus");
-    const resetFilters = document.getElementById("resetFilters");
+$(document).ready(function () {
+    // Listen for the filter form submission
+    $('#taskFilterForm').on('submit', function (e) {
+        e.preventDefault(); // Prevent form submission
 
-    function filterTasks() {
-        const assignedToValue = filterAssignedTo.value.toLowerCase();
-        const taskTitleValue = filterTaskTitle.value.toLowerCase();
-        const statusValue = filterStatus.value.toLowerCase();
+        // Get the values from the filters
+        let taskTitle = $('#filter_task_title').val().toLowerCase();
+        let assignedTo = $('#filter_assigned_to').val();
+        let status = $('#filter_status').val();
 
-        document.querySelectorAll("#taskTable tbody tr").forEach(row => {
-            const assignedTo = row.querySelector("td:nth-child(4)")?.textContent.toLowerCase();
-            const taskTitle = row.querySelector("td:nth-child(2)")?.textContent.toLowerCase();
-            const status = row.querySelector("td:nth-child(5) select")?.value.toLowerCase();
+        // Loop through each table row and hide/show based on filter criteria
+        $('table tbody tr').each(function () {
+            let taskRow = $(this);
+            let taskTitleCell = taskRow.find('td:nth-child(2)').text().toLowerCase();
+            let assignedToCell = taskRow.find('td:nth-child(4)').text().toLowerCase();
+            let statusCell = taskRow.find('td:nth-child(5)').text().toLowerCase();
 
-            const assignedToMatch = !assignedToValue || assignedTo.includes(assignedToValue);
-            const taskTitleMatch = !taskTitleValue || taskTitle.includes(taskTitleValue);
-            const statusMatch = !statusValue || status === statusValue;
+            let showRow = true;
 
-            row.style.display = assignedToMatch && taskTitleMatch && statusMatch ? "" : "none";
+            // Check if the row matches the taskTitle filter
+            if (taskTitle && !taskTitleCell.includes(taskTitle)) {
+                showRow = false;
+            }
+
+            // Check if the row matches the assignedTo filter
+            if (assignedTo && !assignedToCell.includes(assignedTo)) {
+                showRow = false;
+            }
+
+            // Check if the row matches the status filter
+            if (status && !statusCell.includes(status)) {
+                showRow = false;
+            }
+
+            // Show or hide the row based on filter results
+            if (showRow) {
+                taskRow.show();
+            } else {
+                taskRow.hide();
+            }
         });
-    }
-
-    filterAssignedTo.addEventListener("change", filterTasks);
-    filterTaskTitle.addEventListener("input", filterTasks);
-    filterStatus.addEventListener("change", filterTasks);
-
-    resetFilters.addEventListener("click", () => {
-        filterAssignedTo.value = "";
-        filterTaskTitle.value = "";
-        filterStatus.value = "";
-        filterTasks();
+    });
+});
+$('#filter_task_title').on('keyup', function () {
+    let searchText = $(this).val().toLowerCase();
+    $('table tbody tr').each(function () {
+        let taskTitle = $(this).find('td:nth-child(2)').text().toLowerCase();
+        if (taskTitle.includes(searchText)) {
+            $(this).show();
+        } else {
+            $(this).hide();
+        }
     });
 });
 //update remarks
