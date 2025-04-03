@@ -12,7 +12,7 @@
 
 </head>
 <body class="bg-black text-white p-6">
-<div class="max-w-5xl mx-auto">
+<div class="container mx-auto p-6 bg-black text-white min-h-screen">
     <h1 class="text-3xl font-bold mb-6 text-center">Task Management</h1>
 
     <!-- Task Creation Form -->
@@ -32,9 +32,9 @@
         </div>
 
         <!-- Flex container for three fields -->
-        <div class="flex space-x-4 mb-4">
+        <div class="flex flex-wrap space-y-4 md:space-y-0 md:space-x-4 mb-4">
             <!-- Department -->
-            <div class="flex-1">
+            <div class="w-full md:flex-1">
                 <label class="block text-white mb-2">Department</label>
                 <select name="department_id" id="department_id" required class="w-full p-3 rounded text-black bg-gray-700">
                     <option value="">Select Department</option>
@@ -45,7 +45,7 @@
             </div>
 
             <!-- Role -->
-            <div class="flex-1">
+            <div class="w-full md:flex-1">
                 <label class="block text-white mb-2">Role</label>
                 <select name="role_id" id="role_id" required class="w-full p-3 rounded text-black bg-gray-700">
                     <option value="">Select Role</option>
@@ -56,7 +56,7 @@
             </div>
 
             <!-- Assigned To -->
-            <div class="flex-1">
+            <div class="w-full md:flex-1">
                 <label class="block text-white mb-2">Assigned To</label>
                 <select name="assigned_to" id="assigned_to" required class="w-full p-3 rounded text-black bg-gray-700">
                     <option value="">Select Employee</option>
@@ -81,29 +81,34 @@
 
     </form>
 </div>
-<div class="bg-gray-800 p-4 rounded-lg">
+<div class="container mx-auto p-6 bg-black text-white min-h-screen">
     <h2 class="text-xl font-semibold mb-4">Task List</h2>
 
     <!-- Filter Form -->
-    <form id="taskFilterForm" class="mb-4 flex space-x-4">
-        <input type="text" id="filter_task_title" placeholder="Search by Task Title" class="w-1/3 p-2 rounded text-black bg-gray-700">
-        <select id="filter_assigned_to" class="w-1/3 p-2 rounded text-black bg-gray-700">
-            <option value="">Filter by Assigned To</option>
-            @foreach ($employees as $employee)
-                <option value="{{ strtolower($employee->full_name) }}">{{ $employee->full_name }}</option>
-            @endforeach
-        </select>
-        <select id="filter_status" class="w-1/3 p-2 rounded text-black bg-gray-700">
-            <option value="">Filter by Status</option>
-            <option value="pending">Pending</option>
-            <option value="started">Started</option>
-            <option value="completed">Completed</option>
-            <option value="review">Review</option>
-        </select>
-        <button type="submit" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded">Filter</button>
-    </form>
+<div class="flex flex-wrap items-center gap-4 mb-4 bg-gray-800 p-4 rounded">
+    <!-- Assigned To Filter -->
+    <select id="filterAssignedTo" class="p-2 rounded bg-gray-700 text-white">
+        <option value="">Filter by Assigned To</option>
+        @foreach($employees as $employee)
+            <option value="{{ $employee->email_id }}">{{ $employee->email_id }}</option>
+        @endforeach
+    </select>
 
-    <div class="overflow-x-auto">
+    <!-- Task Title Filter -->
+    <input type="text" id="filterTaskTitle" class="p-2 rounded bg-gray-700 text-white" placeholder="Filter by Task Title">
+
+    <!-- Status Filter -->
+    <select id="filterStatus" class="p-2 rounded bg-gray-700 text-white">
+        <option value="">Filter by Status</option>
+        <option value="Pending">Pending</option>
+        <option value="Started">Started</option>
+        <option value="Completed">Completed</option>
+        <option value="Review">Review</option>
+    </select>
+
+    <button id="resetFilters" class="p-2 bg-red-600 text-white rounded">Reset Filters</button>
+</div>
+ <div class="overflow-x-auto">
         <table class="w-full border border-gray-600 text-center">
             <thead>
                 <tr class="bg-[#ff0003] text-white">
@@ -407,58 +412,39 @@ document.querySelectorAll('.task-start-date').forEach(input => {
 
 
 //filter
-$(document).ready(function () {
-    // Listen for the filter form submission
-    $('#taskFilterForm').on('submit', function (e) {
-        e.preventDefault(); // Prevent form submission
+document.addEventListener("DOMContentLoaded", function () {
+    const filterAssignedTo = document.getElementById("filterAssignedTo");
+    const filterTaskTitle = document.getElementById("filterTaskTitle");
+    const filterStatus = document.getElementById("filterStatus");
+    const resetFilters = document.getElementById("resetFilters");
 
-        // Get the values from the filters
-        let taskTitle = $('#filter_task_title').val().toLowerCase();
-        let assignedTo = $('#filter_assigned_to').val();
-        let status = $('#filter_status').val();
+    function filterTasks() {
+        const assignedToValue = filterAssignedTo.value.toLowerCase();
+        const taskTitleValue = filterTaskTitle.value.toLowerCase();
+        const statusValue = filterStatus.value.toLowerCase();
 
-        // Loop through each table row and hide/show based on filter criteria
-        $('table tbody tr').each(function () {
-            let taskRow = $(this);
-            let taskTitleCell = taskRow.find('td:nth-child(2)').text().toLowerCase();
-            let assignedToCell = taskRow.find('td:nth-child(4)').text().toLowerCase();
-            let statusCell = taskRow.find('td:nth-child(5)').text().toLowerCase();
+        document.querySelectorAll("#taskTable tbody tr").forEach(row => {
+            const assignedTo = row.querySelector("td:nth-child(4)")?.textContent.toLowerCase();
+            const taskTitle = row.querySelector("td:nth-child(2)")?.textContent.toLowerCase();
+            const status = row.querySelector("td:nth-child(5) select")?.value.toLowerCase();
 
-            let showRow = true;
+            const assignedToMatch = !assignedToValue || assignedTo.includes(assignedToValue);
+            const taskTitleMatch = !taskTitleValue || taskTitle.includes(taskTitleValue);
+            const statusMatch = !statusValue || status === statusValue;
 
-            // Check if the row matches the taskTitle filter
-            if (taskTitle && !taskTitleCell.includes(taskTitle)) {
-                showRow = false;
-            }
-
-            // Check if the row matches the assignedTo filter
-            if (assignedTo && !assignedToCell.includes(assignedTo)) {
-                showRow = false;
-            }
-
-            // Check if the row matches the status filter
-            if (status && !statusCell.includes(status)) {
-                showRow = false;
-            }
-
-            // Show or hide the row based on filter results
-            if (showRow) {
-                taskRow.show();
-            } else {
-                taskRow.hide();
-            }
+            row.style.display = assignedToMatch && taskTitleMatch && statusMatch ? "" : "none";
         });
-    });
-});
-$('#filter_task_title').on('keyup', function () {
-    let searchText = $(this).val().toLowerCase();
-    $('table tbody tr').each(function () {
-        let taskTitle = $(this).find('td:nth-child(2)').text().toLowerCase();
-        if (taskTitle.includes(searchText)) {
-            $(this).show();
-        } else {
-            $(this).hide();
-        }
+    }
+
+    filterAssignedTo.addEventListener("change", filterTasks);
+    filterTaskTitle.addEventListener("input", filterTasks);
+    filterStatus.addEventListener("change", filterTasks);
+
+    resetFilters.addEventListener("click", () => {
+        filterAssignedTo.value = "";
+        filterTaskTitle.value = "";
+        filterStatus.value = "";
+        filterTasks();
     });
 });
 //update remarks

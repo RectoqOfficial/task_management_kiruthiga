@@ -62,7 +62,8 @@ Route::get('/admin/employees', [EmployeeController::class, 'index'])->name('admi
 Route::post('/admin/employees/add', [EmployeeController::class, 'addEmployee'])->name('admin.addEmployee');
 Route::get('/admin/employees/roles/{departmentId}', [EmployeeController::class, 'getRolesByDepartment'])->name('admin.getRolesByDepartment');
 Route::delete('/admin/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
-Route::get('/admin/employees/filter', [EmployeeController::class, 'filterEmployees'])->name('admin.filterEmployees');
+Route::get('/employees/filter', [EmployeeController::class, 'filterEmployees'])->name('employees.filter');
+
 Route::get('/employee/profile', [EmployeeController::class, 'profile'])->name('employee.profile');
 
 use App\Http\Controllers\TaskController;

@@ -9,7 +9,15 @@
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
  
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+    /* Change input background color */
+/* Change background color of the calendar popup */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
 
+
+</style>
 </head>
 @extends('layouts.app')
 
@@ -45,7 +53,7 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
         <div>
             <label class="block">Contact</label>
             <input type="text" name="contact" class="w-full p-2 rounded bg-gray-700 text-white" required>
@@ -100,45 +108,40 @@
 
     <hr class="my-6 border-gray-600">
     
+   <h2 class="text-2xl font-bold mb-4">Table Details </h2>
     <!-- Filters Section -->
-    <div class="mb-6">
-        <div class="flex gap-4">
-            <!-- Email Filter -->
-            <div>
-                <label for="filterEmail" class="block text-sm">Email</label>
-                <input type="text" id="filterEmail" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Search by email">
-            </div>
+    <div class="flex flex-wrap gap-4 p-4 bg-gray-800 text-white">
+        <!-- Email Search -->
+        <div class="w-full md:w-auto">
+            <input type="text" id="searchEmail" placeholder="Search by Email" class="w-full p-2 text-black border rounded">
+        </div>
 
-            <!-- Department Filter -->
-            <div>
-                <label for="filterDepartment" class="block text-sm">Department</label>
-                <select id="filterDepartment" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
-                    <option value="">Select Department</option>
-                    @foreach($departments as $department)
-                        <option value="{{ $department->id }}">{{ $department->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+        <!-- Department Filter -->
+        <div class="w-full md:w-auto">
+            <select id="filterDepartment" class="w-full p-2 text-white border rounded">
+                <option value="">Filter by Department</option>
+                @foreach($departments as $department)
+                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                @endforeach
+            </select>
+        </div>
 
-            <!-- Role Filter -->
-            <div>
-                <label for="filterRole" class="block text-sm">Role</label>
-                <select id="filterRole" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
-                    <option value="">Select Role</option>
-                    @foreach($roles as $role)
-                        <option value="{{ $role->id }}">{{ $role->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+        <!-- Role Filter -->
+        <div class="w-full md:w-auto">
+            <select id="filterRole" class="w-full p-2 text-white border rounded">
+                <option value="">Filter by Role</option>
+                @foreach($roles as $role)
+                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                @endforeach
+            </select>
+        </div>
 
-            <!-- Search Filter -->
-            <div>
-                <label for="searchEmployee" class="block text-sm">Search</label>
-                <input type="text" id="searchEmployee" class="w-full p-2 rounded bg-gray-700 text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" placeholder="Search by name">
-            </div>
+        <div class="w-full md:w-auto">
+            <button onclick="filterEmployees()" class="w-full px-4 py-2 bg-[#ff0003] hover:bg-red-700 text-white rounded ">
+                Search
+            </button>
         </div>
     </div>
-
 
     <!-- Employee Table -->
     <div class="overflow-x-auto">
@@ -298,77 +301,51 @@ function deleteEmployee(event, employeeId) {
 }
 
 // ///filter
-// $(document).ready(function () {
-//     // Event listener for filter changes
-//     $('#filterEmail, #filterDepartment, #filterRole, #searchEmployee').on('input change', function () {
-//         filterTable();
-//     });
+   function filterEmployees() {
+        let email = document.getElementById('searchEmail').value;
+        let departmentId = document.getElementById('filterDepartment').value;
+        let roleId = document.getElementById('filterRole').value;
 
-//     // Function to fetch and filter the employee table
-//     function filterTable() {
-//         var email = $('#filterEmail').val();
-//         var departmentId = $('#filterDepartment').val();
-//         var roleId = $('#filterRole').val();
-//         var search = $('#searchEmployee').val();
+        fetch(`{{ route('employees.filter') }}?email=${email}&department_id=${departmentId}&role_id=${roleId}`)
+            .then(response => response.json())
+            .then(data => {
+                let tbody = document.querySelector("#employeeList tbody");
+                tbody.innerHTML = "";
 
-//         // Send AJAX request with filter parameters
-//         $.ajax({
-//             url: "/admin/employees/filter", // Update with the appropriate route
-//             method: "GET",
-//             data: {
-//                 email: email,
-//                 department_id: departmentId,
-//                 role_id: roleId,
-//                 search: search
-//             },
-//             success: function (response) {
-//                 // Clear current table body
-//                 $('#employeeList tbody').empty();
+                data.employees.forEach(employee => {
+                    tbody.innerHTML += `
+                        <tr class="bg-gray-700 hover:bg-gray-600">
+                            <td class="p-3 border">${employee.id}</td>
+                            <td class="p-3 border">${employee.full_name}</td>
+                            <td class="p-3 border">${employee.gender}</td>
+                            <td class="p-3 border">${employee.date_of_joining}</td>
+                            <td class="p-3 border">${employee.contact}</td>
+                            <td class="p-3 border">${employee.email_id}</td>
+                            <td class="p-3 border">${employee.department.name}</td>
+                            <td class="p-3 border">${employee.role.name}</td>
+                            <td class="p-3 border">${employee.jobtype}</td>
+                            <td class="p-3 border text-center">
+                                <button onclick="deleteEmployee(event, ${employee.id})" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+    }
+    //eye icon
+    // Toggle password visibility
+ function togglePassword() {
+    const passwordField = document.getElementById("password");
+    const eyeIcon = document.getElementById("eyeIcon");
 
-//                 // Add the filtered employees to the table
-//                 response.employees.forEach(function(employee) {
-//                     var newRow = `
-//                         <tr class="bg-gray-700 hover:bg-gray-600">
-//                             <td class="p-3 border">${employee.id}</td>
-//                             <td class="p-3 border">${employee.full_name}</td>
-//                             <td class="p-3 border">${employee.gender}</td>
-//                             <td class="p-3 border">${employee.date_of_joining}</td>
-//                             <td class="p-3 border">${employee.contact}</td>
-//                             <td class="p-3 border">${employee.email_id}</td>
-//                             <td class="p-3 border">${employee.department.name}</td>
-//                             <td class="p-3 border">${employee.role.name}</td>
-//                             <td class="p-3 border">${employee.jobtype}</td>
-//                             <td class="p-3 border text-center">
-//                                 <button onclick="deleteEmployee(event, ${employee.id})" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-//                                     Delete
-//                                 </button>
-//                             </td>
-//                         </tr>
-//                     `;
-//                     $('#employeeList tbody').append(newRow);
-//                 });
-//             },
-//             error: function (xhr, status, error) {
-//                 console.error("Error fetching filtered data:", error);
-//             }
-//         });
-//     }
-// });
-//   /* Target the calendar icon specifically and make it white */
-//     input[type="date"]::-webkit-calendar-picker-indicator {
-//         filter: invert(1);
-//     }
-//     //eye icon
-//     // Toggle password visibility
-//     const togglePassword = document.getElementById('togglePassword');
-//     const passwordInput = document.getElementById('password');
-
-//     togglePassword.addEventListener('click', function() {
-//         // Toggle the input type between password and text
-//         const type = passwordInput.type === 'password' ? 'text' : 'password';
-//         passwordInput.type = type;
-
-//         // Toggle eye icon (open/close)
-//         this.innerHTML = type === 'password' ? '<i class="fa fa-eye"></i>' : '<i class="fa fa-eye-slash"></i>';
-//     });
+    if (passwordField.type === "password") {
+        passwordField.type = "text"; // Show Password
+        eyeIcon.innerHTML = `<path d="M288 144c-79.5..."></path>`; // Open Eye
+    } else {
+        passwordField.type = "password"; // Hide Password
+        eyeIcon.innerHTML = `<path d="M572.52 246.6c..."></path>`; // Closed Eye
+    }
+}
 </script>

@@ -13,9 +13,9 @@
         <h1 class="text-2xl font-bold mb-4 text-center">Manage Departments & Roles</h1>
 
         <!-- Department Form -->
-        <form id="departmentForm" method="POST" class="mb-4 bg-gray-800 p-4 rounded-md w-full flex items-center space-x-2">
+        <form id="departmentForm" method="POST" class="mb-4 bg-gray-800 p-4 rounded-md w-full flex items-center space-x-2 hover:shadow-lg transition-shadow duration-300">
             @csrf
-            <input type="text" id="departmentName" name="name" placeholder="Enter Department Name" required class="flex-1 p-2 rounded text-black w-3/4">
+            <input type="text" id="departmentName" name="name" placeholder="Enter Department Name" required class="flex-1 p-2 rounded text-black w-3/4 hover:outline hover:outline-2 hover:outline-[#ff0003] transition-colors duration-300">
             <button type="button" onclick="addDepartment()" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-sm">
             <span>Add</span>
             </button>
@@ -24,56 +24,56 @@
         <!-- Display Departments -->
         <div id="department-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @foreach ($departments as $department)
-                <div class="bg-gray-800 p-4 rounded-md department-item hover:bg-gray-700 transition duration-200 flex flex-col items-center text-center w-full" id="department-{{ $department->id }}">
-                    
-                    <div class="flex justify-between items-center w-full mb-2">
-                        <h2 class="text-lg font-semibold department-name">{{ $department->name }}</h2>
-                        <div class="space-x-2 flex">
-                            <img src="/build/assets/img/update.png" 
-                                 onclick="toggleEditForm('dept-edit-{{ $department->id }}')" 
-                                 class="w-5 h-5 cursor-pointer"
-                                 style="filter: invert(48%) sepia(94%) saturate(2977%) hue-rotate(102deg) brightness(93%) contrast(89%);">
+            <div class="bg-gray-800 p-4 rounded-md department-item hover:bg-gray-700 hover:shadow-lg transition duration-300 flex flex-col items-center text-center w-full" id="department-{{ $department->id }}">
+                
+                <div class="flex justify-between items-center w-full mb-2">
+                <h2 class="text-lg font-semibold department-name">{{ $department->name }}</h2>
+                <div class="space-x-2 flex">
+                    <img src="/build/assets/img/update.png" 
+                     onclick="toggleEditForm('dept-edit-{{ $department->id }}')" 
+                     class="w-5 h-5 cursor-pointer"
+                     style="filter: invert(48%) sepia(94%) saturate(2977%) hue-rotate(102deg) brightness(93%) contrast(89%);">
 
-                            <img src="/build/assets/img/delete.png" 
-                                 onclick="deleteDepartment({{ $department->id }})" 
-                                 class="w-5 h-5 cursor-pointer" 
-                                 style="filter: invert(19%) sepia(88%) saturate(7482%) hue-rotate(358deg) brightness(102%) contrast(119%);">
-                        </div>
+                    <img src="/build/assets/img/delete.png" 
+                     onclick="deleteDepartment({{ $department->id }})" 
+                     class="w-5 h-5 cursor-pointer" 
+                     style="filter: invert(19%) sepia(88%) saturate(7482%) hue-rotate(358deg) brightness(102%) contrast(119%);">
+                </div>
+                </div>
+
+                <!-- Role Form -->
+                <form class="role-form mb-2 w-full flex flex-col items-center space-y-2 hover:shadow-lg transition-shadow duration-300" data-department-id="{{ $department->id }}">
+                @csrf
+                <input type="hidden" name="department_id" value="{{ $department->id }}">
+                <input type="text" name="name" placeholder="Enter Role Name" required class="w-full p-2 rounded text-black hover:outline hover:outline-2 hover:outline-[#ff0003] transition-colors duration-300">
+                <button type="submit" class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm w-full">
+                    <span>Add</span>
+                </button>
+                </form>
+
+                <!-- Display Roles -->
+                <ul class="space-y-2 w-full text-center" id="roles-{{ $department->id }}">
+                @foreach ($department->roles as $role)
+                    <li id="role-{{ $role->id }}" class="text-gray-300 flex justify-between items-center bg-gray-900 p-2 rounded-md hover:bg-gray-800 hover:shadow-lg transition duration-300">
+                    <span class="role-name flex-1 text-center">{{ $role->name }}</span>
+                    <div class="space-x-2 flex">
+                        <img src="/build/assets/img/update.png" 
+                         onclick="toggleEditForm('role-edit-{{ $role->id }}')" 
+                         class="w-5 h-5 cursor-pointer"
+                         style="filter: invert(48%) sepia(94%) saturate(2977%) hue-rotate(102deg) brightness(93%) contrast(89%);">
+
+                        <img src="/build/assets/img/delete.png" 
+                         onclick="deleteRole({{ $role->id }})" 
+                         class="w-5 h-5 cursor-pointer" 
+                         style="filter: invert(18%) sepia(86%) saturate(7482%) hue-rotate(358deg) brightness(102%) contrast(119%);">
                     </div>
+                    </li>
 
-                    <!-- Role Form -->
-                    <form class="role-form mb-2 w-full flex flex-col items-center space-y-2" data-department-id="{{ $department->id }}">
+                    <!-- Hidden Edit Form for Role -->
+                    <div id="role-edit-{{ $role->id }}" class="hidden mt-2 w-full">
+                    <form onsubmit="event.preventDefault(); updateRole({{ $role->id }});" class="w-full">
                         @csrf
-                        <input type="hidden" name="department_id" value="{{ $department->id }}">
-                        <input type="text" name="name" placeholder="Enter Role Name" required class="w-full p-2 rounded text-black">
-                        <button type="submit" class="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm w-full">
-                            <span>Add</span>
-                        </button>
-                    </form>
-
-                    <!-- Display Roles -->
-                    <ul class="space-y-2 w-full text-center" id="roles-{{ $department->id }}">
-                        @foreach ($department->roles as $role)
-                            <li id="role-{{ $role->id }}" class="text-gray-300 flex justify-between items-center bg-gray-900 p-2 rounded-md hover:bg-gray-800 transition duration-200">
-                                <span class="role-name flex-1 text-center">{{ $role->name }}</span>
-                                <div class="space-x-2 flex">
-                                    <img src="/build/assets/img/update.png" 
-                                         onclick="toggleEditForm('role-edit-{{ $role->id }}')" 
-                                         class="w-5 h-5 cursor-pointer"
-                                         style="filter: invert(48%) sepia(94%) saturate(2977%) hue-rotate(102deg) brightness(93%) contrast(89%);">
-
-                                    <img src="/build/assets/img/delete.png" 
-                                         onclick="deleteRole({{ $role->id }})" 
-                                         class="w-5 h-5 cursor-pointer" 
-                                         style="filter: invert(18%) sepia(86%) saturate(7482%) hue-rotate(358deg) brightness(102%) contrast(119%);">
-                                </div>
-                            </li>
-
-                            <!-- Hidden Edit Form for Role -->
-                            <div id="role-edit-{{ $role->id }}" class="hidden mt-2 w-full">
-                                <form onsubmit="event.preventDefault(); updateRole({{ $role->id }});" class="w-full">
-                                    @csrf
-                                    <input type="text" id="role-name-{{ $role->id }}" name="name" value="{{ $role->name }}" class="w-full p-2 rounded text-black">
+                        <input type="text" id="role-name-{{ $role->id }}" name="name" value="{{ $role->name }}" class="w-full p-2 rounded text-black hover:outline hover:outline-2 hover:outline-[#ff0003] transition-colors duration-300">
                                     <button type="submit" class="mt-2 w-full px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm">
                                         <img src="/build/assets/img/save.png" alt="Save" class="inline w-4 h-4 mr-1">
                                         <span>Save</span>
@@ -144,7 +144,7 @@ function addDepartment() {
                     @csrf
                     <input type="hidden" name="department_id" value="${response.department.id}">
                     <input type="text" name="name" placeholder="Enter Role Name" required class="w-full p-2 rounded text-black">
-                    <button type="submit" class="mt-2 w-full px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm">Add Role</button>
+                    <button type="submit" class="mt-2 w-full px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm">Add</button>
                 </form>
                 <ul class="space-y-1 role-list" id="roles-${response.department.id}"></ul>
             </div>

@@ -20,44 +20,36 @@
 <body class="bg-black flex h-screen ">
 {{ session('user_role') }}
 
-    <!-- Sidebar -->
-  <div id="sidebar" class="w-64 bg-black h-screen p-4 hidden md:block">
-        <a class="text-lg font-bold text-white block text-center mb-6" href="#">ADMIN PANEL</a>
-        <ul>
-     <!-- Sidebar -->
-
-    <li class="px-4 py-3">
-                <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDepartmentDetails(event)">
-                    <span class="icon-container w-5 h-5"></span>
-                    <span class="ml-4">Department & Role Details</span>
-                </a>
-            </li>
-    <li class="px-4 py-3">
-        <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeDetails(event)" data-icon="employee">
-            <span class="icon-container w-5 h-5"></span>
-            <span class="ml-4">Employee Details</span>
-        </a>
-    </li>
-
-    <li class="px-4 py-3">
-        <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadTaskDetails(event)" data-icon="task">
-            <span class="icon-container w-5 h-5"></span>
-            <span class="ml-4">Task Details</span>
-        </a>
-    </li>
-
-    <li class="px-4 py-3">
-        <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadScoreDetails(event)" data-icon="score">
-            <span class="icon-container w-5 h-5"></span>
-            <span class="ml-4">Scoreboard</span>
-        </a>
-    </li>
-
-
-
-             <!-- Logout Button -->
-            <li class="px-4 py-3">
-                <a href="{{ route('logout') }}" 
+<!-- Sidebar -->
+<div id="sidebar" class="w-64 bg-black h-screen p-4 hidden md:block">
+    <a class="text-lg font-bold text-white block text-center mb-6" href="#">ADMIN PANEL</a>
+    <ul class="text-sm"> <!-- Reduced font size -->
+        <li class="px-4 py-3">
+            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDepartmentDetails(event)">
+                <span class="icon-container w-5 h-5"></span>
+                <span class="ml-4">Department & Role Details</span>
+            </a>
+        </li>
+        <li class="px-4 py-3">
+            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeDetails(event)" data-icon="employee">
+                <span class="icon-container w-5 h-5"></span>
+                <span class="ml-4">Employee Details</span>
+            </a>
+        </li>
+        <li class="px-4 py-3">
+            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadTaskDetails(event)" data-icon="task">
+                <span class="icon-container w-5 h-5"></span>
+                <span class="ml-4">Task Details</span>
+            </a>
+        </li>
+        <li class="px-4 py-3">
+            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadScoreDetails(event)" data-icon="score">
+                <span class="icon-container w-5 h-5"></span>
+                <span class="ml-4">Scoreboard</span>
+            </a>
+        </li>
+        <li class="px-4 py-3">
+            <a href="{{ route('logout') }}" 
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
                class="block text-center text-white bg-[#ff0003] px-4 py-2 rounded-md hover:bg-red-700 
                       transition duration-300 ease-in-out transform hover:scale-105 shadow-md 
@@ -67,25 +59,25 @@
                 </svg>
                 Logout
             </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                    @csrf
-                </form>
-            </li>
-        </ul>
-    </div>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                @csrf
+            </form>
+        </li>
+    </ul>
+</div>
 
-    <!-- Mobile Sidebar Toggle -->
-    <div class="absolute top-4 left-4 md:hidden">
-        <button onclick="toggleSidebar()" class="bg-[#ff0003] text-white p-2 rounded-md">
-            ☰ Menu
-        </button>
-    </div>
+<!-- Mobile Sidebar Toggle -->
+<div class="absolute top-4 left-4 md:hidden">
+    <button onclick="toggleSidebar()" class="bg-[#ff0003] text-white p-2 rounded-md">
+        ☰ Menu
+    </button>
+</div>
 
- <!-- Mobile Sidebar -->
+<!-- Mobile Sidebar -->
 <div id="mobileSidebar" class="fixed inset-0 bg-black w-64 p-4 transform -translate-x-full transition-transform duration-300 md:hidden">
     <button onclick="toggleSidebar()" class="absolute top-4 right-4 text-white text-2xl">×</button>
     <a class="text-lg font-bold text-white block text-center mb-6" href="#">ADMIN PANEL</a>
-    <ul>
+    <ul class="text-sm"> <!-- Reduced font size -->
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDepartmentDetails(event)">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -94,16 +86,14 @@
                 <span class="ml-4">Department & Role Details</span>
             </a>
         </li>
-
-       <li class="px-4 py-3">
-    <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeDetails(event)">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2-2-2"></path>
-        </svg>
-        <span class="ml-4">Employee Details</span>
-    </a>
-</li>
-
+        <li class="px-4 py-3">
+            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeDetails(event)">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2-2-2"></path>
+                </svg>
+                <span class="ml-4">Employee Details</span>
+            </a>
+        </li>
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadTaskDetails(event)">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -112,7 +102,6 @@
                 <span class="ml-4">Task Details</span>
             </a>
         </li>
-
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadScoreDetails(event)">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -121,7 +110,6 @@
                 <span class="ml-4">Scoreboard</span>
             </a>
         </li>
-
         <li class="px-4 py-3">
             <a href="{{ route('logout') }}" 
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
