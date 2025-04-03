@@ -132,7 +132,7 @@
         <!-- Dynamic Content Area -->
         <div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[100vh] text-white overflow-auto">
                 @include('employee.dashboard_cards')
-            <p>Select an option from the sidebar.</p>
+            {{-- <p>Select an option from the sidebar.</p> --}}
         </div>
     </div>
 
