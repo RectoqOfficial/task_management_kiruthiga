@@ -71,7 +71,7 @@
     <!-- Mobile Sidebar Toggle -->
     <div class="absolute top-4 left-4 md:hidden">
         <button onclick="toggleSidebar()" class="bg-[#ff0003] text-white p-2 rounded-md">
-            ☰ Menu
+            ☰ 
         </button>
     </div>
 

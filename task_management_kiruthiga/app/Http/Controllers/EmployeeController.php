@@ -1,15 +1,17 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\Task;
+use Illuminate\Support\Facades\Log; // Import Log class
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Role;
+use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+
+
 class EmployeeController extends Controller
 {
-
      // Display employee list page
     public function index()
     {
@@ -25,6 +27,7 @@ class EmployeeController extends Controller
 
 public function addEmployee(Request $request)
 {
+       Log::info('Received request:', $request->all());
     $request->validate([
         'full_name' => 'required|string|max:255',
         'gender' => 'required|string|max:255',
@@ -114,6 +117,26 @@ public function myTasks()
     return view('employee.tasks', compact('futureTasks', 'pastTasks'));
 }
 
+public function dashboard()
+{
+    // Check if the employee is authenticated
+    if (!Auth::guard('employee')->check()) {
+        return redirect()->route('employee.login')->with('error', 'Please log in to view your dashboard.');
+    }
+
+    // Get the logged-in employee
+    $employee = Auth::guard('employee')->user();
+
+    // Fetch task counts based on assigned_to field
+    return view('employee.dashboard', [
+        'totalTasks' => Task::where('assigned_to', $employee->id)->count(),
+        'pendingTasks' => Task::where('assigned_to', $employee->id)->where('status', 'pending')->count(),
+        'startedTasks' => Task::where('assigned_to', $employee->id)->where('status', 'started')->count(),
+        'completedTasks' => Task::where('assigned_to', $employee->id)->where('status', 'completed')->count(),
+        'reviewTasks' => Task::where('assigned_to', $employee->id)->where('status', 'review')->count(),
+    ]);
+}
+
 
 
 // //filter
@@ -138,26 +161,12 @@ public function filterEmployees(Request $request)
     return response()->json(['employees' => $employees]);
 }
 
-public function dashboard()
-{
-    // Check if the employee is authenticated
-    if (!Auth::guard('employee')->check()) {
-        return redirect()->route('employee.login')->with('error', 'Please log in to view your dashboard.');
-    }
-
-    // Get the logged-in employee
-    $employee = Auth::guard('employee')->user();
-
-    // Fetch task counts based on assigned_to field
-    return view('employee.dashboard', [
-        'totalTasks' => Task::where('assigned_to', $employee->id)->count(),
-        'pendingTasks' => Task::where('assigned_to', $employee->id)->where('status', 'pending')->count(),
-        'startedTasks' => Task::where('assigned_to', $employee->id)->where('status', 'started')->count(),
-        'completedTasks' => Task::where('assigned_to', $employee->id)->where('status', 'completed')->count(),
-        'reviewTasks' => Task::where('assigned_to', $employee->id)->where('status', 'review')->count(),
-    ]);
-}
-
 
 
 }
+
+
+
+
+
+
