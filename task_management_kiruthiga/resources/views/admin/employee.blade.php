@@ -118,20 +118,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
         <!-- Department Filter -->
         <div class="w-full md:w-auto">
-            <select id="filterDepartment" class="w-full p-2 text-black border rounded">
-                <option value="">Filter by Department</option>
+            <select id="filterDepartment" class="w-full p-2 text-white border rounded">
+                <option value="" class="text-black">Filter by Department</option>
                 @foreach($departments as $department)
-                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    <option value="{{ $department->id }}" class="text-black">{{ $department->name }}</option>
                 @endforeach
             </select>
         </div>
 
         <!-- Role Filter -->
         <div class="w-full md:w-auto">
-            <select id="filterRole" class="w-full p-2 text-black border rounded">
-                <option value="">Filter by Role</option>
+            <select id="filterRole" class="w-full p-2 text-white border rounded">
+                <option value="" class="text-black">Filter by Role</option>
                 @foreach($roles as $role)
-                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    <option value="{{ $role->id }}" class="text-black">{{ $role->name }}</option>
                 @endforeach
             </select>
         </div>
