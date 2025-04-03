@@ -10,8 +10,9 @@ class Score extends Model
     use HasFactory;
     
     protected $fillable = ['task_id', 'overdue_count', 'redo_count', 'score'];
-  public function task()
+ 
+    public function task()
     {
-        return $this->belongsTo(Task::class, 'task_id');
+        return $this->belongsTo(Task::class, 'task_id', 'id');
     }
 }

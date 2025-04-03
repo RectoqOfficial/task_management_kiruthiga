@@ -8,6 +8,7 @@ use App\Models\Score;
 use App\Models\Department;
 use App\Models\Role;
 use App\Models\Employee;
+use Illuminate\Support\Facades\Log; // Import for logging
 class Task extends Model
 {
     use HasFactory;
@@ -31,26 +32,35 @@ class Task extends Model
         return $this->belongsTo(Employee::class, 'assigned_to');
     }
 
-    public function score()
-{
-    return $this->hasOne(Score::class, 'task_id');
-}
- // Automatically create a score entry when a task is created
-  protected static function booted()
-{
-    static::created(function ($task) {
-        try {
-            Score::create([
-                'task_id' => $task->id,
-                'redo_count' => 0,
-                'overdue_count' => 0,
-                'score' => 100,
-            ]);
-            \Log::info("Score created for Task ID: " . $task->id);
-        } catch (\Exception $e) {
-            \Log::error("Failed to create score for Task ID: " . $task->id . " | Error: " . $e->getMessage());
+ public function score()
+    {
+        return $this->hasOne(Score::class, 'task_id', 'id');
+    }
+      public function calculateOverdue()
+    {
+        if ($this->status != 'Completed' && now()->greaterThan($this->deadline)) {
+            $this->overdue_count += 1;
+            $this->save();
         }
-    });
-}
+    }
+ // Automatically create a score entry when a task is created
+ protected static function booted()
+    {
+        static::created(function ($task) {
+            try {
+                Score::firstOrCreate(
+                    ['task_id' => $task->id], // Avoid duplicate scores
+                    [
+                        'redo_count' => 0,
+                        'overdue_count' => 0,
+                        'score' => 100,
+                    ]
+                );
+                Log::info("✅ Score created for Task ID: " . $task->id);
+            } catch (\Exception $e) {
+                Log::error("❌ Failed to create score for Task ID: " . $task->id . " | Error: " . $e->getMessage());
+            }
+        });
+    }
 
 }

@@ -95,6 +95,7 @@
                     <th class="border border-gray-600 p-2">Description</th>
                     <th class="border border-gray-600 p-2">Assigned To</th>
                     <th class="border border-gray-600 p-2">Status</th>
+                     <th class="border border-gray-600 p-2">Redo Count</th>
                     <th class="border border-gray-600 p-2">Task Create Date</th>
                     <th class="border border-gray-600 p-2">Task Start Date</th>
                     <th class="border border-gray-600 p-2">No. of Days</th>
@@ -118,6 +119,19 @@
                                 <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
                             </select>
                         </td>
+                           <!-- Redo Count Column -->
+            <td class="border border-gray-600 p-2 flex flex-col items-center space-y-2">
+                <input type="number" id="redo-count-{{ $task->id }}" value="{{ $task->redo_count ?? 0 }}" class="w-16 p-1 text-black text-center rounded">
+                <button class="px-2 py-1 bg-yellow-500 text-black rounded update-redo-btn" data-task-id="{{ $task->id }}">
+                    Update
+                </button>
+                @if ($task->status == 'Review')
+                    <button class="px-2 py-1 bg-red-600 text-white rounded redo-btn" data-task-id="{{ $task->id }}">
+                        Redo
+                    </button>
+                @endif
+            </td>
+
                         <td class="border border-gray-600 p-2">{{ $task->task_create_date }}</td>
                         <td class="border border-gray-600 p-2">
                             <input type="date" name="task_start_date" id="task_start_date-{{ $task->id }}" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-black task-start-date" data-task-id="{{ $task->id }}" />
@@ -127,7 +141,7 @@
 </td>
 
                         <td class="border border-gray-600 p-2">
-                            <input type="date" name="deadline" id="deadline-{{ $task->id }}" value="{{ $task->deadline }}" readonly class="w-full p-1 rounded text-black bg-gray-700 task-deadline" data-task-id="{{ $task->id }}" />
+                            <input type="date" name="deadline" id="deadline-{{ $task->id }}" value="{{ $task->deadline }}" readonly class="w-full p-1 rounded text-white bg-gray-700 task-deadline" data-task-id="{{ $task->id }}" />
                         </td>
 <td class="border border-gray-600 p-2">
     <textarea class="w-full p-1 rounded text-black remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
@@ -470,6 +484,29 @@ document.querySelectorAll('.save-remark-btn').forEach(button => {
         .catch(error => console.error('Error:', error));
     });
 });
+//redo count
+   $(document).on("click", ".update-redo-btn", function () {
+        var taskId = $(this).data("task-id");
+
+        $.ajax({
+            url: "/tasks/update-redo/" + taskId,
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert("Redo count updated!");
+                    location.reload(); // Refresh scoreboard
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert("Failed to update redo count.");
+            }
+        });
+    });
 
     </script>
 </body>

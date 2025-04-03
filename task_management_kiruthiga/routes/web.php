@@ -11,6 +11,9 @@ use App\Http\Controllers\AuthController;
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// Employee Authentication Routes
+Route::get('/employee/login', [AuthController::class, 'showLogin'])->name('employee.login');
+Route::post('/employee/login', [AuthController::class, 'login'])->name('employee.login.submit');
 
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\RoleController;
@@ -94,6 +97,12 @@ Route::post('/employee/task/update-start-date/{id}', [TaskController::class, 'up
 Route::delete('/employee/task/delete/{id}', [TaskController::class, 'deleteTask']);
 Route::post('/employee/task/update-deadline/{id}', [TaskController::class, 'updateDeadline']);
 Route::post('/tasks/{id}/update-remarks', [TaskController::class, 'updateRemarks'])->name('tasks.updateRemarks');
+
+Route::post('/tasks/update-redo/{taskId}', [TaskController::class, 'updateRedoCount'])->name('update.redo');
+Route::post('/tasks/update-overdue', [TaskController::class, 'updateOverdueTasks']);
+
+
+
 
 
 

@@ -63,9 +63,10 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
-    protected function schedule(Schedule $schedule)
+protected function schedule(Schedule $schedule)
 {
-    $schedule->command('tasks:update-scores')->dailyAt('00:00'); // Runs every day at midnight
+    $schedule->call(function () {
+        app(TaskController::class)->updateOverdueTasks();
+    })->daily();
 }
-
 }

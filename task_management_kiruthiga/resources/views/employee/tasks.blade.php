@@ -12,12 +12,13 @@
                     <th class="border border-gray-600 p-2">Description</th>
                    
                     <th class="border border-gray-600 p-2">Status</th>
+                     <th class="border border-gray-600 p-2">Redo Count</th>
                     <th class="border border-gray-600 p-2">Task Create Date</th>
                     <th class="border border-gray-600 p-2">Task Start Date</th>
                     <th class="border border-gray-600 p-2">No. of Days</th>
                     <th class="border border-gray-600 p-2">Deadline</th>
                      <th class="border border-gray-600 p-2">Remarks</th>
-
+      
                 </tr>
             </thead>
             <tbody>
@@ -33,7 +34,11 @@
                                 <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }} class="text-black">Started</option>
                                 <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }} class="text-black">Completed</option>
                                 <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }} class="text-black">Review</option></select>
-                        </td>
+<td class="border border-gray-600 p-2 text-white">
+    {{ $task->redo_count ?? 0 }}
+</td>
+
+
                         <td class="border border-gray-600 p-2 text-white">{{ $task->task_create_date }}</td>
                         <td class="border border-gray-600 p-2">
                             <input type="date" name="task_start_date" id="task_start_date-{{ $task->id }}" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-white task-start-date" data-task-id="{{ $task->id }}" />
@@ -153,7 +158,29 @@ document.querySelectorAll('.save-remark-btn').forEach(button => {
         .catch(error => console.error('Error:', error));
     });
 });
+//redo count
+   $(document).on("click", ".update-redo-btn", function () {
+        var taskId = $(this).data("task-id");
 
+        $.ajax({
+            url: "/tasks/update-redo/" + taskId,
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert("Redo count updated!");
+                    location.reload(); // Refresh scoreboard
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert("Failed to update redo count.");
+            }
+        });
+    });
 
 </script>
 @endsection

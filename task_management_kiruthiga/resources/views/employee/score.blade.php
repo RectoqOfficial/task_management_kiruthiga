@@ -28,13 +28,64 @@
                             <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
                             <td class="border border-gray-600 p-2">{{ $task->status }}</td>
                             <td class="border border-gray-600 p-2">{{ $task->score->overdue_count ?? 0 }}</td>
-                            <td class="border border-gray-600 p-2">{{ $task->score->redo_count ?? 0 }}</td>
-                            <td class="border border-gray-600 p-2 font-bold">{{ $task->score->score ?? 'N/A' }}</td>
+                            <td class="border border-gray-600 p-2">{{ $task->redo_count ?? 0 }}</td>
+<td class="border border-gray-600 p-2 font-bold" id="score-{{ $task->id }}">
+    {{ $task->score->score ?? 0 }}
+</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
     </div>
+
+
+    <script>
+       $(document).on("click", ".update-redo-btn", function () {
+        var taskId = $(this).data("task-id");
+
+        $.ajax({
+            url: "/tasks/update-redo/" + taskId,
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert("Redo count updated!");
+                    location.reload(); // Refresh scoreboard
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert("Failed to update redo count.");
+            }
+        });
+    });
+
+    $(document).on("click", ".update-overdue-btn", function () {
+        var taskId = $(this).data("task-id");
+
+        $.ajax({
+            url: "/tasks/update-overdue/" + taskId,
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert("Overdue count updated!");
+                    location.reload(); // Refresh scoreboard
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert("Failed to update overdue count.");
+            }
+        });
+    });
+</script>
 </body>
 </html>
