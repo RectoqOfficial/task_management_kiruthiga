@@ -138,6 +138,26 @@ public function filterEmployees(Request $request)
     return response()->json(['employees' => $employees]);
 }
 
+public function dashboard()
+{
+    // Check if the employee is authenticated
+    if (!Auth::guard('employee')->check()) {
+        return redirect()->route('employee.login')->with('error', 'Please log in to view your dashboard.');
+    }
+
+    // Get the logged-in employee
+    $employee = Auth::guard('employee')->user();
+
+    // Fetch task counts based on assigned_to field
+    return view('employee.dashboard', [
+        'totalTasks' => Task::where('assigned_to', $employee->id)->count(),
+        'pendingTasks' => Task::where('assigned_to', $employee->id)->where('status', 'pending')->count(),
+        'startedTasks' => Task::where('assigned_to', $employee->id)->where('status', 'started')->count(),
+        'completedTasks' => Task::where('assigned_to', $employee->id)->where('status', 'completed')->count(),
+        'reviewTasks' => Task::where('assigned_to', $employee->id)->where('status', 'review')->count(),
+    ]);
+}
+
 
 
 }

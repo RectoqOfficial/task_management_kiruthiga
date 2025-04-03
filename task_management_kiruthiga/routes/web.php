@@ -93,6 +93,8 @@ Route::post('/employee/task/update-start-date/{id}', [TaskController::class, 'up
 Route::delete('/employee/task/delete/{id}', [TaskController::class, 'deleteTask']);
 Route::post('/employee/task/update-deadline/{id}', [TaskController::class, 'updateDeadline']);
 Route::post('/tasks/{id}/update-remarks', [TaskController::class, 'updateRemarks'])->name('tasks.updateRemarks');
+Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
+Route::get('/admin/dashboard', [AdminDashboardController::class, 'dashboard'])->name('admin.dashboard');
 
 
 use App\Http\Controllers\ScoreController;

@@ -1,36 +1,31 @@
-{{-- <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full p-4">
-    <!-- My Tasks Count Card -->
-    <div class="bg-gray-800 p-6 rounded-lg shadow-md text-center">
-        <h3 class="text-xl font-bold text-white">My Tasks</h3>
-        <p id="taskCount" class="text-3xl font-semibold text-red-400 mt-2">0</p>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Total Tasks -->
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+        <h3 class="text-lg font-semibold text-white">Total Tasks</h3>
+        <p class="text-3xl font-bold text-blue-400">{{ $totalTasks }}</p>
     </div>
 
-    <!-- Tasks in Progress Count Card -->
-    <div class="bg-gray-800 p-6 rounded-lg shadow-md text-center">
-        <h3 class="text-xl font-bold text-white">Tasks In Progress</h3>
-        <p id="progressTaskCount" class="text-3xl font-semibold text-yellow-400 mt-2">0</p>
+    <!-- Pending Tasks -->
+    <div class="bg-yellow-600 p-6 rounded-lg shadow-lg text-center">
+        <h3 class="text-lg font-semibold text-white">Pending Tasks</h3>
+        <p class="text-3xl font-bold">{{ $pendingTasks }}</p>
     </div>
 
-    <!-- My Score Card -->
-    <div class="bg-gray-800 p-6 rounded-lg shadow-md text-center">
-        <h3 class="text-xl font-bold text-white">My Score</h3>
-        <p id="taskScore" class="text-3xl font-semibold text-green-400 mt-2">0</p>
+    <!-- Started Tasks -->
+    <div class="bg-blue-600 p-6 rounded-lg shadow-lg text-center">
+        <h3 class="text-lg font-semibold text-white">Started Tasks</h3>
+        <p class="text-3xl font-bold">{{ $startedTasks }}</p>
+    </div>
+
+    <!-- Completed Tasks -->
+    <div class="bg-green-600 p-6 rounded-lg shadow-lg text-center">
+        <h3 class="text-lg font-semibold text-white">Completed Tasks</h3>
+        <p class="text-3xl font-bold">{{ $completedTasks }}</p>
+    </div>
+
+    <!-- Review Tasks -->
+    <div class="bg-purple-600 p-6 rounded-lg shadow-lg text-center">
+        <h3 class="text-lg font-semibold text-white">Tasks in Review</h3>
+        <p class="text-3xl font-bold">{{ $reviewTasks }}</p>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $.ajax({
-            url: "/employee/task-stats",
-            type: "GET",
-            success: function (response) {
-                $("#taskCount").text(response.taskCount);
-                $("#progressTaskCount").text(response.progressTaskCount);
-                $("#taskScore").text(response.taskScore);
-            },
-            error: function (xhr) {
-                console.error("Error fetching task stats:", xhr.responseText);
-            }
-        });
-    });
-</script>
-  @include('employee.dashboard_cards') --}}

@@ -23,7 +23,7 @@
 <!-- Sidebar -->
 <div id="sidebar" class="w-64 bg-black h-screen p-4 hidden md:block">
     <a class="text-lg font-bold text-white block text-center mb-6" href="#">ADMIN PANEL</a>
-    <ul class="text-sm"> <!-- Reduced font size -->
+    <ul class="text-sm"> <!-- Reduced font size -->      
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDepartmentDetails(event)">
                 <span class="icon-container w-5 h-5"></span>
@@ -77,8 +77,8 @@
 <div id="mobileSidebar" class="fixed inset-0 bg-black w-64 p-4 transform -translate-x-full transition-transform duration-300 md:hidden">
     <button onclick="toggleSidebar()" class="absolute top-4 right-4 text-white text-2xl">×</button>
     <a class="text-lg font-bold text-white block text-center mb-6" href="#">ADMIN PANEL</a>
-    <ul class="text-sm"> <!-- Reduced font size -->
-        <li class="px-4 py-3">
+    <ul class="text-sm"> <!-- Reduced font size -->  
+       <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDepartmentDetails(event)">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
@@ -86,6 +86,7 @@
                 <span class="ml-4">Department & Role Details</span>
             </a>
         </li>
+        
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeDetails(event)">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -135,9 +136,44 @@
         <p class="mt-2 text-gray-400 text-center">Manage tasks and employees efficiently.</p>
 
    <!-- ========== Start Section ========== -->
-     <div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[100vh] text-white overflow-auto">
-         
+    
+        <!-- ========== Start Section ========== -->
+<div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[100vh] text-white overflow-auto">
+    <!-- Task Count Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Total Tasks -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-lg font-semibold text-white">Total Tasks</h3>
+            <p class="text-3xl font-bold text-blue-400">{{ $totalTasks }}</p>
         </div>
+
+        <!-- Pending Tasks -->
+        <div class="bg-yellow-600 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-lg font-semibold text-white">Pending Tasks</h3>
+            <p class="text-3xl font-bold">{{ $pendingTasks }}</p>
+        </div>
+
+        <!-- Started Tasks -->
+        <div class="bg-blue-600 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-lg font-semibold text-white">Started Tasks</h3>
+            <p class="text-3xl font-bold">{{ $startedTasks }}</p>
+        </div>
+
+        <!-- Completed Tasks -->
+        <div class="bg-green-600 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-lg font-semibold text-white">Completed Tasks</h3>
+            <p class="text-3xl font-bold">{{ $completedTasks }}</p>
+        </div>
+
+        <!-- Review Tasks -->
+        <div class="bg-purple-600 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-lg font-semibold text-white">Tasks in Review</h3>
+            <p class="text-3xl font-bold">{{ $reviewTasks }}</p>
+        </div>
+    </div>
+</div>
+<!-- ========== End Section ========== -->
+
    <!-- ========== End Section ========== -->
    
         
