@@ -20,12 +20,12 @@
     <div id="sidebar" class="w-full md:w-64 bg-black h-auto md:h-screen p-4 hidden md:block">
         <a class="text-lg font-bold text-white block text-center mb-6" href="#">EMPLOYEE PANEL</a>
         <ul>
-            <li class="px-4 py-3">
-                <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDashboard(event)">
-                    <span class="icon-container w-5 h-5"></span>
-                    <span class="ml-4">Dashboard</span>
-                </a>
-            </li>
+ <li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDashboard(event)">
+        <span class="icon-container w-5 h-5"></span>
+        <span class="ml-4">Dashboard</span>
+    </a>
+</li>
 
             <li class="px-4 py-3">
     <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyTasks(event)">
@@ -131,8 +131,8 @@
 
         <!-- Dynamic Content Area -->
         <div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[100vh] text-white overflow-auto">
-                @include('employee.dashboard_cards')
-            {{-- <p>Select an option from the sidebar.</p> --}}
+              
+            <p>Select an option from the sidebar.</p>
         </div>
     </div>
 
@@ -169,11 +169,7 @@ document.querySelectorAll("#mobileSidebar ul li a").forEach(item => {
             event.preventDefault();
             $("#contentArea").html("<h2 class='text-xl'>Employee Dashboard</h2><p>Dashboard content goes here.</p>");
         }
-// function loadMyTasks(event) {
-//     event.preventDefault(); // Prevent page reload
-//   $("#contentArea").html("<h2 class='text-xl'>My Task</h2><p>Your task details.</p>");
-    
-// }
+
 function loadMyTasks(event) {
     event.preventDefault(); // Prevent full page reload
 

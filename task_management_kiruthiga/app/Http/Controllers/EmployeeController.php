@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers;
-
+use App\Models\Task;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Role;
@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 class EmployeeController extends Controller
 {
+
      // Display employee list page
     public function index()
     {

@@ -28,7 +28,7 @@
         <!-- Description -->
         <div class="mb-4">
             <label class="block text-white mb-2">Description</label>
-            <textarea name="description" required class="w-full p-3 rounded text-black bg-gray-700"></textarea>
+            <textarea name="description" required class="w-full p-3 rounded text-white bg-gray-700"></textarea>
         </div>
 
         <!-- Flex container for three fields -->
@@ -81,7 +81,7 @@
 
     </form>
 </div>
-<div class="container mx-auto p-6 bg-black text-white min-h-screen">
+<div class="container mx-auto p-1 bg-black text-white min-h-screen">
     <h2 class="text-xl font-semibold mb-4">Task List</h2>
 
  <div class="overflow-x-auto">

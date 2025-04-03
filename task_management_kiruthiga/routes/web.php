@@ -66,6 +66,9 @@ Route::get('/employees/filter', [EmployeeController::class, 'filterEmployees'])-
 
 Route::get('/employee/profile', [EmployeeController::class, 'profile'])->name('employee.profile');
 
+Route::get('/employee/task-stats', [EmployeeController::class, 'getEmployeeTaskStats']);
+
+
 use App\Http\Controllers\TaskController;
 
 Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
