@@ -122,40 +122,39 @@
         <div class="flex items-center w-full justify-between px-4 md:px-0">
             <h1 class="text-2xl font-bold text-center md:text-left w-full">Welcome, Employee</h1>
         </div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    <!-- Total Tasks -->
-    <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-        <h3 class="text-lg font-semibold text-white">Total Tasks</h3>
-        <p class="text-3xl font-bold text-blue-400">{{ $totalTasks }}</p>
-    </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Total Tasks -->
+            <div class="bg-gray-800 p-4 sm:p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-sm sm:text-lg font-semibold text-white">Total Tasks</h3>
+                <p class="text-2xl sm:text-3xl font-bold text-blue-400">{{ $totalTasks }}</p>
+            </div>
 
-    <!-- Pending Tasks -->
-    <div class="bg-yellow-600 p-6 rounded-lg shadow-lg text-center">
-        <h3 class="text-lg font-semibold text-white">Pending Tasks</h3>
-        <p class="text-3xl font-bold">{{ $pendingTasks }}</p>
-    </div>
+            <!-- Pending Tasks -->
+            <div class="bg-yellow-600 p-4 sm:p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-sm sm:text-lg font-semibold text-white">Pending Tasks</h3>
+                <p class="text-2xl sm:text-3xl font-bold">{{ $pendingTasks }}</p>
+            </div>
 
-    <!-- Started Tasks -->
-    <div class="bg-blue-600 p-6 rounded-lg shadow-lg text-center">
-        <h3 class="text-lg font-semibold text-white">Started Tasks</h3>
-        <p class="text-3xl font-bold">{{ $startedTasks }}</p>
-    </div>
+            <!-- Started Tasks -->
+            <div class="bg-blue-600 p-4 sm:p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-sm sm:text-lg font-semibold text-white">Started Tasks</h3>
+                <p class="text-2xl sm:text-3xl font-bold">{{ $startedTasks }}</p>
+            </div>
 
-    <!-- Completed Tasks -->
-    <div class="bg-green-600 p-6 rounded-lg shadow-lg text-center">
-        <h3 class="text-lg font-semibold text-white">Completed Tasks</h3>
-        <p class="text-3xl font-bold">{{ $completedTasks }}</p>
-    </div>
+            <!-- Completed Tasks -->
+            <div class="bg-green-600 p-4 sm:p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-sm sm:text-lg font-semibold text-white">Completed Tasks</h3>
+                <p class="text-2xl sm:text-3xl font-bold">{{ $completedTasks }}</p>
+            </div>
 
-    <!-- Review Tasks -->
-    <div class="bg-purple-600 p-6 rounded-lg shadow-lg text-center">
-        <h3 class="text-lg font-semibold text-white">Tasks in Review</h3>
-        <p class="text-3xl font-bold">{{ $reviewTasks }}</p>
-    </div>
-</div>
+            <!-- Review Tasks -->
+            <div class="bg-purple-600 p-4 sm:p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-sm sm:text-lg font-semibold text-white">Tasks in Review</h3>
+                <p class="text-2xl sm:text-3xl font-bold">{{ $reviewTasks }}</p>
+            </div>
+        </div>
 
-        <p class="mt-2 text-gray-400 text-center">Manage your tasks efficiently.</p>
-        
+        <p class="mt-2 text-gray-400 text-center text-sm sm:text-base">Manage your tasks efficiently.</p>
 
    <!-- Dynamic Content Area -->
         <div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[100vh] text-white overflow-auto">
