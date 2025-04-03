@@ -84,30 +84,6 @@
 <div class="container mx-auto p-6 bg-black text-white min-h-screen">
     <h2 class="text-xl font-semibold mb-4">Task List</h2>
 
-    <!-- Filter Form -->
-<div class="flex flex-wrap items-center gap-4 mb-4 bg-gray-800 p-4 rounded">
-    <!-- Assigned To Filter -->
-    <select id="filterAssignedTo" class="p-2 rounded bg-gray-700 text-white">
-        <option value="">Filter by Assigned To</option>
-        @foreach($employees as $employee)
-            <option value="{{ $employee->email_id }}">{{ $employee->email_id }}</option>
-        @endforeach
-    </select>
-
-    <!-- Task Title Filter -->
-    <input type="text" id="filterTaskTitle" class="p-2 rounded bg-gray-700 text-white" placeholder="Filter by Task Title">
-
-    <!-- Status Filter -->
-    <select id="filterStatus" class="p-2 rounded bg-gray-700 text-white">
-        <option value="">Filter by Status</option>
-        <option value="Pending">Pending</option>
-        <option value="Started">Started</option>
-        <option value="Completed">Completed</option>
-        <option value="Review">Review</option>
-    </select>
-
-    <button id="resetFilters" class="p-2 bg-red-600 text-white rounded">Reset Filters</button>
-</div>
  <div class="overflow-x-auto">
         <table class="w-full border border-gray-600 text-center">
             <thead>

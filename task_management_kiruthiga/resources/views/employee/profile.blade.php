@@ -13,25 +13,25 @@
         </div>
         <div class="p-6 space-y-4">
             <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-300 cursor-pointer">
-                <p class="text-gray-700"><span class="font-medium">Name:</span> {{ $employee->full_name }}</p>
+                <p class="text-gray-700 break-words"><span class="font-medium">Name:</span> {{ $employee->full_name }}</p>
             </div>
             <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-300 cursor-pointer">
-                <p class="text-gray-700"><span class="font-medium">Email:</span> {{ $employee->email_id }}</p>
+                <p class="text-gray-700 break-words"><span class="font-medium">Email:</span> {{ $employee->email_id }}</p>
             </div>
             <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-300 cursor-pointer">
-                <p class="text-gray-700"><span class="font-medium">Gender:</span> {{ $employee->gender }}</p>
+                <p class="text-gray-700 break-words"><span class="font-medium">Gender:</span> {{ $employee->gender }}</p>
             </div>
             <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-300 cursor-pointer">
-                <p class="text-gray-700"><span class="font-medium">Contact:</span> {{ $employee->contact }}</p>
+                <p class="text-gray-700 break-words"><span class="font-medium">Contact:</span> {{ $employee->contact }}</p>
             </div>
             <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-300 cursor-pointer">
-                <p class="text-gray-700"><span class="font-medium">Department:</span> {{ $employee->department->name }}</p>
+                <p class="text-gray-700 break-words"><span class="font-medium">Department:</span> {{ $employee->department->name }}</p>
             </div>
             <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-300 cursor-pointer">
-                <p class="text-gray-700"><span class="font-medium">Role:</span> {{ $employee->role->name }}</p>
+                <p class="text-gray-700 break-words"><span class="font-medium">Role:</span> {{ $employee->role->name }}</p>
             </div>
             <div class="bg-gray-50 p-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-300 cursor-pointer">
-                <p class="text-gray-700"><span class="font-medium">Date of Joining:</span> {{ $employee->date_of_joining }}</p>
+                <p class="text-gray-700 break-words"><span class="font-medium">Date of Joining:</span> {{ $employee->date_of_joining }}</p>
             </div>
         </div>
     </div>

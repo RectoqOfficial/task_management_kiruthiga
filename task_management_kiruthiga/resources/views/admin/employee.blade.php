@@ -110,7 +110,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     
    <h2 class="text-2xl font-bold mb-4">Table Details </h2>
     <!-- Filters Section -->
-    <div class="flex flex-wrap gap-4 p-4 bg-gray-800 text-white">
+    <div class="flex flex-wrap gap-4 p-4 bg-gray-800 text-black">
         <!-- Email Search -->
         <div class="w-full md:w-auto">
             <input type="text" id="searchEmail" placeholder="Search by Email" class="w-full p-2 text-black border rounded">
@@ -118,7 +118,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
         <!-- Department Filter -->
         <div class="w-full md:w-auto">
-            <select id="filterDepartment" class="w-full p-2 text-white border rounded">
+            <select id="filterDepartment" class="w-full p-2 text-black border rounded">
                 <option value="">Filter by Department</option>
                 @foreach($departments as $department)
                     <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -128,7 +128,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
         <!-- Role Filter -->
         <div class="w-full md:w-auto">
-            <select id="filterRole" class="w-full p-2 text-white border rounded">
+            <select id="filterRole" class="w-full p-2 text-black border rounded">
                 <option value="">Filter by Role</option>
                 @foreach($roles as $role)
                     <option value="{{ $role->id }}">{{ $role->name }}</option>

@@ -14,11 +14,10 @@
         }
     </style>
 </head>
-
-<body class="bg-black flex h-screen">
+<body class="bg-black flex flex-col md:flex-row h-screen">
 
     <!-- Sidebar -->
-    <div id="sidebar" class="w-64 bg-black h-screen p-4 hidden md:block">
+    <div id="sidebar" class="w-full md:w-64 bg-black h-auto md:h-screen p-4 hidden md:block">
         <a class="text-lg font-bold text-white block text-center mb-6" href="#">EMPLOYEE PANEL</a>
         <ul>
             <li class="px-4 py-3">
@@ -123,25 +122,8 @@
         <div class="flex items-center w-full justify-between px-4 md:px-0">
             <h1 class="text-2xl font-bold text-center md:text-left w-full">Welcome, Employee</h1>
         </div>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full p-4">
-    <!-- My Tasks Count Card -->
-    <div class="bg-gray-800 p-6 rounded-lg shadow-md text-center">
-        <h3 class="text-xl font-bold text-white">My Tasks</h3>
-        <p id="taskCount" class="text-3xl font-semibold text-red-400 mt-2">0</p>
-    </div>
 
-    <!-- Tasks in Progress Count Card -->
-    <div class="bg-gray-800 p-6 rounded-lg shadow-md text-center">
-        <h3 class="text-xl font-bold text-white">Tasks In Progress</h3>
-        <p id="progressTaskCount" class="text-3xl font-semibold text-yellow-400 mt-2">0</p>
-    </div>
 
-    <!-- My Score Card -->
-    <div class="bg-gray-800 p-6 rounded-lg shadow-md text-center">
-        <h3 class="text-xl font-bold text-white">My Score</h3>
-        <p id="taskScore" class="text-3xl font-semibold text-green-400 mt-2">0</p>
-    </div>
-</div>
         <p class="mt-2 text-gray-400 text-center">Manage your tasks efficiently.</p>
         
   
@@ -149,6 +131,7 @@
 
         <!-- Dynamic Content Area -->
         <div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[100vh] text-white overflow-auto">
+                @include('employee.dashboard_cards')
             <p>Select an option from the sidebar.</p>
         </div>
     </div>

@@ -28,23 +28,22 @@
                         <td class="border border-gray-600 p-2">{{ $task->description }}</td>
 
                         <td class="border border-gray-600 p-2">
-                            <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
-                                <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-                                <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
-                            </select>
+                            <select class="p-1 text-white rounded status-select" data-task-id="{{ $task->id }}">
+                                <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }} class="text-black">Pending</option>
+                                <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }} class="text-black">Started</option>
+                                <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }} class="text-black">Completed</option>
+                                <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }} class="text-black">Review</option></select>
                         </td>
-                        <td class="border border-gray-600 p-2">{{ $task->task_create_date }}</td>
+                        <td class="border border-gray-600 p-2 text-white">{{ $task->task_create_date }}</td>
                         <td class="border border-gray-600 p-2">
-                            <input type="date" name="task_start_date" id="task_start_date-{{ $task->id }}" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-black task-start-date" data-task-id="{{ $task->id }}" />
+                            <input type="date" name="task_start_date" id="task_start_date-{{ $task->id }}" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-white task-start-date" data-task-id="{{ $task->id }}" />
                         </td>
-                        <td class="border border-gray-600 p-2">{{ $task->no_of_days }}</td>
+                        <td class="border border-gray-600 p-2 text-white">{{ $task->no_of_days }}</td>
                         <td class="border border-gray-600 p-2">
-                            <input type="date" name="deadline" id="deadline-{{ $task->id }}" value="{{ $task->deadline }}" readonly class="w-full p-1 rounded text-black bg-gray-700 task-deadline" data-task-id="{{ $task->id }}" />
+                            <input type="date" name="deadline" id="deadline-{{ $task->id }}" value="{{ $task->deadline }}" readonly class="w-full p-1 rounded text-white bg-gray-700 task-deadline" data-task-id="{{ $task->id }}" />
                         </td>
  <td class="border border-gray-600 p-2">
-    <textarea class="w-full p-1 rounded text-black remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
+    <textarea class="w-full p-1 rounded text-white remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
     <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="{{ $task->id }}">
         Save
     </button>
