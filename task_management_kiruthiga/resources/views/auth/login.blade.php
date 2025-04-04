@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Task Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@latest/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center min-h-screen p-4">
+<body class="flex items-center justify-center min-h-screen p-4 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 animate-gradient-x">
 
     <div class="bg-gray-800 shadow-2xl rounded-lg p-6 sm:p-8 w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg text-center transform transition duration-300 hover:scale-105">
         <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-4">Login</h2>
@@ -31,7 +37,7 @@
             </div>
 
             <button type="submit" 
-                    class="w-full px-5 py-2 sm:py-3 bg-[#ff0003] text-white font-semibold rounded-lg shadow-md hover:bg-red-700 hover:shadow-lg transition duration-300 transform hover:-translate-y-1">
+                    class="w-full px-5 py-2 sm:py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 hover:shadow-lg transition duration-300 transform hover:-translate-y-1">
                 Login
             </button>
         </form>
