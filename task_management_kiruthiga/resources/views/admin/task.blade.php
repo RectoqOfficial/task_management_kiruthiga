@@ -111,26 +111,39 @@
                         <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
                         <td class="border border-gray-600 p-2">{{ $task->description }}</td>
                         <td class="border border-gray-600 p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
-                        <td class="border border-gray-600 p-2">
-                            <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
-                                <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-                                <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
-                            </select>
-                        </td>
+<td class="border border-gray-600 p-2">
+    @if (auth()->check() && auth()->user()->role == 'Employee') 
+        <select id="status-{{ $task->id }}" class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
+            <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+            <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
+            <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+            <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
+        </select>
+    @else
+        <span id="status-text-{{ $task->id }}">{{ $task->status }}</span>
+    @endif
+</td>
+
+
+
+
+
+
+
                            <!-- Redo Count Column -->
-            <td class="border border-gray-600 p-2 flex flex-col items-center space-y-2">
-                <input type="number" id="redo-count-{{ $task->id }}" value="{{ $task->redo_count ?? 0 }}" class="w-16 p-1 text-black text-center rounded">
-                <button class="px-2 py-1 bg-yellow-500 text-black rounded update-redo-btn" data-task-id="{{ $task->id }}">
-                    Update
-                </button>
-                @if ($task->status == 'Review')
-                    <button class="px-2 py-1 bg-red-600 text-white rounded redo-btn" data-task-id="{{ $task->id }}">
-                        Redo
-                    </button>
-                @endif
-            </td>
+<!-- Redo Count Column -->
+<td class="border border-gray-600 p-2">
+    <span class="redo-count">{{ $task->redo_count ?? 0 }}</span>
+    
+    @if (Auth::guard('employee')->check() && $task->status == 'Review')
+        <!-- Show Redo button only when employee is logged in and status is 'Review' -->
+        <button class="px-2 py-1 bg-red-600 text-white rounded redo-btn" data-task-id="{{ $task->id }}">
+            Redo
+        </button>
+    @endif
+</td>
+
+
 
                         <td class="border border-gray-600 p-2">{{ $task->task_create_date }}</td>
                         <td class="border border-gray-600 p-2">
@@ -485,28 +498,50 @@ document.querySelectorAll('.save-remark-btn').forEach(button => {
     });
 });
 //redo count
-   $(document).on("click", ".update-redo-btn", function () {
-        var taskId = $(this).data("task-id");
+    $(document).ready(function () {
+        $(".redo-btn").click(function () {
+            var taskId = $(this).data("task-id");
+            var button = $(this);
+            var redoCountCell = button.closest("td").find("span.redo-count");
+            var statusSelect = $("#status-" + taskId); // Get status dropdown (if available)
+            var statusText = $("#status-text-" + taskId); // Get status text (for Admin)
 
-        $.ajax({
-            url: "/tasks/update-redo/" + taskId,
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-            },
-            success: function (response) {
-                if (response.success) {
-                    alert("Redo count updated!");
-                    location.reload(); // Refresh scoreboard
-                } else {
-                    alert(response.message);
+            $.ajax({
+                url: "{{ route('tasks.redo') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    task_id: taskId
+                },
+                success: function (response) {
+                    redoCountCell.text(response.redo_count);
+
+                    // Update status to 'Pending' dynamically
+                    if (statusSelect.length) {
+                        statusSelect.val("Pending"); // For employees (dropdown)
+                    } else {
+                        statusText.text("Pending"); // For Admin (text)
+                    }
+                },
+                error: function (error) {
+                    alert("Error updating redo count!");
+                    console.log(error);
                 }
-            },
-            error: function () {
-                alert("Failed to update redo count.");
-            }
+            });
         });
     });
+
+    $(document).ready(function() {
+    $('.status-select').on('change', function() {
+        let taskId = $(this).data('task-id');
+        let newStatus = $(this).val();
+
+        // If the new status is 'Completed', hide the redo button
+        if (newStatus === 'Completed') {
+            $('.redo-btn[data-task-id="' + taskId + '"]').hide();
+        }
+    });
+});
 
     </script>
 </body>

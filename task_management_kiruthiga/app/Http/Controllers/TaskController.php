@@ -238,30 +238,32 @@ public function updateRemarks(Request $request, $id)
 }
 
 //redo count
-public function updateRedoCount(Request $request, $taskId)
+public function redoTask(Request $request)
 {
-    try {
-        // Find the score entry for the given task
-        $score = Score::where('task_id', $taskId)->first();
+    $task = Task::find($request->task_id);
 
-        if ($score) {
-            // Update redo_count
-            $score->redo_count += 1;
+    if ($task) {
+        // Increase redo_count by 1
+        $task->redo_count += 1;
 
-            // Decrease score by 10 for each redo
-            $score->score -= 10;
+        // Reduce score by 10 (ensure score never goes below 0)
+        $task->score->score = max(0, $task->score->score - 10);
+        $task->score->save();
 
-            // Save changes
-            $score->save();
+        // Update the status to "Pending"
+        $task->status = "Pending";
+        $task->save();
 
-            return response()->json(['success' => true, 'message' => 'Redo count updated!', 'score' => $score]);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Score entry not found.']);
-        }
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'message' => 'Failed to update redo count.']);
+        return response()->json([
+            'redo_count' => $task->redo_count,
+            'status' => $task->status,
+            'score' => $task->score->score
+        ]);
     }
+
+    return response()->json(['error' => 'Task not found!'], 404);
 }
+
 public function updateOverdueTasks()
 {
     $tasks = Task::where('due_date', '<', now()) // Find overdue tasks

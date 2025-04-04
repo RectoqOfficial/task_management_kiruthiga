@@ -98,9 +98,11 @@ Route::delete('/employee/task/delete/{id}', [TaskController::class, 'deleteTask'
 Route::post('/employee/task/update-deadline/{id}', [TaskController::class, 'updateDeadline']);
 Route::post('/tasks/{id}/update-remarks', [TaskController::class, 'updateRemarks'])->name('tasks.updateRemarks');
 
-Route::post('/tasks/update-redo/{taskId}', [TaskController::class, 'updateRedoCount'])->name('update.redo');
+Route::post('/tasks/{task}/redo', [TaskController::class, 'redoTask'])->name('tasks.redo');
+
 Route::post('/tasks/update-overdue', [TaskController::class, 'updateOverdueTasks']);
 
+Route::post('/tasks/redo', [TaskController::class, 'redoTask'])->name('tasks.redo');
 
 
 
