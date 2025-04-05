@@ -279,6 +279,11 @@ public function updateOverdueTasks()
 }
 
 
+public function showScoreboard()
+{
+    $tasks = Task::with('score')->get(); // Ensure the relationship is loaded
+    return view('scoreboard', compact('tasks'));
+}
 
 
 }

@@ -169,7 +169,7 @@ $(document).on('submit', ".role-form", function(event) {
             alert(response.message);
             $("#roles-" + departmentId).append(`
                 <li id="role-${response.role.id}" class="text-gray-300 flex justify-between items-center bg-gray-900 p-2 rounded-md hover:bg-gray-800 transition duration-200">
-                    <span class="role-name">${response.role.name}</span>
+                    <span class="role-name flex-1 text-center">${response.role.name}</span>
                     <div class="space-x-2 flex">
                         <img src="/build/assets/img/update.png" onclick="toggleEditForm('role-edit-${response.role.id}')" 
                              class="w-5 h-5 cursor-pointer"

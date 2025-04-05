@@ -27,7 +27,6 @@ class EmployeeController extends Controller
 
 public function addEmployee(Request $request)
 {
-       Log::info('Received request:', $request->all());
     $request->validate([
         'full_name' => 'required|string|max:255',
         'gender' => 'required|string|max:255',
@@ -40,8 +39,7 @@ public function addEmployee(Request $request)
         'jobtype' => 'required|string',
     ]);
 
-    // Create a new employee record
-    $employee = new Employee([
+    $employee = Employee::create([
         'full_name' => $request->full_name,
         'gender' => $request->gender,
         'date_of_joining' => $request->date_of_joining,
@@ -52,14 +50,31 @@ public function addEmployee(Request $request)
         'role_id' => $request->role_id,
         'jobtype' => $request->jobtype,
     ]);
-    $employee->save();
 
-    // Return success response with the new employee data
+    // Load related department and role
+    $employee->load('department', 'role');
+
     return response()->json([
         'success' => true,
-        'message' => 'Employee added successfully.',
-        'employee' => $employee,  // Include the newly created employee data
+        'message' => 'Employee added successfully!',
+        'employee' => $employee,
+        // Pass the redirect URL
     ]);
+}
+public function employeeList()
+{
+    $employees = Employee::with('department', 'role')->get();
+    $departments = Department::all(); // Fetch all departments
+    $roles = Role::all(); // Fetch all roles
+
+    return view('admin.employee', compact('employees', 'departments', 'roles'));
+}
+
+public function checkEmail(Request $request)
+{
+    $exists = Employee::where('email_id', $request->email_id)->exists();
+
+    return response()->json(['exists' => $exists]);
 }
 
 

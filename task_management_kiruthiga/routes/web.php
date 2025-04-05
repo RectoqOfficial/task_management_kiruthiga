@@ -72,6 +72,8 @@ Route::get('/employee/profile', [EmployeeController::class, 'profile'])->name('e
 
 Route::get('/employee/task-stats', [EmployeeController::class, 'getEmployeeTaskStats']);
 Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
+    Route::get('/admin/employees', [EmployeeController::class, 'employeeList'])->name('admin.employeeList');
+    Route::post('/admin/check-email', [EmployeeController::class, 'checkEmail'])->name('admin.checkEmail');
 
 use App\Http\Controllers\TaskController;
 

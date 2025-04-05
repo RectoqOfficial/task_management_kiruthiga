@@ -48,28 +48,40 @@
 
     </div>
 <script>
-       $(document).on("click", ".update-redo-btn", function () {
-        var taskId = $(this).data("task-id");
+      //redo count
+    $(document).ready(function () {
+        $(".redo-btn").click(function () {
+            var taskId = $(this).data("task-id");
+            var button = $(this);
+            var redoCountCell = button.closest("td").find("span.redo-count");
+            var statusSelect = $("#status-" + taskId); // Get status dropdown (if available)
+            var statusText = $("#status-text-" + taskId); // Get status text (for Admin)
 
-        $.ajax({
-            url: "/tasks/update-redo/" + taskId,
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-            },
-            success: function (response) {
-                if (response.success) {
-                    alert("Redo count updated!");
-                    location.reload(); // Refresh scoreboard
-                } else {
-                    alert(response.message);
+            $.ajax({
+                url: "{{ route('tasks.redo') }}",
+                type: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    task_id: taskId
+                },
+                success: function (response) {
+                    redoCountCell.text(response.redo_count);
+
+                    // Update status to 'Pending' dynamically
+                    if (statusSelect.length) {
+                        statusSelect.val("Pending"); // For employees (dropdown)
+                    } else {
+                        statusText.text("Pending"); // For Admin (text)
+                    }
+                },
+                error: function (error) {
+                    alert("Error updating redo count!");
+                    console.log(error);
                 }
-            },
-            error: function () {
-                alert("Failed to update redo count.");
-            }
+            });
         });
     });
+
 
     $(document).on("click", ".update-overdue-btn", function () {
         var taskId = $(this).data("task-id");

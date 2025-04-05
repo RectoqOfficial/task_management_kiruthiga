@@ -124,13 +124,6 @@
     @endif
 </td>
 
-
-
-
-
-
-
-                           <!-- Redo Count Column -->
 <!-- Redo Count Column -->
 <td class="border border-gray-600 p-2">
     <span class="redo-count">{{ $task->redo_count ?? 0 }}</span>

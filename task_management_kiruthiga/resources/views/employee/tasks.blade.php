@@ -28,18 +28,12 @@
                         <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
                         <td class="border border-gray-600 p-2">{{ $task->description }}</td>
 
-<td class="border border-gray-600 p-2">
-    @if (auth()->check() && auth()->user()->role == 'Employee') 
-        <select id="status-{{ $task->id }}" class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
-            <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-            <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-            <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-            <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
-        </select>
-    @else
-        <span id="status-text-{{ $task->id }}">{{ $task->status }}</span>
-    @endif
-</td>
+                        <td class="border border-gray-600 p-2">
+                            <select class="p-1 text-white rounded status-select" data-task-id="{{ $task->id }}">
+                                <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }} class="text-black">Pending</option>
+                                <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }} class="text-black">Started</option>
+                                <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }} class="text-black">Completed</option>
+                                <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }} class="text-black">Review</option></select>
 <td class="border border-gray-600 p-2 text-white">
     {{ $task->redo_count ?? 0 }}
 </td>
@@ -68,7 +62,7 @@
     </div>
 </div>
 <script>
-    $(document).ready(function () {
+$(document).ready(function () {
     // Update task status
     $(".status-select").change(function () {
         let taskId = $(this).data("task-id");
@@ -82,7 +76,11 @@
                 status: newStatus
             },
             success: function (response) {
-                alert(response.message);
+               if(response.success)
+               {
+                alert("Update successfully");
+               }
+               
             },
             error: function (xhr) {
                 alert("Error updating status. Check console.");

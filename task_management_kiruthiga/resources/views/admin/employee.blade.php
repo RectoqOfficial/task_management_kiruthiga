@@ -9,19 +9,17 @@
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
  
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<style>
-    /* Change input background color */
-/* Change background color of the calendar popup */
-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1);
-}
 
-
-</style>
 </head>
 @extends('layouts.app')
 
 @section('content')
+@if(session('success'))
+    <script>
+        alert("✅ {{ session('success') }}");
+    </script>
+@endif
+
 <div class="container mx-auto p-6 bg-black text-white min-h-screen">
 
     <h2 class="text-2xl font-bold mb-4">Employee Details</h2>
@@ -119,9 +117,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <!-- Department Filter -->
         <div class="w-full md:w-auto">
             <select id="filterDepartment" class="w-full p-2 text-white border rounded">
-                <option value="">Filter by Department</option>
+                <option value="" class="text-black">Filter by Department</option>
                 @foreach($departments as $department)
-                    <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    <option value="{{ $department->id }}" class="text-black">{{ $department->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -129,9 +127,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <!-- Role Filter -->
         <div class="w-full md:w-auto">
             <select id="filterRole" class="w-full p-2 text-white border rounded">
-                <option value="">Filter by Role</option>
+                <option value="" class="text-black">Filter by Role</option>
                 @foreach($roles as $role)
-                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    <option value="{{ $role->id }}" class="text-black">{{ $role->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -148,16 +146,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         <table class="w-full text-left border bg-[#ff0003] text-sm md:text-base" id="employeeList">
             <thead class="bg-[#ff0003] text-white">
                 <tr>
-                    <th class="p-3 border">ID</th>
-                    <th class="p-3 border">Full Name</th>
-                    <th class="p-3 border">Gender</th>
-                    <th class="p-3 border">Date of Joining</th>
-                    <th class="p-3 border">Contact</th>
-                    <th class="p-3 border">Email ID</th>
-                    <th class="p-3 border">Department</th>
-                    <th class="p-3 border">Role</th>
-                    <th class="p-3 border">Job Type</th>
-                    <th class="p-3 border">Actions</th>
+                    <th class="p-5 border">ID</th>
+                    <th class="p-5 border">Full Name</th>
+                    <th class="p-5 border">Gender</th>
+                    <th class="p-5 border">D.O.J</th>
+                    <th class="p-5 border">Contact</th>
+                    <th class="p-5 border">Email ID</th>
+                    <th class="p-5 border">Department</th>
+                    <th class="p-5 border">Role</th>
+                    <th class="p-5 border">Job Type</th>
+                    <th class="p-5 border">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -186,71 +184,89 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 @endsection
 
 <script>
-$(document).ready(function () {
-    // Handle form submission
-    $('#addEmployeeForm').on('submit', function (e) {
-        e.preventDefault();
 
-        // Email validation
-        var email = $('input[name="email_id"]').val();
-        var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        if (!emailPattern.test(email)) {
-            alert('Please enter a valid email address');
-            return; // Stop form submission if email is invalid
-        }
+$('#addEmployeeForm').on('submit', function (e) {
+    e.preventDefault();
 
-        var formData = $(this).serialize();  // Collect form data
-$.ajax({
-    url: "{{ route('admin.addEmployee') }}",
-    type: 'POST',
-    data: formData,
-    success: function (response) {
-           console.log(response);
-        if (response.success) {
-            // Display success message
-            $('#successMessage').removeClass('hidden').text(response.message);
+    var email = $('input[name="email_id"]').val();
+    var password = $('input[name="password"]').val();
 
-            // Reset the form
-            $('#addEmployeeForm')[0].reset();
-
-            // Add the new employee to the table dynamically
-            var newEmployee = response.employee;
-            
-            var newRow = `
-                <tr class="bg-gray-700 hover:bg-gray-600">
-                    <td class="p-3 border">${newEmployee.id}</td>
-                    <td class="p-3 border">${newEmployee.full_name}</td>
-                    <td class="p-3 border">${newEmployee.gender}</td>
-                    <td class="p-3 border">${newEmployee.date_of_joining}</td>
-                    <td class="p-3 border">${newEmployee.contact}</td>
-                    <td class="p-3 border">${newEmployee.email_id}</td>
-                    <td class="p-3 border">${newEmployee.department.name}</td>
-                    <td class="p-3 border">${newEmployee.role.name}</td>
-                    <td class="p-3 border">${newEmployee.jobtype}</td>
-                    <td class="p-3 border text-center">
-                        <button onclick="deleteEmployee(event, ${newEmployee.id})" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-                            Delete
-                        </button>
-                    </td>
-                </tr>
-            `;
-
-            // Prepend new row to the employee list table
-            $('#employeeList tbody').prepend(newRow);
-        } else {
-            alert(response.message || 'Error adding employee');
-        }
-    },
-    error: function (xhr, status, error) {
-        $('#errorMessage').removeClass('hidden').text('An error occurred: ' + error);
-        setTimeout(function() {
-            $('#errorMessage').addClass('hidden');
-        }, 5000);
+    // ✅ Email pattern check
+    var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (!emailPattern.test(email)) {
+        alert('❌ Please enter a valid email address');
+        return;
     }
-});
 
+    // ✅ Password length & pattern check (at least 1 letter and 1 number)
+    var passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordPattern.test(password)) {
+        alert('❌ Password must be at least 8 characters long and contain both letters and numbers');
+        return;
+    }
+
+    // ✅ Check if email already exists via AJAX
+    $.ajax({
+        url: "{{ route('admin.checkEmail') }}",
+        type: "POST",
+        data: {
+            email_id: email,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            if (response.exists) {
+                alert("❌ Email already exists. Please enter a different email.");
+            } else {
+                // Proceed with form submission
+                var formData = $('#addEmployeeForm').serialize();
+
+                $.ajax({
+                    url: "{{ route('admin.addEmployee') }}",
+                    type: 'POST',
+                    data: formData + "&_token=" + $('meta[name="csrf-token"]').attr('content'),
+                    success: function (response) {
+                        if (response.success) {
+                            alert('✅ Employee added successfully!');
+                            $('#addEmployeeForm')[0].reset();
+
+                            var newEmployee = response.employee;
+                            var newRow = `
+                                <tr class="bg-gray-700 hover:bg-gray-600">
+                                    <td class="p-3 border">${newEmployee.id}</td>
+                                    <td class="p-3 border">${newEmployee.full_name}</td>
+                                    <td class="p-3 border">${newEmployee.gender}</td>
+                                    <td class="p-3 border">${newEmployee.date_of_joining}</td>
+                                    <td class="p-3 border">${newEmployee.contact}</td>
+                                    <td class="p-3 border">${newEmployee.email_id}</td>
+                                    <td class="p-3 border">${newEmployee.department.name}</td>
+                                    <td class="p-3 border">${newEmployee.role.name}</td>
+                                    <td class="p-3 border">${newEmployee.jobtype}</td>
+                                    <td class="p-3 border text-center">
+                                        <button onclick="deleteEmployee(event, ${newEmployee.id})" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                            $('#employeeList tbody').append(newRow);
+                        } else {
+                            alert(response.message || '❌ Error adding employee');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert("❌ Error: " + xhr.responseText);
+                    }
+                });
+            }
+        },
+        error: function () {
+            alert("❌ Error checking email");
+        }
     });
 });
+
+
 
 
 $(document).ready(function() {
@@ -301,6 +317,7 @@ function deleteEmployee(event, employeeId) {
 }
 
 // ///filter
+// ///filter
    function filterEmployees() {
         let email = document.getElementById('searchEmail').value;
         let departmentId = document.getElementById('filterDepartment').value;
@@ -334,8 +351,7 @@ function deleteEmployee(event, employeeId) {
                 });
             });
     }
-    //eye icon
-    // Toggle password visibility
+        // Toggle password visibility
  function togglePassword() {
     const passwordField = document.getElementById("password");
     const eyeIcon = document.getElementById("eyeIcon");
@@ -348,4 +364,5 @@ function deleteEmployee(event, employeeId) {
         eyeIcon.innerHTML = `<path d="M572.52 246.6c..."></path>`; // Closed Eye
     }
 }
+
 </script>
