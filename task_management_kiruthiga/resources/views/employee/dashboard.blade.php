@@ -49,22 +49,21 @@
                 </a>
             </li>
 
-            <!-- Logout Button -->
             <li class="px-4 py-3">
-                <a href="{{ route('logout') }}" 
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
-                   class="block text-center text-white bg-[#ff0003] px-4 py-2 rounded-md hover:bg-red-700 
-                          transition duration-300 ease-in-out transform hover:scale-105 shadow-md 
-                          hover:shadow-red-500/50 flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M17 16l4-4m0 0l-4-4m4 4H7m6-8V3m0 18v-2"></path>
-                    </svg>
-                    Logout
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                    @csrf
-                </form>
-            </li>
+            <a href="{{ route('logout') }}" 
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
+               class="block text-center text-white bg-[#ff0003] px-4 py-2 rounded-md hover:bg-red-700 
+                      transition duration-300 ease-in-out transform hover:scale-105 shadow-md 
+                      hover:shadow-red-500/50 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17 16l4-4m0 0l-4-4m4 4H7m6-8V3m0 18v-2"></path>
+                </svg>
+                Logout
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                @csrf
+            </form>
+        </li>
         </ul>
     </div>
 

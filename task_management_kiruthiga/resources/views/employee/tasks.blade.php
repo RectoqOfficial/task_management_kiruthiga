@@ -28,19 +28,24 @@
                         <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
                         <td class="border border-gray-600 p-2">{{ $task->description }}</td>
 
+  
 <td class="border border-gray-600 p-2">
+
     {{-- Admin Dropdown --}}
     @if (Auth::guard('admin')->check() && $task->status !== 'Completed')
-        <select id="status-{{ $task->id }}" class="p-1 text-white rounded status-select" data-task-id="{{ $task->id }}">
-            <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-            <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
+        <select id="status-{{ $task->id }}" class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
+              <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                          <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
+                                      <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
         </select>
 
     {{-- Employee Dropdown --}}
     @elseif (Auth::guard('employee')->check() && $task->status !== 'Completed')
-        <select id="status-{{ $task->id }}" class="p-1 text-white rounded status-select" data-task-id="{{ $task->id }}">
-            <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-            <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+        <select id="status-{{ $task->id }}" class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
+   
+              <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
+
+                        <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
         </select>
 
     {{-- Read-Only Text for Everyone Else --}}
@@ -48,7 +53,6 @@
         <span id="status-text-{{ $task->id }}">{{ $task->status }}</span>
     @endif
 </td>
-
 
 
 
