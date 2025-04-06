@@ -241,25 +241,21 @@ public function updateRemarks(Request $request, $id)
 public function redoTask(Request $request)
 {
     $task = Task::find($request->task_id);
+if ($task && $task->score) {
+    $task->redo_count += 1;
+    $task->score->score -= 10;
+    $task->score->save();
 
-    if ($task) {
-        // Increase redo_count by 1
-        $task->redo_count += 1;
+    $task->status = "Pending";
+    $task->save();
 
-          // Reduce score by 10 (ALLOW negative values now)
-        $task->score->score -= 10;
-        $task->score->save();
+    return response()->json([
+        'redo_count' => $task->redo_count,
+        'status' => $task->status,
+        'score' => $task->score->score
+    ]);
+}
 
-        // Update the status to "Pending"
-        $task->status = "Pending";
-        $task->save();
-
-        return response()->json([
-            'redo_count' => $task->redo_count,
-            'status' => $task->status,
-            'score' => $task->score->score
-        ]);
-    }
 
     return response()->json(['error' => 'Task not found!'], 404);
 }

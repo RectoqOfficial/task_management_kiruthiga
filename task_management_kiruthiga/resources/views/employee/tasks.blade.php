@@ -28,17 +28,29 @@
                         <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
                         <td class="border border-gray-600 p-2">{{ $task->description }}</td>
 
-                        <td class="border border-gray-600 p-2">
-@if ($task->status !== 'Completed')
-    <select class="p-1 text-white rounded status-select" data-task-id="{{ $task->id }}">
-        <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }} class="text-black">Pending</option>
-        <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }} class="text-black">Started</option>
-        <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }} class="text-black">Completed</option>
-        <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }} class="text-black">Review</option>
-    </select>
-@else
-    <span>{{ $task->status }}</span>
-@endif
+<td class="border border-gray-600 p-2">
+    {{-- Admin Dropdown --}}
+    @if (Auth::guard('admin')->check() && $task->status !== 'Completed')
+        <select id="status-{{ $task->id }}" class="p-1 text-white rounded status-select" data-task-id="{{ $task->id }}">
+            <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
+            <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
+        </select>
+
+    {{-- Employee Dropdown --}}
+    @elseif (Auth::guard('employee')->check() && $task->status !== 'Completed')
+        <select id="status-{{ $task->id }}" class="p-1 text-white rounded status-select" data-task-id="{{ $task->id }}">
+            <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+            <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+        </select>
+
+    {{-- Read-Only Text for Everyone Else --}}
+    @else
+        <span id="status-text-{{ $task->id }}">{{ $task->status }}</span>
+    @endif
+</td>
+
+
+
 
 <td class="border border-gray-600 p-2 text-white">
     {{ $task->redo_count ?? 0 }}
@@ -169,38 +181,46 @@ document.querySelectorAll('.save-remark-btn').forEach(button => {
     });
 });
 //redo count
-    $(document).ready(function () {
-        $(".redo-btn").click(function () {
-            var taskId = $(this).data("task-id");
-            var button = $(this);
-            var redoCountCell = button.closest("td").find("span.redo-count");
-            var statusSelect = $("#status-" + taskId); // Get status dropdown (if available)
-            var statusText = $("#status-text-" + taskId); // Get status text (for Admin)
+$(document).ready(function () {
+    $(".redo-btn").click(function () {
+        var taskId = $(this).data("task-id");
+        var button = $(this);
+        var redoCountCell = button.closest("td").find("span.redo-count");
+        var statusSelect = $("#status-" + taskId); // Dropdown
+        var statusText = $("#status-text-" + taskId); // Admin text
+        var scoreSpan = $("#score-" + taskId); // Score display
 
-            $.ajax({
-                url: "{{ route('tasks.redo') }}",
-                type: "POST",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    task_id: taskId
-                },
-                success: function (response) {
-                    redoCountCell.text(response.redo_count);
-    scoreSpan.text(response.score); // Can now show negative values
-                    // Update status to 'Pending' dynamically
-                    if (statusSelect.length) {
-                        statusSelect.val("Pending"); // For employees (dropdown)
-                    } else {
-                        statusText.text("Pending"); // For Admin (text)
-                    }
-                },
-                error: function (error) {
-                    alert("Error updating redo count!");
-                    console.log(error);
+        $.ajax({
+            url: "{{ route('tasks.redo') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                task_id: taskId
+            },
+            success: function (response) {
+                redoCountCell.text(response.redo_count);
+                scoreSpan.text(response.score);
+
+                // Update status in UI
+                if (statusSelect.length) {
+                    statusSelect.val(response.status);
+                } else {
+                    statusText.text(response.status);
                 }
-            });
+
+                // Optional: Show redo button again if status is not Completed
+                if (response.status !== 'Completed') {
+                    button.show();
+                }
+            },
+            error: function (error) {
+                alert("Error updating redo count!");
+                console.log(error);
+            }
         });
     });
+});
+
 
     $(document).ready(function() {
     $('.status-select').on('change', function() {
