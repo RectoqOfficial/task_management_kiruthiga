@@ -10,31 +10,40 @@
     <div class="container mx-auto p-4">
         <h1 class="text-2xl font-bold mb-4 text-center">Employee Task Scores</h1>
         <div class="overflow-x-auto">
-            <table class="w-full border border-gray-600 text-center text-sm md:text-base">
-                <thead>
-                    <tr class="bg-[#ff0003] text-white">
-                        <th class="border border-gray-600 p-2">ID</th>
-                        <th class="border border-gray-600 p-2">Task Title</th>
-                        <th class="border border-gray-600 p-2">Status</th>
-                        <th class="border border-gray-600 p-2">Overdue Count</th>
-                        <th class="border border-gray-600 p-2">Redo Count</th>
-                        <th class="border border-gray-600 p-2">Score</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($tasks as $task)
-                        <tr class="bg-gray-900 hover:bg-gray-700 text-white">
-                            <td class="border border-gray-600 p-2">{{ $task->id }}</td>
-                            <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
-                            <td class="border border-gray-600 p-2">{{ $task->status }}</td>
-                            <td class="border border-gray-600 p-2">{{ $task->score->overdue_count ?? 0 }}</td>
-                            <td class="border border-gray-600 p-2">{{ $task->redo_count ?? 0 }}</td>
-<td class="border border-gray-600 p-2 font-bold" id="score-{{ $task->id }}">
+            <table class="w-full  text-center">
+                  <thead>
+    <tr class="bg-[#ff0003] text-white font-bold">
+        <th class="p-2 min-w-[80px] whitespace-nowrap">ID</th>
+        <th class="p-2 min-w-[200px] whitespace-nowrap">Task Title</th>
+        <th class="p-2 min-w-[180px] whitespace-nowrap">Task Member</th>
+        <th class="p-2 min-w-[140px] whitespace-nowrap">Status</th>
+        <th class="p-2 min-w-[150px] whitespace-nowrap">Overdue Count</th>
+        <th class="p-2 min-w-[150px] whitespace-nowrap">Redo Count</th>
+        <th class="p-2 min-w-[100px] whitespace-nowrap">Score</th>
+    </tr>
+</thead>
+
+           <tbody>
+    @foreach ($tasks as $task)
+        <tr class="bg-gray-900 hover:bg-gray-700">
+            <td class="p-2">{{ $task->id }}</td>
+            <td class=" p-2">{{ $task->task_title }}</td>
+            <td class="p-2">{{ $task->assigned_to}}</td>
+            <td class=" p-2">{{ $task->status }}</td>
+<td class=" p-2">
+    <span class="redo-count" id="redo-{{ $task->id }}">
+        {{ $task->redo_count ?? 0 }}
+    </span>
+</td>
+
+            <td class=" p-2">{{ $task->redo_count ?? 0 }}</td>
+<td class=" p-2 font-bold" id="score-{{ $task->id }}">
     {{ $task->score->score ?? 0 }}
 </td>
-                        </tr>
-                    @endforeach
-                </tbody>
+         
+        </tr>
+    @endforeach
+</tbody>
             </table>
         </div>
     </div>

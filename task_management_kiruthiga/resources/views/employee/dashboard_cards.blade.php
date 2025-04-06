@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+{{-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     <!-- Total Tasks -->
     <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
         <h3 class="text-lg font-semibold text-white">Total Tasks</h3>
@@ -28,4 +28,4 @@
         <h3 class="text-lg font-semibold text-white">Tasks in Review</h3>
         <p class="text-3xl font-bold">{{ $reviewTasks }}</p>
     </div>
-</div>
+</div> --}}

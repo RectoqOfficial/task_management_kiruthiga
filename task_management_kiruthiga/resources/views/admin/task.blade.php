@@ -29,7 +29,7 @@
     <h1 class="text-3xl font-bold mb-6 text-center">Task Management</h1>
 
     <!-- Task Creation Form -->
-    <form action="{{ route('tasks.store') }}" method="POST" id="taskForm" class="mb-6 bg-gray-800 p-4 rounded-lg">
+    <form action="{{ route('tasks.store') }}" method="POST" id="taskForm" class="mb-6 p-4 rounded-lg">
         @csrf
 
         <!-- Task Title -->

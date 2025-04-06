@@ -40,29 +40,67 @@
 
 <!-- Sidebar -->
 <div id="sidebar" class="w-64 bg-black h-screen p-4 hidden md:block">
-    <a class="text-lg font-bold text-white block text-center mb-6" href="#">ADMIN PANEL</a>
-    <ul class="text-sm"> <!-- Reduced font size -->      
+    <a class="text-lg font-bold text-white block text-center mb-6 animate-pulse" href="#">ADMIN PANEL</a>
+        <style>
+            @keyframes pulse {
+            0%, 100% {
+                color: #ffffff; /* White */
+            }
+            50% {
+                color: #ff0003; /* Red */
+            }
+            }
+            .animate-pulse {
+            animation: pulse 2s infinite;
+            }
+        </style>
+    <ul class="text-sm"> <!-- Reduced font size -->   
+        <li class="px-4 py-3">
+        <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDashboard(event)">
+        <span class="icon-container w-5 h-5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 10h18M3 14h18M5 6h14M5 18h14"></path>
+            </svg>
+        </span>
+        <span class="ml-4">Dashboard</span>
+        </a>
+    </li>
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDepartmentDetails(event)">
-                <span class="icon-container w-5 h-5"></span>
+                <span class="icon-container w-5 h-5">
+                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
+                </svg>
+                </span>
                 <span class="ml-4">Department & Role Details</span>
             </a>
         </li>
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeDetails(event)" data-icon="employee">
-                <span class="icon-container w-5 h-5"></span>
+                  <span class="icon-container w-5 h-5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4z"></path>
+                        </svg>
+                    </span>
                 <span class="ml-4">Employee Details</span>
             </a>
         </li>
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadTaskDetails(event)" data-icon="task">
-                <span class="icon-container w-5 h-5"></span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </span>
                 <span class="ml-4">Task Details</span>
             </a>
         </li>
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadScoreDetails(event)" data-icon="score">
-                <span class="icon-container w-5 h-5"></span>
+                  <span class="icon-container w-5 h-5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 8c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4zm0 6c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"></path>
+                        </svg>
+                    </span>
                 <span class="ml-4">Scoreboard</span>
             </a>
         </li>
@@ -94,38 +132,57 @@
 <!-- Mobile Sidebar -->
 <div id="mobileSidebar" class="fixed inset-0 bg-black w-64 p-4 transform -translate-x-full transition-transform duration-300 md:hidden">
     <button onclick="toggleSidebar()" class="absolute top-4 right-4 text-white text-2xl">×</button>
-    <a class="text-lg font-bold text-white block text-center mb-6" href="#">ADMIN PANEL</a>
+   <a class="text-lg font-bold text-white block text-center mb-6 animate-pulse" href="#">ADMIN PANEL</a>
     <ul class="text-sm"> <!-- Reduced font size -->  
-       <li class="px-4 py-3">
+<li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDashboard(event); closeMobileSidebar()">
+        <span class="icon-container w-5 h-5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M3 10h18M3 14h18M5 6h14M5 18h14"></path>
+            </svg>
+        </span>
+        <span class="ml-4">Dashboard</span>
+    </a>
+</li>
+
+        <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDepartmentDetails(event)">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <span class="icon-container w-5 h-5">
+                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
                 </svg>
+                </span>
                 <span class="ml-4">Department & Role Details</span>
             </a>
         </li>
         
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeDetails(event)">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2-2-2"></path>
-                </svg>
+                  <span class="icon-container w-5 h-5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4z"></path>
+                        </svg>
+                    </span>
                 <span class="ml-4">Employee Details</span>
             </a>
         </li>
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadTaskDetails(event)">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
-                </svg>
+                <span class="icon-container w-5 h-5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </span>
                 <span class="ml-4">Task Details</span>
             </a>
         </li>
         <li class="px-4 py-3">
             <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadScoreDetails(event)">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"></path>
-                </svg>
+                <span class="icon-container w-5 h-5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 8c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4zm0 6c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"></path>
+                        </svg>
+                    </span>
                 <span class="ml-4">Scoreboard</span>
             </a>
         </li>
@@ -148,16 +205,17 @@
   <!-- Main Content -->
     <div class="flex-1 p-2 bg-black text-white flex flex-col justify-center items-center">
         <div class="flex items-center w-full justify-between px-4 md:px-0">
-            <h1 class="text-2xl font-bold text-center md:text-left w-full">Welcome, you</h1>
+
         </div>
         
-        <p class="mt-2 text-gray-400 text-center">Manage tasks and employees efficiently.</p>
+      
 
    <!-- ========== Start Section ========== -->
     
         <!-- ========== Start Section ========== -->
-<div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[80vh] text-white overflow-auto thin-scrollbar">
-    <!-- Task Count Cards -->
+<div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[80vh] text-white "> 
+<!-- Dashboard Section -->
+<div id="dashboard" class="hidden">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Total Tasks -->
         <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
@@ -190,6 +248,9 @@
         </div>
     </div>
 </div>
+
+</div>
+
 
 
 <!-- ========== End Section ========== -->
@@ -243,7 +304,22 @@
         });
     });
 
+//dashboard
+  function hideAllSections() {
+        document.getElementById("dashboard").classList.add("hidden");
+        // Add other sections here
+        const otherSections = ['departmentDetails', 'employeeDetails', 'taskDetails', 'scoreDetails'];
+        otherSections.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add("hidden");
+        });
+    }
 
+    function loadDashboard(event) {
+        event.preventDefault();
+        hideAllSections();
+        document.getElementById("dashboard").classList.remove("hidden");
+    }
 // Function to load Role Details content into the #contentArea div
 function loadDepartmentDetails(event) {
     event.preventDefault(); // Prevent the default behavior of the link/button click

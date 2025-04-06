@@ -15,33 +15,34 @@
         <div class="bg-gray-800 p-4 rounded-lg">
             <h2 class="text-xl font-semibold mb-4">Score List</h2>
             <div class="overflow-x-auto">
-                <table class="w-full border border-gray-600 text-center">
-                    <thead>
-                        <tr class="bg-[#ff0003] text-white">
-                            <th class="border border-gray-600 p-2">ID</th>
-                            <th class="border border-gray-600 p-2">Task Title</th>
-                              <th class="border border-gray-600 p-2">Task Member</th>
-                            <th class="border border-gray-600 p-2">Status</th>
-                            <th class="border border-gray-600 p-2">Overdue Count</th>
-                            <th class="border border-gray-600 p-2">Redo Count</th>
-                            <th class="border border-gray-600 p-2">Score</th>
-                        </tr>
-                    </thead>
+                <table class="w-full  text-center">
+           <thead>
+    <tr class="bg-[#ff0003] text-white font-bold">
+        <th class="p-2 min-w-[80px] whitespace-nowrap">ID</th>
+        <th class="p-2 min-w-[200px] whitespace-nowrap">Task Title</th>
+        <th class="p-2 min-w-[180px] whitespace-nowrap">Task Member</th>
+        <th class="p-2 min-w-[140px] whitespace-nowrap">Status</th>
+        <th class="p-2 min-w-[150px] whitespace-nowrap">Overdue Count</th>
+        <th class="p-2 min-w-[150px] whitespace-nowrap">Redo Count</th>
+        <th class="p-2 min-w-[100px] whitespace-nowrap">Score</th>
+    </tr>
+</thead>
+
     <tbody>
     @foreach ($tasks as $task)
         <tr class="bg-gray-900 hover:bg-gray-700">
-            <td class="border border-gray-600 p-2">{{ $task->id }}</td>
-            <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
-            <td class="border border-gray-600 p-2">{{ $task->assigned_to}}</td>
-            <td class="border border-gray-600 p-2">{{ $task->status }}</td>
-<td class="border border-gray-600 p-2">
+            <td class="p-2">{{ $task->id }}</td>
+            <td class=" p-2">{{ $task->task_title }}</td>
+            <td class="p-2">{{ $task->assigned_to}}</td>
+            <td class=" p-2">{{ $task->status }}</td>
+<td class=" p-2">
     <span class="redo-count" id="redo-{{ $task->id }}">
         {{ $task->redo_count ?? 0 }}
     </span>
 </td>
 
-            <td class="border border-gray-600 p-2">{{ $task->redo_count ?? 0 }}</td>
-<td class="border border-gray-600 p-2 font-bold" id="score-{{ $task->id }}">
+            <td class=" p-2">{{ $task->redo_count ?? 0 }}</td>
+<td class=" p-2 font-bold" id="score-{{ $task->id }}">
     {{ $task->score->score ?? 0 }}
 </td>
          

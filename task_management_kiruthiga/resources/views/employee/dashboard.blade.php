@@ -18,18 +18,39 @@
 
     <!-- Sidebar -->
     <div id="sidebar" class="w-full md:w-64 bg-black h-auto md:h-screen p-4 hidden md:block">
-        <a class="text-lg font-bold text-white block text-center mb-6" href="#">EMPLOYEE PANEL</a>
+        <a class="text-lg font-bold text-white block text-center mb-6 animate-pulse" href="#">EMPLOYEE PANEL</a>
+        <style>
+            @keyframes pulse {
+            0%, 100% {
+                color: #ffffff; /* White */
+            }
+            50% {
+                color: #ff0003; /* Red */
+            }
+            }
+            .animate-pulse {
+            animation: pulse 2s infinite;
+            }
+        </style>
         <ul>
  <li class="px-4 py-3">
     <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDashboard(event)">
-        <span class="icon-container w-5 h-5"></span>
+        <span class="icon-container w-5 h-5">
+               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M3 10h18M3 14h18M5 6h14M5 18h14"></path>
+            </svg>
+        </span>
         <span class="ml-4">Dashboard</span>
     </a>
 </li>
 
             <li class="px-4 py-3">
     <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyTasks(event)">
-        <span class="icon-container w-5 h-5"></span>
+        <span class="icon-container w-5 h-5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </span>
         <span class="ml-4">My Task</span>
     </a>
 </li>
@@ -37,14 +58,22 @@
 
             <li class="px-4 py-3">
                 <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyProfile(event)">
-                    <span class="icon-container w-5 h-5"></span>
+                       <span class="icon-container w-5 h-5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4z"></path>
+                        </svg>
+                    </span>
                     <span class="ml-4">My Profile</span>
                 </a>
             </li>
 
             <li class="px-4 py-3">
                 <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyScore(event)">
-                    <span class="icon-container w-5 h-5"></span>
+                     <span class="icon-container w-5 h-5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 8c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4zm0 6c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"></path>
+                        </svg>
+                    </span>
                     <span class="ml-4">My Score</span>
                 </a>
             </li>
@@ -77,31 +106,51 @@
     <!-- Mobile Sidebar -->
     <div id="mobileSidebar" class="fixed inset-0 bg-black w-64 p-4 transform -translate-x-full transition-transform duration-300 md:hidden">
         <button onclick="toggleSidebar()" class="absolute top-4 right-4 text-white text-2xl">×</button>
-        <a class="text-lg font-bold text-white block text-center mb-6" href="#">EMPLOYEE PANEL</a>
+   <a class="text-lg font-bold text-white block text-center mb-6 animate-pulse" href="#">EMPLOYEE PANEL</a>
         <ul>
             <li class="px-4 py-3">
                 <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDashboard(event)">
+                    <span class="icon-container w-5 h-5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M3 10h18M3 14h18M5 6h14M5 18h14"></path>
+            </svg>
+        </span>
                     <span class="ml-4">Dashboard</span>
                 </a>
             </li>
 
             <li class="px-4 py-3">
                 <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyTasks(event)">
+                    <span class="icon-container w-5 h-5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </span>
                     <span class="ml-4">My Tasks</span>
                 </a>
             </li>
 
             <li class="px-4 py-3">
                 <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyProfile(event)">
+                    <span class="icon-container w-5 h-5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4z"></path>
+                        </svg>
+                    </span>
                     <span class="ml-4">My Profile</span>
                 </a>
             </li>
 
-          <li class="px-4 py-3">
-    <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyScore(event)">
-        <span class="ml-4">My Score</span>
-    </a>
-</li>
+            <li class="px-4 py-3">
+                <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyScore(event)">
+                    <span class="icon-container w-5 h-5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 8c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4zm0 6c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"></path>
+                        </svg>
+                    </span>
+                    <span class="ml-4">My Score</span>
+                </a>
+            </li>
 
 
             <li class="px-4 py-3">
@@ -119,46 +168,48 @@
     <!-- Main Content -->
     <div class="flex-1 p-2 bg-black text-white flex flex-col justify-center items-center">
         <div class="flex items-center w-full justify-between px-4 md:px-0">
-            <h1 class="text-2xl font-bold text-center md:text-left w-full">Welcome, Employee</h1>
+
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Total Tasks -->
-            <div class="bg-gray-800 p-4 sm:p-6 rounded-lg shadow-lg text-center">
-                <h3 class="text-sm sm:text-lg font-semibold text-white">Total Tasks</h3>
-                <p class="text-2xl sm:text-3xl font-bold text-blue-400">{{ $totalTasks }}</p>
-            </div>
-
-            <!-- Pending Tasks -->
-            <div class="bg-yellow-600 p-4 sm:p-6 rounded-lg shadow-lg text-center">
-                <h3 class="text-sm sm:text-lg font-semibold text-white">Pending Tasks</h3>
-                <p class="text-2xl sm:text-3xl font-bold">{{ $pendingTasks }}</p>
-            </div>
-
-            <!-- Started Tasks -->
-            <div class="bg-blue-600 p-4 sm:p-6 rounded-lg shadow-lg text-center">
-                <h3 class="text-sm sm:text-lg font-semibold text-white">Started Tasks</h3>
-                <p class="text-2xl sm:text-3xl font-bold">{{ $startedTasks }}</p>
-            </div>
-
-            <!-- Completed Tasks -->
-            <div class="bg-green-600 p-4 sm:p-6 rounded-lg shadow-lg text-center">
-                <h3 class="text-sm sm:text-lg font-semibold text-white">Completed Tasks</h3>
-                <p class="text-2xl sm:text-3xl font-bold">{{ $completedTasks }}</p>
-            </div>
-
-            <!-- Review Tasks -->
-            <div class="bg-purple-600 p-4 sm:p-6 rounded-lg shadow-lg text-center">
-                <h3 class="text-sm sm:text-lg font-semibold text-white">Tasks in Review</h3>
-                <p class="text-2xl sm:text-3xl font-bold">{{ $reviewTasks }}</p>
-            </div>
+       <div id="employee-dashboard" style="display: none;">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Total Tasks -->
+        <div class="bg-gray-800 p-4 sm:p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-sm sm:text-lg font-semibold text-white">Total Tasks</h3>
+            <p class="text-2xl sm:text-3xl font-bold text-blue-400">{{ $totalTasks }}</p>
         </div>
 
-        <p class="mt-2 text-gray-400 text-center text-sm sm:text-base">Manage your tasks efficiently.</p>
+        <!-- Pending Tasks -->
+        <div class="bg-yellow-600 p-4 sm:p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-sm sm:text-lg font-semibold text-white">Pending Tasks</h3>
+            <p class="text-2xl sm:text-3xl font-bold">{{ $pendingTasks }}</p>
+        </div>
+
+        <!-- Started Tasks -->
+        <div class="bg-blue-600 p-4 sm:p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-sm sm:text-lg font-semibold text-white">Started Tasks</h3>
+            <p class="text-2xl sm:text-3xl font-bold">{{ $startedTasks }}</p>
+        </div>
+
+        <!-- Completed Tasks -->
+        <div class="bg-green-600 p-4 sm:p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-sm sm:text-lg font-semibold text-white">Completed Tasks</h3>
+            <p class="text-2xl sm:text-3xl font-bold">{{ $completedTasks }}</p>
+        </div>
+
+        <!-- Review Tasks -->
+        <div class="bg-purple-600 p-4 sm:p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-sm sm:text-lg font-semibold text-white">Tasks in Review</h3>
+            <p class="text-2xl sm:text-3xl font-bold">{{ $reviewTasks }}</p>
+        </div>
+    </div>
+</div>
+
+    
 
    <!-- Dynamic Content Area -->
         <div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[100vh] text-white overflow-auto">
               
-            <p>Select an option from the sidebar.</p>
+          
         </div>
     </div>
 
@@ -191,11 +242,21 @@ document.querySelectorAll("#mobileSidebar ul li a").forEach(item => {
 });
 
 
+function loadDashboard(event) {
+    event.preventDefault();
 
- function loadDashboard(event) {
-            event.preventDefault();
-            $("#contentArea").html("");
-        }
+    // Optionally close mobile sidebar if open
+    const sidebar = document.getElementById("mobileSidebar");
+    if (sidebar && !sidebar.classList.contains("-translate-x-full")) {
+        sidebar.classList.add("-translate-x-full");
+    }
+
+    // Get the employee dashboard content
+    const dashboardContent = document.getElementById("employee-dashboard").innerHTML;
+
+    // Inject it into the mainContent section
+    document.getElementById("contentArea").innerHTML = dashboardContent;
+}
 
 
 
