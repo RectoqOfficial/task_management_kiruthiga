@@ -144,7 +144,7 @@
                             <input type="date" name="task_start_date" id="task_start_date-{{ $task->id }}" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-black task-start-date" data-task-id="{{ $task->id }}" />
                         </td>
 <td class="border border-gray-600 p-2">
-    <input type="number" name="no_of_days" id="no_of_days-{{ $task->id }}" value="{{ $task->no_of_days }}" class="w-full p-1 rounded text-black no-of-days-input" data-task-id="{{ $task->id }}" />
+    <input type="number" name="no_of_days" id="no_of_days-{{ $task->id }}" value="{{ $task->no_of_days }}" class="w-full p-1 rounded text-white no-of-days-input" data-task-id="{{ $task->id }}" />
 </td>
 
                         <td class="border border-gray-600 p-2">

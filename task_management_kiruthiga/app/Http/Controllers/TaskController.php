@@ -74,8 +74,7 @@ public function store(Request $request)
             'score' => 100,
         ]);
 
-  return response()->json(['message' => 'Task Created Successfully']);
-
+        return response()->json(['success' => true, 'message' => 'Task created successfully', 'task' => $task], 201);
     } catch (\Exception $e) {
         \Log::error('Error creating task: ' . $e->getMessage());
         return response()->json(['success' => false, 'message' => 'Error creating task'], 500);
@@ -122,20 +121,13 @@ public function store(Request $request)
 
 
       // Delete a task
-// TaskController.php
-public function destroy($id)
+ public function destroy($id)
 {
-    $task = Task::find($id);
-
-    if (!$task) {
-        return response()->json(['success' => false, 'message' => 'Task not found.']);
-    }
-
+    $task = Task::findOrFail($id);
     $task->delete();
 
-    return response()->json(['success' => true, 'message' => 'Task deleted successfully.']);
+    return response()->json(['success' => true]);
 }
-
 
 
     // Get roles by department
@@ -245,68 +237,46 @@ public function updateRemarks(Request $request, $id)
     return response()->json(['success' => true, 'message' => 'Remark updated successfully', 'remarks' => $task->remarks]);
 }
 
+//redo count
 public function redoTask(Request $request)
 {
-    $task = Task::with('score')->find($request->task_id);
+    $task = Task::find($request->task_id);
 
-    if ($task && $task->score) {
-        // ✅ 1. Increase redo_count (ascending)
-        $task->score->redo_count += 1;
+    if ($task) {
+        // Increase redo_count by 1
+        $task->redo_count += 1;
 
-        // ✅ 2. Decrease score by 10 (can go negative)
+          // Reduce score by 10 (ALLOW negative values now)
         $task->score->score -= 10;
-
-        // ✅ 3. Save score changes
         $task->score->save();
 
-        // ✅ 4. Update task status to 'Pending'
+        // Update the status to "Pending"
         $task->status = "Pending";
         $task->save();
 
         return response()->json([
-            'redo_count' => $task->score->redo_count,
-            'score' => $task->score->score,
-            'status' => $task->status
+            'redo_count' => $task->redo_count,
+            'status' => $task->status,
+            'score' => $task->score->score
         ]);
     }
 
-    return response()->json(['error' => 'Task or Score not found!'], 404);
+    return response()->json(['error' => 'Task not found!'], 404);
 }
-
 
 public function updateOverdueTasks()
 {
-    // Get overdue tasks (not completed, and due_date is in the past)
-    $tasks = Task::with('score')
-        ->where('deadline', '<', now()) // use 'deadline' instead of 'due_date' if that's your column
-        ->where('status', '!=', 'Completed')
-        ->get();
+    $tasks = Task::where('due_date', '<', now()) // Find overdue tasks
+                 ->where('status', '!=', 'Completed') // Ignore completed tasks
+                 ->get();
 
     foreach ($tasks as $task) {
-        if ($task->score) {
-            // 1. Increment overdue count
-            $task->score->overdue_count += 1;
-
-            // 2. Decrease score (even into negatives)
-            $task->score->score -= 5; // or -10 if you prefer
-
-            // 3. Save score
-            $task->score->save();
-        }
-
-        // 4. Check if task has been overdue for too long
-        if ($task->score->overdue_count >= $task->no_of_days) {
-            $task->status = "Completed"; // Force-complete
-        }
-
+        $task->increment('overdue_count'); // Increase overdue count
         $task->save();
     }
 
-    \Log::info("✅ Overdue tasks updated successfully.");
-    return response()->json(['message' => 'Overdue tasks updated']);
+    \Log::info("Overdue tasks updated successfully.");
 }
-
-
 
 
 public function showScoreboard()
