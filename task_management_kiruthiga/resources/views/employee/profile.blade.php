@@ -24,7 +24,7 @@
         </div>
         <div class="p-8 space-y-6">
             <div class="flex items-center space-x-4">
-                <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold text-xl">
+                <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold text-xl animate-color">
                     {{ substr($employee->full_name, 0, 1) }}
                 </div>
                 <div>
