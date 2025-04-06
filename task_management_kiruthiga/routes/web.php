@@ -113,8 +113,6 @@ Route::post('/tasks/redo', [TaskController::class, 'redoTask'])->name('tasks.red
 
 
 
-
-
 use App\Http\Controllers\ScoreController;
 
 Route::get('/scores', [ScoreController::class, 'index'])->name('scores.index');

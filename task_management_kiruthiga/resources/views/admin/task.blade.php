@@ -9,7 +9,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="{{ asset('js/tasks.js') }}"></script>
-
+    <style>
+            /* Custom scrollbar styles */
+            .max-w-5xl::-webkit-scrollbar {
+                width: 6px;
+            }
+            .max-w-5xl::-webkit-scrollbar-thumb {
+                background-color: #888;
+                border-radius: 10px;
+            }
+            .max-w-5xl::-webkit-scrollbar-thumb:hover {
+                background-color: #555;
+            }
+        </style>
 </head>
 
 <body class="bg-black text-white p-6">
@@ -84,107 +96,76 @@
 </div>
 <div class="max-w-5xl mx-auto">
     <h2 class="text-xl font-semibold mb-4">Task List</h2>
-
-
-
-    <div class="overflow-x-auto">
-        <table class="w-full border border-gray-600 text-center">
+    <div class="max-w-5xl mx-auto overflow-x-auto" style="max-height: 500px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #888 #444;">
+    
+        <table class="w-full text-center">
             <thead>
-                <tr class="bg-[#ff0003] text-white">
-                    <th class="border border-gray-600 p-2">ID</th>
-                    <th class="border border-gray-600 p-2">Task Title</th>
-                    <th class="border border-gray-600 p-2">Description</th>
-                    <th class="border border-gray-600 p-2">Assigned To</th>
-                    <th class="border border-gray-600 p-2">Status</th>
-                     <th class="border border-gray-600 p-2">Redo Count</th>
-                    <th class="border border-gray-600 p-2">Task Create Date</th>
-                    <th class="border border-gray-600 p-2">Task Start Date</th>
-                    <th class="border border-gray-600 p-2">No. of Days</th>
-                    <th class="border border-gray-600 p-2">Deadline</th>
-                    <th class="border border-gray-600 p-2">Remarks</th>
-                    <th class="border border-gray-600 p-2">Actions</th>
+                <tr class="bg-[#ff0003] text-white text-sm">
+                    <th class="p-2 whitespace-nowrap min-w-[60px]">ID</th>
+                    <th class="p-2 whitespace-nowrap min-w-[120px]">Task Title</th>
+                    <th class="p-2 whitespace-nowrap min-w-[160px]">Description</th>
+                    <th class="p-2 whitespace-nowrap min-w-[140px]">Assigned To</th>
+                    <th class="p-2 whitespace-nowrap min-w-[100px]">Status</th>
+                    <th class="p-2 whitespace-nowrap min-w-[130px]">Redo Count</th>
+                    <th class="p-2 whitespace-nowrap min-w-[160px]">Task Create Date</th>
+                    <th class="p-2 whitespace-nowrap min-w-[160px]">Task Start Date</th>
+                    <th class="p-2 whitespace-nowrap min-w-[130px]">No. of Days</th>
+                    <th class="p-2 whitespace-nowrap min-w-[120px]">Deadline</th>
+                    <th class="p-2 whitespace-nowrap min-w-[140px]">Remarks</th>
+                    <th class="p-2 whitespace-nowrap min-w-[100px]">Actions</th>
                 </tr>
             </thead>
-            <tbody id="task-table-body">
+            <tbody id="task-table-body" class="text-sm">
                 @foreach ($tasks as $task)
-                    <tr class="bg-gray-900 hover:bg-gray-700">
-                        <td class="border border-gray-600 p-2">{{ $task->id }}</td>
-                        <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
-                        <td class="border border-gray-600 p-2">{{ $task->description }}</td>
-      
-                        <td class="border border-gray-600 p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
-<td class="border border-gray-600 p-2">
-    
-    {{-- Admin Dropdown --}}
-    @if (Auth::guard('admin')->check() && $task->status !== 'Completed')
-        <select id="status-{{ $task->id }}" class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
-              <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-            <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                          <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-                                      <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
-        </select>
-
-    {{-- Employee Dropdown --}}
-    @elseif (Auth::guard('employee')->check() && $task->status !== 'Completed')
-        <select id="status-{{ $task->id }}" class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
-   
-              <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-            <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                          <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-                                      <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
-        </select>
-
-    {{-- Read-Only Text for Everyone Else --}}
-    @else
-        <span id="status-text-{{ $task->id }}">{{ $task->status }}</span>
-    @endif
-</td>
-
-
-
-
-
-<!-- Redo Count Column -->
-<td class="border border-gray-600 p-2">
-    <span class="redo-count">{{ $task->redo_count ?? 0 }}</span>
-    
-    @if (Auth::guard('employee')->check() && $task->status == 'Review')
-        <!-- Show Redo button only when employee is logged in and status is 'Review' -->
-        <button class="px-2 py-1 bg-red-600 text-white rounded redo-btn" data-task-id="{{ $task->id }}">
-            Redo
-        </button>
-    @endif
-</td>
-
-
-
-                        <td class="border border-gray-600 p-2">{{ $task->task_create_date }}</td>
-                        <td class="border border-gray-600 p-2">
-                            <input type="date" name="task_start_date" id="task_start_date-{{ $task->id }}" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-black task-start-date" data-task-id="{{ $task->id }}" />
+                    <tr class="bg-gray-900 hover:bg-gray-700 text-white">
+                        <td class="p-2">{{ $task->id }}</td>
+                        <td class="p-2">{{ $task->task_title }}</td>
+                        <td class="p-2">{{ $task->description }}</td>
+                        <td class="p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
+                        <td class="p-2">
+                            @if (Auth::guard('admin')->check() && $task->status !== 'Completed')
+                                <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
+                                    <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
+                                    <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
+                                    <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                </select>
+                            @elseif (Auth::guard('employee')->check() && $task->status !== 'Completed')
+                                <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
+                                    <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
+                                    <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
+                                    <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                                </select>
+                            @else
+                                <span>{{ $task->status }}</span>
+                            @endif
                         </td>
-<td class="border border-gray-600 p-2">
-    <input type="number" name="no_of_days" id="no_of_days-{{ $task->id }}" value="{{ $task->no_of_days }}" class="w-full p-1 rounded text-white no-of-days-input" data-task-id="{{ $task->id }}" />
-</td>
-
-                        <td class="border border-gray-600 p-2">
-                            <input type="date" name="deadline" id="deadline-{{ $task->id }}" value="{{ $task->deadline }}" readonly class="w-full p-1 rounded text-white bg-gray-700 task-deadline" data-task-id="{{ $task->id }}" />
+                        <td class="p-2">
+                            <span class="redo-count">{{ $task->redo_count ?? 0 }}</span>
+                            @if (Auth::guard('employee')->check() && $task->status == 'Review')
+                                <button class="px-2 py-1 bg-red-600 text-white rounded redo-btn" data-task-id="{{ $task->id }}">Redo</button>
+                            @endif
                         </td>
-<td class="border border-gray-600 p-2">
-    <textarea class="w-full p-1 rounded text-black remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
-    <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="{{ $task->id }}">
-        Save
-    </button>
-</td>
-
-                        <td class="border border-gray-600 p-2">
-<form class="task-delete-form" data-task-id="{{ $task->id }}">
-    @csrf
-    <button type="button" class="px-2 py-1 bg-red-600 text-white rounded ml-2 delete-task-btn">
-        Delete
-    </button>
-</form>
-
-
+                        <td class="p-2">{{ $task->task_create_date }}</td>
+                        <td class="p-2">
+                            <input type="date" class="w-full p-1 rounded text-black task-start-date" value="{{ $task->task_start_date }}" data-task-id="{{ $task->id }}" />
+                        </td>
+                        <td class="p-2">
+                            <input type="number" class="w-full p-1 rounded text-white no-of-days-input" value="{{ $task->no_of_days }}" data-task-id="{{ $task->id }}" />
+                        </td>
+                        <td class="p-2">
+                            <input type="date" readonly class="w-full p-1 rounded text-white bg-gray-700 task-deadline" value="{{ $task->deadline }}" data-task-id="{{ $task->id }}" />
+                        </td>
+                        <td class="p-2">
+                            <textarea class="w-full p-1 rounded text-black remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
+                            <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="{{ $task->id }}">Save</button>
+                        </td>
+                        <td class="p-2">
+                            <form class="task-delete-form" data-task-id="{{ $task->id }}">
+                                @csrf
+                                <button type="button" class="px-2 py-1 bg-red-600 text-white rounded delete-task-btn">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach

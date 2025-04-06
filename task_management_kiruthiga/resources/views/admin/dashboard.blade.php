@@ -13,6 +13,24 @@
     body {
         font-family: 'Poppins', sans-serif;
     }
+    .thin-scrollbar {
+        scrollbar-width: thin; /* For Firefox */
+        scrollbar-color: #4B5563 transparent; /* For Firefox */
+    }
+
+    .thin-scrollbar::-webkit-scrollbar {
+        width: 6px; /* For Chrome, Edge, and Safari */
+    }
+
+    .thin-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #4B5563; /* Gray color for the scrollbar thumb */
+        border-radius: 10px;
+    }
+
+    .thin-scrollbar::-webkit-scrollbar-track {
+        background: transparent; /* Transparent track */
+    }
+
 </style>
 
 </head>
@@ -138,7 +156,7 @@
    <!-- ========== Start Section ========== -->
     
         <!-- ========== Start Section ========== -->
-<div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[100vh] text-white overflow-auto">
+<div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[80vh] text-white overflow-auto thin-scrollbar">
     <!-- Task Count Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Total Tasks -->
@@ -172,6 +190,8 @@
         </div>
     </div>
 </div>
+
+
 <!-- ========== End Section ========== -->
 
    <!-- ========== End Section ========== -->

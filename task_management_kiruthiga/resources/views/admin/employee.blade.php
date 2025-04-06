@@ -9,7 +9,19 @@
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
  
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
+    <style>
+            /* Custom scrollbar styles */
+            .max-w-5xl::-webkit-scrollbar {
+                width: 6px;
+            }
+            .max-w-5xl::-webkit-scrollbar-thumb {
+                background-color: #888;
+                border-radius: 10px;
+            }
+            .max-w-5xl::-webkit-scrollbar-thumb:hover {
+                background-color: #555;
+            }
+        </style>
 </head>
 @extends('layouts.app')
 
@@ -22,7 +34,7 @@
 
 <div class="container mx-auto p-6 bg-black text-white min-h-screen">
 
-    <h2 class="text-2xl font-bold mb-4">Employee Details</h2>
+    <h2 class="text-2xl font-bold mb-4 max-w-5xl mx-auto">Employee Details</h2>
 
     <!-- Success Message -->
     @if(session('success'))
@@ -30,73 +42,75 @@
     @endif
 
     <!-- Employee Form -->
-<form id="addEmployeeForm" method="POST" action="{{ route('admin.addEmployee') }}"  class="bg-gray-800 p-6 rounded-lg shadow-lg">
-    @csrf
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-            <label class="block">Full Name</label>
-            <input type="text" name="full_name" class="w-full p-2 rounded bg-gray-700 text-white" required>
+    <form id="addEmployeeForm" method="POST" action="{{ route('admin.addEmployee') }}" class="max-w-5xl mx-auto ">
+        @csrf
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block">Full Name</label>
+                <input type="text" name="full_name" class="w-full p-2 rounded bg-gray-700 text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#ff0003]" required>
+            </div>
+            <div>
+                <label class="block">Gender</label>
+                <select name="gender" class="w-full p-2 rounded bg-gray-700 text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#ff0003]" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div>
+                <label class="block">Date of Joining</label>
+                <input type="date" name="date_of_joining" class="w-full p-2 rounded bg-gray-700 text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#ff0003]" required>
+            </div>
         </div>
-        <div>
-            <label class="block">Gender</label>
-            <select name="gender" class="w-full p-2 rounded bg-gray-700 text-white" required>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
-        <div>
-            <label class="block">Date of Joining</label>
-            <input type="date" name="date_of_joining" class="w-full p-2 rounded bg-gray-700 text-white" required>
-        </div>
-    </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <div>
-            <label class="block">Contact</label>
-            <input type="text" name="contact" class="w-full p-2 rounded bg-gray-700 text-white" required>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div>
+                <label class="block">Contact</label>
+                <input type="text" name="contact" class="w-full p-2 rounded bg-gray-700 text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#ff0003]" required>
+            </div>
+            <div>
+                <label class="block">Email ID</label>
+                <input type="email" name="email_id" class="w-full p-2 rounded bg-gray-700 text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#ff0003]" required>
+            </div>
+            <div>
+                <label class="block">Password</label>
+                <input type="password" name="password" class="w-full p-2 rounded bg-gray-700 text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#ff0003]" required>
+            </div>
         </div>
-        <div>
-            <label class="block">Email ID</label>
-            <input type="email" name="email_id" class="w-full p-2 rounded bg-gray-700 text-white" required>
-        </div>
-        <div>
-            <label class="block">Password</label>
-            <input type="password" name="password" class="w-full p-2 rounded bg-gray-700 text-white" required>
-        </div>
-    </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-        <div>
-            <label class="block">Department</label>
-            <select name="department_id" id="departmentSelect" class="w-full p-2 rounded bg-gray-700 text-white" required>
-                <option value="">Select Department</option>
-                @foreach($departments as $department)
-                    <option value="{{ $department->id }}">{{ $department->name }}</option>
-                @endforeach
-            </select>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div>
+                <label class="block">Department</label>
+                <select name="department_id" id="departmentSelect" class="w-full p-2 rounded bg-gray-700 text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#ff0003]" required>
+                    <option value="">Select Department</option>
+                    @foreach($departments as $department)
+                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block">Role</label>
+                <select name="role_id" id="roleSelect" class="w-full p-2 rounded bg-gray-700 text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#ff0003]" required>
+                    <option value="">Select Role</option>
+                    @foreach($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block">Job Type</label>
+                <select name="jobtype" class="w-full p-2 rounded bg-gray-700 text-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#ff0003]" required>
+                    <option value="Full-Time">Full-Time</option>
+                    <option value="Part-Time">Part-Time</option>
+                    <option value="Contract">Contract</option>
+                </select>
+            </div>
         </div>
-        <div>
-            <label class="block">Role</label>
-            <select name="role_id" id="roleSelect" class="w-full p-2 rounded bg-gray-700 text-white" required>
-                <option value="">Select Role</option>
-                @foreach($roles as $role)
-                    <option value="{{ $role->id }}">{{ $role->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <label class="block">Job Type</label>
-            <select name="jobtype" class="w-full p-2 rounded bg-gray-700 text-white" required>
-                <option value="Full-Time">Full-Time</option>
-                <option value="Part-Time">Part-Time</option>
-                <option value="Contract">Contract</option>
-            </select>
-        </div>
-    </div>
 
-    <button type="submit" class="w-full md:w-auto mt-4 px-6 py-2 bg-[#ff0003] hover:bg-red-700 text-white rounded">SUBMIT</button>
-</form>
+        <div class="flex justify-center mt-4">
+            <button type="submit" class="px-6 py-2 bg-[#ff0003] hover:bg-red-700 text-white rounded">SUBMIT</button>
+        </div>
+    </form>
 
 <!-- Success Message -->
 <!-- Success message that will show after employee is added -->
@@ -106,12 +120,11 @@
 
     <hr class="my-6 border-gray-600">
     
-   <h2 class="text-2xl font-bold mb-4">Table Details </h2>
-    <!-- Filters Section -->
-    <div class="flex flex-wrap gap-4 p-4 bg-gray-800 text-white">
+   <h2 class="text-2xl font-bold mb-4 max-w-5xl mx-auto ">Table Details </h2>
+  <div class="flex flex-wrap gap-6 p-7 text-white max-w-5xl mx-auto">
         <!-- Email Search -->
         <div class="w-full md:w-auto">
-            <input type="text" id="searchEmail" placeholder="Search by Email" class="w-full p-2 text-black border rounded">
+            <input type="text" id="searchEmail" placeholder="Search by Email" class="w-full p-2 text-white border rounded">
         </div>
 
         <!-- Department Filter -->
@@ -142,39 +155,42 @@
     </div>
 
     <!-- Employee Table -->
-    <div class="overflow-x-auto">
-        <table class="w-full text-left border bg-[#ff0003] text-sm md:text-base" id="employeeList">
-            <thead class="bg-[#ff0003] text-white">
-                <tr>
-                    <th class="p-5 border">ID</th>
-                    <th class="p-5 border">Full Name</th>
-                    <th class="p-5 border">Gender</th>
-                    <th class="p-5 border">D.O.J</th>
-                    <th class="p-5 border">Contact</th>
-                    <th class="p-5 border">Email ID</th>
-                    <th class="p-5 border">Department</th>
-                    <th class="p-5 border">Role</th>
-                    <th class="p-5 border">Job Type</th>
-                    <th class="p-5 border">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
+       <div class="max-w-5xl mx-auto overflow-x-auto" style="max-height: 500px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #888 #444;">
+            <!-- Filters Section -->
+  
+        <table class="w-full text-left bg-[#ff0003] text-sm md:text-base" id="employeeList">
+          <thead class="bg-[#ff0003] text-white text-sm font-semibold text-center">
+    <tr>
+        <th class="p-4 min-w-[80px] max-w-[100px] truncate">ID</th>
+        <th class="p-4 min-w-[160px] max-w-[180px] truncate">Full Name</th>
+        <th class="p-4 min-w-[100px] max-w-[120px] truncate">Gender</th>
+        <th class="p-4 min-w-[120px] max-w-[140px] truncate">D.O.J</th>
+        <th class="p-4 min-w-[140px] max-w-[160px] truncate">Contact</th>
+        <th class="p-4 min-w-[180px] max-w-[220px] truncate">Email ID</th>
+        <th class="p-4 min-w-[140px] max-w-[160px] truncate">Department</th>
+        <th class="p-4 min-w-[100px] max-w-[120px] truncate">Role</th>
+        <th class="p-4 min-w-[120px] max-w-[140px] truncate">Job Type</th>
+        <th class="p-4 min-w-[100px] max-w-[120px] truncate">Actions</th>
+    </tr>
+</thead>
+
+            <tbody class="overflow-y-auto thin-scrollbar">
                 @foreach($employees as $employee)
                     <tr class="bg-gray-700 hover:bg-gray-600">
-                        <td class="p-3 border">{{ $employee->id }}</td>
-                        <td class="p-3 border">{{ $employee->full_name }}</td>
-                        <td class="p-3 border">{{ $employee->gender }}</td>
-                        <td class="p-3 border">{{ $employee->date_of_joining }}</td>
-                        <td class="p-3 border">{{ $employee->contact }}</td>
-                        <td class="p-3 border">{{ $employee->email_id }}</td>
-                        <td class="p-3 border">{{ $employee->department->name }}</td>
-                        <td class="p-3 border">{{ $employee->role->name }}</td>
-                        <td class="p-3 border">{{ $employee->jobtype }}</td>
- <td class="p-3 border text-center">
-    <button onclick="deleteEmployee(event, {{ $employee->id }})" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-        Delete
-    </button>
-</td>
+                        <td class="p-3">{{ $employee->id }}</td>
+                        <td class="p-3">{{ $employee->full_name }}</td>
+                        <td class="p-3">{{ $employee->gender }}</td>
+                        <td class="p-3">{{ $employee->date_of_joining }}</td>
+                        <td class="p-3">{{ $employee->contact }}</td>
+                        <td class="p-3">{{ $employee->email_id }}</td>
+                        <td class="p-3">{{ $employee->department->name }}</td>
+                        <td class="p-3">{{ $employee->role->name }}</td>
+                        <td class="p-3">{{ $employee->jobtype }}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="deleteEmployee(event, {{ $employee->id }})" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                                Delete
+                            </button>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
@@ -232,16 +248,16 @@ $('#addEmployeeForm').on('submit', function (e) {
                             var newEmployee = response.employee;
                             var newRow = `
                                 <tr class="bg-gray-700 hover:bg-gray-600">
-                                    <td class="p-3 border">${newEmployee.id}</td>
-                                    <td class="p-3 border">${newEmployee.full_name}</td>
-                                    <td class="p-3 border">${newEmployee.gender}</td>
-                                    <td class="p-3 border">${newEmployee.date_of_joining}</td>
-                                    <td class="p-3 border">${newEmployee.contact}</td>
-                                    <td class="p-3 border">${newEmployee.email_id}</td>
-                                    <td class="p-3 border">${newEmployee.department.name}</td>
-                                    <td class="p-3 border">${newEmployee.role.name}</td>
-                                    <td class="p-3 border">${newEmployee.jobtype}</td>
-                                    <td class="p-3 border text-center">
+                                    <td class="p-3 ">${newEmployee.id}</td>
+                                    <td class="p-3 ">${newEmployee.full_name}</td>
+                                    <td class="p-3 ">${newEmployee.gender}</td>
+                                    <td class="p-3 ">${newEmployee.date_of_joining}</td>
+                                    <td class="p-3 ">${newEmployee.contact}</td>
+                                    <td class="p-3 ">${newEmployee.email_id}</td>
+                                    <td class="p-3 ">${newEmployee.department.name}</td>
+                                    <td class="p-3 ">${newEmployee.role.name}</td>
+                                    <td class="p-3">${newEmployee.jobtype}</td>
+                                    <td class="p-3 text-center">
                                         <button onclick="deleteEmployee(event, ${newEmployee.id})" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
                                             Delete
                                         </button>
@@ -332,16 +348,16 @@ function deleteEmployee(event, employeeId) {
                 data.employees.forEach(employee => {
                     tbody.innerHTML += `
                         <tr class="bg-gray-700 hover:bg-gray-600">
-                            <td class="p-3 border">${employee.id}</td>
-                            <td class="p-3 border">${employee.full_name}</td>
-                            <td class="p-3 border">${employee.gender}</td>
-                            <td class="p-3 border">${employee.date_of_joining}</td>
-                            <td class="p-3 border">${employee.contact}</td>
-                            <td class="p-3 border">${employee.email_id}</td>
-                            <td class="p-3 border">${employee.department.name}</td>
-                            <td class="p-3 border">${employee.role.name}</td>
-                            <td class="p-3 border">${employee.jobtype}</td>
-                            <td class="p-3 border text-center">
+                            <td class="p-3 ">${employee.id}</td>
+                            <td class="p-3 ">${employee.full_name}</td>
+                            <td class="p-3 ">${employee.gender}</td>
+                            <td class="p-3 ">${employee.date_of_joining}</td>
+                            <td class="p-3 ">${employee.contact}</td>
+                            <td class="p-3 ">${employee.email_id}</td>
+                            <td class="p-3 ">${employee.department.name}</td>
+                            <td class="p-3 ">${employee.role.name}</td>
+                            <td class="p-3 ">${employee.jobtype}</td>
+                            <td class="p-3  text-center">
                                 <button onclick="deleteEmployee(event, ${employee.id})" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
                                     Delete
                                 </button>
