@@ -11,6 +11,7 @@
     <script src="{{ asset('js/tasks.js') }}"></script>
 
 </head>
+
 <body class="bg-black text-white p-6">
 <div class="max-w-5xl mx-auto">
     <h1 class="text-3xl font-bold mb-6 text-center">Task Management</h1>
@@ -72,7 +73,7 @@
         <!-- No. of Days -->
         <div class="mb-4">
             <label class="block text-white mb-2">No. of Days</label>
-            <input type="number" name="no_of_days" id="no_of_days" required class="w-full p-3 rounded text-white bg-gray-700">
+            <input type="number" name="no_of_days" id="no_of_days" required class="w-full p-3 rounded text-black bg-gray-700">
         </div>
 
        <button type="submit" id="createTaskBtn" onclick="console.log('Create Task Clicked');" class="mt-4 w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded">
@@ -104,7 +105,7 @@
                     <th class="border border-gray-600 p-2">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="task-table-body">
                 @foreach ($tasks as $task)
                     <tr class="bg-gray-900 hover:bg-gray-700">
                         <td class="border border-gray-600 p-2">{{ $task->id }}</td>
@@ -143,7 +144,7 @@
                             <input type="date" name="task_start_date" id="task_start_date-{{ $task->id }}" value="{{ $task->task_start_date }}" class="w-full p-1 rounded text-black task-start-date" data-task-id="{{ $task->id }}" />
                         </td>
 <td class="border border-gray-600 p-2">
-    <input type="number" name="no_of_days" id="no_of_days-{{ $task->id }}" value="{{ $task->no_of_days }}" class="w-full p-1 rounded text-white no-of-days-input" data-task-id="{{ $task->id }}" />
+    <input type="number" name="no_of_days" id="no_of_days-{{ $task->id }}" value="{{ $task->no_of_days }}" class="w-full p-1 rounded text-black no-of-days-input" data-task-id="{{ $task->id }}" />
 </td>
 
                         <td class="border border-gray-600 p-2">
@@ -157,13 +158,14 @@
 </td>
 
                         <td class="border border-gray-600 p-2">
-                            <form class="task-delete-form" data-task-id="{{ $task->id }}">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button" class="px-2 py-1 bg-red-600 text-white rounded ml-2 delete-task-btn">
-                                    Delete
-                                </button>
-                            </form>
+<form class="task-delete-form" data-task-id="{{ $task->id }}">
+    @csrf
+    <button type="button" class="px-2 py-1 bg-red-600 text-white rounded ml-2 delete-task-btn">
+        Delete
+    </button>
+</form>
+
+
                         </td>
                     </tr>
                 @endforeach
@@ -187,35 +189,73 @@
             });
         });
 });
+    $(document).ready(function () {
+        // 🔁 Prevent binding the event multiple times
+        $(document).off('submit', '#taskForm');
 
-$(document).ready(function () {
-    $('#role_id').change(function () {
-        let roleId = $(this).val();
+        // Employee Dropdown by Role
+        $('#role_id').change(function () {
+            let roleId = $(this).val();
 
-        if (roleId) {
-         $.ajax({
-    url: "{{ route('getEmployeesByRole') }}", // Ensure this is inside a Blade file
-    type: "GET",
-    data: { role_id: roleId },
-    success: function (response) {
-        let assignedToDropdown = $('#assigned_to');
-        assignedToDropdown.empty();
-        assignedToDropdown.append('<option value="">Select Employee</option>');
+            if (roleId) {
+                $.ajax({
+                    url: "{{ route('getEmployeesByRole') }}",
+                    type: "GET",
+                    data: { role_id: roleId },
+                    success: function (response) {
+                        let assignedToDropdown = $('#assigned_to');
+                        assignedToDropdown.empty();
+                        assignedToDropdown.append('<option value="">Select Employee</option>');
 
-        response.forEach(function (employee) {
-            assignedToDropdown.append(
-                `<option value="${employee.id}">${employee.full_name} (${employee.email_id})</option>`
-            );
+                        response.forEach(function (employee) {
+                            assignedToDropdown.append(
+                                `<option value="${employee.id}">${employee.full_name} (${employee.email_id})</option>`
+                            );
+                        });
+                    },
+                    error: function (xhr) {
+                        console.error('Error fetching employees:', xhr.responseText);
+                    }
+                });
+            }
         });
-    },
-    error: function (xhr) {
-        console.error('Error fetching employees:', xhr.responseText);
-    }
-});
 
-        }
+        // 🚀 AJAX Form Submission
+        $('#taskForm').submit(function (e) {
+            e.preventDefault();
+
+            let formData = $(this).serialize();
+
+            $.ajax({
+                url: "{{ route('tasks.store') }}",
+                method: "POST",
+                data: formData,
+                success: function (response) {
+                    alert('✅ Task created successfully!');
+                    $('#taskForm')[0].reset();
+
+                    // ✅ Optional: Add new task row to your table
+                    if (response.task) {
+                        $('#task-table-body').append(`
+                            <tr>
+                                <td>${response.task.task_title}</td>
+                                <td>${response.task.description}</td>
+                                <td>${response.task.task_start_date ?? '-'}</td>
+                                <td>${response.task.no_of_days}</td>
+                                <td>${response.task.deadline}</td>
+                                <td>${response.task.status}</td>
+                                <td>${response.task?.employee?.full_name ?? '-'}</td>
+                            </tr>
+                        `);
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr.responseText);
+                    alert('❌ Error creating task.');
+                }
+            });
+        });
     });
-});
 
 //calculate deadline based on no_od_days
 document.querySelectorAll('.task-start-date').forEach(input => {
@@ -376,32 +416,33 @@ document.querySelectorAll('.task-start-date').forEach(input => {
 
 
  
-
-
-    //delet 
-    $(document).ready(function () {
+//delete
+$(document).ready(function () {
     $(document).on("click", ".delete-task-btn", function () {
-        let taskId = $(this).closest("form").data("task-id");
-        let $row = $(this).closest("tr"); // Get the row for removal
+        const form = $(this).closest("form");
+        const taskId = form.data("task-id");
+        const row = form.closest("tr");
 
         if (confirm("Are you sure you want to delete this task?")) {
             $.ajax({
-                url: "/tasks/" + taskId + "/delete", // Adjust route if needed
+                url: `/tasks/${taskId}`,
                 type: "DELETE",
-                data: {
-                    _token: "{{ csrf_token() }}"
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
                 },
                 success: function (response) {
                     if (response.success) {
-                        $row.fadeOut(500, function () {
-                            $(this).remove(); // Remove the row from the table
+                        alert(response.message); // Optional alert
+                        row.fadeOut(300, function () {
+                            $(this).remove();
                         });
                     } else {
-                        alert("Failed to delete task.");
+                        alert("Error: " + response.message);
                     }
                 },
-                error: function () {
-                    alert("Error occurred while deleting task.");
+                error: function (xhr) {
+                    console.error(xhr.responseText);
+                    alert("An error occurred while deleting the task.");
                 }
             });
         }
@@ -508,7 +549,7 @@ document.querySelectorAll('.save-remark-btn').forEach(button => {
                 },
                 success: function (response) {
                     redoCountCell.text(response.redo_count);
-
+    scoreSpan.text(response.score); // Can now show negative values
                     // Update status to 'Pending' dynamically
                     if (statusSelect.length) {
                         statusSelect.val("Pending"); // For employees (dropdown)
@@ -532,6 +573,17 @@ document.querySelectorAll('.save-remark-btn').forEach(button => {
         // If the new status is 'Completed', hide the redo button
         if (newStatus === 'Completed') {
             $('.redo-btn[data-task-id="' + taskId + '"]').hide();
+        }
+    });
+});
+//overdue 
+$(document).ready(function () {
+    $('.task-deadline').each(function () {
+        let deadline = new Date($(this).data('deadline'));
+        let today = new Date();
+
+        if (deadline < today) {
+            $(this).closest('tr').addClass('bg-red-100 text-red-800');
         }
     });
 });

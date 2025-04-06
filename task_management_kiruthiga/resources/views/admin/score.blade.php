@@ -33,7 +33,12 @@
             <td class="border border-gray-600 p-2">{{ $task->task_title }}</td>
             <td class="border border-gray-600 p-2">{{ $task->assigned_to}}</td>
             <td class="border border-gray-600 p-2">{{ $task->status }}</td>
-            <td class="border border-gray-600 p-2">{{ $task->score->overdue_count ?? 0 }}</td>
+<td class="border border-gray-600 p-2">
+    <span class="redo-count" id="redo-{{ $task->id }}">
+        {{ $task->redo_count ?? 0 }}
+    </span>
+</td>
+
             <td class="border border-gray-600 p-2">{{ $task->redo_count ?? 0 }}</td>
 <td class="border border-gray-600 p-2 font-bold" id="score-{{ $task->id }}">
     {{ $task->score->score ?? 0 }}
@@ -48,7 +53,7 @@
 
     </div>
 <script>
-      //redo count
+//redo count
     $(document).ready(function () {
         $(".redo-btn").click(function () {
             var taskId = $(this).data("task-id");
@@ -66,7 +71,7 @@
                 },
                 success: function (response) {
                     redoCountCell.text(response.redo_count);
-
+    scoreSpan.text(response.score); // Can now show negative values
                     // Update status to 'Pending' dynamically
                     if (statusSelect.length) {
                         statusSelect.val("Pending"); // For employees (dropdown)
@@ -82,29 +87,43 @@
         });
     });
 
+    $(document).ready(function() {
+    $('.status-select').on('change', function() {
+        let taskId = $(this).data('task-id');
+        let newStatus = $(this).val();
 
-    $(document).on("click", ".update-overdue-btn", function () {
-        var taskId = $(this).data("task-id");
-
-        $.ajax({
-            url: "/tasks/update-overdue/" + taskId,
-            method: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-            },
-            success: function (response) {
-                if (response.success) {
-                    alert("Overdue count updated!");
-                    location.reload(); // Refresh scoreboard
-                } else {
-                    alert(response.message);
-                }
-            },
-            error: function () {
-                alert("Failed to update overdue count.");
-            }
-        });
+        // If the new status is 'Completed', hide the redo button
+        if (newStatus === 'Completed') {
+            $('.redo-btn[data-task-id="' + taskId + '"]').hide();
+        }
     });
+});
+
+public function updateOverdueTasks()
+{
+    $tasks = Task::with('score')
+        ->where('deadline', '<', now())
+        ->where('status', '!=', 'Completed')
+        ->get();
+
+    foreach ($tasks as $task) {
+        if ($task->score) {
+            $task->score->overdue_count += 1;
+            $task->score->score -= 5; // or -10 as you need
+            $task->score->save();
+        }
+
+        // Optional: If overdue_count crosses some threshold
+        if ($task->score->overdue_count >= $task->no_of_days) {
+            $task->status = "Completed";
+            $task->save();
+        }
+    }
+
+    \Log::info("Overdue tasks updated and score decreased.");
+}
+
+
 </script>
 </body>
 </html>

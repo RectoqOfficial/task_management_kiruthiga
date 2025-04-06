@@ -10,12 +10,12 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      */
-    protected function schedule(Schedule $schedule)
-    {
-        $schedule->call(function () {
-            app(\App\Http\Controllers\TaskController::class)->updateOverdueTasks();
-        })->daily(); // Runs once every day
-    }
+protected function schedule(Schedule $schedule)
+{
+    $schedule->call(function () {
+        \App\Http\Controllers\TaskController::updateOverdueTasks();
+    })->daily(); // or ->hourly()
+}
 
     /**
      * Register the commands for the application.
