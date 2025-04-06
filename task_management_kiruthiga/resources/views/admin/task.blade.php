@@ -113,7 +113,7 @@
                         <td class="border border-gray-600 p-2">{{ $task->description }}</td>
                         <td class="border border-gray-600 p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
 <td class="border border-gray-600 p-2">
-    @if (auth()->check() && auth()->user()->role == 'Employee') 
+    @if (auth()->check() && auth()->user()->role == 'Employee' && $task->status !== 'Completed') 
         <select id="status-{{ $task->id }}" class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
             <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
             <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
@@ -124,6 +124,7 @@
         <span id="status-text-{{ $task->id }}">{{ $task->status }}</span>
     @endif
 </td>
+
 
 <!-- Redo Count Column -->
 <td class="border border-gray-600 p-2">

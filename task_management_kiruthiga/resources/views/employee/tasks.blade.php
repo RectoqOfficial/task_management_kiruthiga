@@ -29,11 +29,17 @@
                         <td class="border border-gray-600 p-2">{{ $task->description }}</td>
 
                         <td class="border border-gray-600 p-2">
-                            <select class="p-1 text-white rounded status-select" data-task-id="{{ $task->id }}">
-                                <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }} class="text-black">Pending</option>
-                                <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }} class="text-black">Started</option>
-                                <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }} class="text-black">Completed</option>
-                                <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }} class="text-black">Review</option></select>
+@if ($task->status !== 'Completed')
+    <select class="p-1 text-white rounded status-select" data-task-id="{{ $task->id }}">
+        <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }} class="text-black">Pending</option>
+        <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }} class="text-black">Started</option>
+        <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }} class="text-black">Completed</option>
+        <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }} class="text-black">Review</option>
+    </select>
+@else
+    <span>{{ $task->status }}</span>
+@endif
+
 <td class="border border-gray-600 p-2 text-white">
     {{ $task->redo_count ?? 0 }}
 </td>
@@ -163,7 +169,6 @@ document.querySelectorAll('.save-remark-btn').forEach(button => {
     });
 });
 //redo count
-//redo count
     $(document).ready(function () {
         $(".redo-btn").click(function () {
             var taskId = $(this).data("task-id");
@@ -205,6 +210,17 @@ document.querySelectorAll('.save-remark-btn').forEach(button => {
         // If the new status is 'Completed', hide the redo button
         if (newStatus === 'Completed') {
             $('.redo-btn[data-task-id="' + taskId + '"]').hide();
+        }
+    });
+});
+//overdue 
+$(document).ready(function () {
+    $('.task-deadline').each(function () {
+        let deadline = new Date($(this).data('deadline'));
+        let today = new Date();
+
+        if (deadline < today) {
+            $(this).closest('tr').addClass('bg-red-100 text-red-800');
         }
     });
 });
