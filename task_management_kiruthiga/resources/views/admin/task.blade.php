@@ -128,9 +128,10 @@
     @elseif (Auth::guard('employee')->check() && $task->status !== 'Completed')
         <select id="status-{{ $task->id }}" class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
    
-              <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-
-                        <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
+              <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+            <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+                          <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
+                                      <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
         </select>
 
     {{-- Read-Only Text for Everyone Else --}}
