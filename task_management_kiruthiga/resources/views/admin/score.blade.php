@@ -33,7 +33,7 @@
         <tr class="bg-gray-900 hover:bg-gray-700">
             <td class="p-2">{{ $task->id }}</td>
             <td class=" p-2">{{ $task->task_title }}</td>
-            <td class="p-2">{{ $task->assigned_to}}</td>
+            <td class="p-2">{{ $task->employee->email_id}}</td>
             <td class=" p-2">{{ $task->status }}</td>
 <td class=" p-2">
     <span class="redo-count" id="redo-{{ $task->id }}">

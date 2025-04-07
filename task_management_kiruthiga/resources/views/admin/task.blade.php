@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -234,20 +235,49 @@
                     alert('✅ Task created successfully!');
                     $('#taskForm')[0].reset();
 
-                    // ✅ Optional: Add new task row to your table
-                    if (response.task) {
-                        $('#task-table-body').append(`
-                            <tr>
-                                <td>${response.task.task_title}</td>
-                                <td>${response.task.description}</td>
-                                <td>${response.task.task_start_date ?? '-'}</td>
-                                <td>${response.task.no_of_days}</td>
-                                <td>${response.task.deadline}</td>
-                                <td>${response.task.status}</td>
-                                <td>${response.task?.employee?.full_name ?? '-'}</td>
-                            </tr>
-                        `);
-                    }
+if (response.task) {
+    $('#task-table-body').append(`
+        <tr class="bg-gray-900 hover:bg-gray-700 text-white">
+            <td>${response.task.id}</td>
+            <td>${response.task.task_title}</td>
+            <td>${response.task.description}</td>
+            <td>${response.emploee.email_id?? 'Not Assigned'}</td>
+            <td>
+                <select class="p-1 text-black rounded status-select" id="status-${response.task.id}" data-task-id="${response.task.id}">
+                    <option value="Pending" ${response.task.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                    <option value="Started" ${response.task.status === 'Started' ? 'selected' : ''}>Started</option>
+                    <option value="Review" ${response.task.status === 'Review' ? 'selected' : ''}>Review</option>
+                    <option value="Completed" ${response.task.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                </select>
+            </td>
+            <td>
+                <span class="redo-count">${response.task.redo_count ?? 0}</span>
+                <button class="px-2 py-1 bg-red-600 text-white rounded redo-btn" data-task-id="${response.task.id}">Redo</button>
+            </td>
+            <td>${response.task.task_create_date ?? '-'}</td>
+            <td>
+                <input type="date" class="w-full p-1 rounded text-black task-start-date" id="start-date-${response.task.id}" value="${response.task.task_start_date ?? ''}" data-task-id="${response.task.id}" />
+            </td>
+            <td>
+                <input type="number" class="w-full p-1 rounded text-white no-of-days-input" id="no_of_days-${response.task.id}" value="${response.task.no_of_days ?? 0}" data-task-id="${response.task.id}" />
+            </td>
+            <td>
+                <input type="date" readonly class="w-full p-1 rounded text-white bg-gray-700 task-deadline" id="deadline-${response.task.id}" value="${response.task.deadline ?? ''}" />
+            </td>
+            <td>
+                <textarea class="w-full p-1 rounded text-black remark-input" data-task-id="${response.task.id}">${response.task.remarks ?? ''}</textarea>
+                <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="${response.task.id}">Save</button>
+            </td>
+            <td>
+                <form class="task-delete-form" data-task-id="${response.task.id}">
+                    <button type="button" class="px-2 py-1 bg-red-600 text-white rounded delete-task-btn">Delete</button>
+                </form>
+            </td>
+        </tr>
+    `);
+}
+
+
                 },
                 error: function (xhr) {
                     console.error(xhr.responseText);
@@ -380,37 +410,25 @@ $(document).ready(function () {
 });
 
 
+// Bind task-start-date change event again
 document.querySelectorAll('.task-start-date').forEach(input => {
-    input.addEventListener('change', function() {
+    input.addEventListener('change', function () {
         const taskId = this.getAttribute('data-task-id');
         const startDate = new Date(this.value);
         const noOfDaysElement = document.querySelector(`#no_of_days-${taskId}`);
         const deadlineElement = document.querySelector(`#deadline-${taskId}`);
 
-        if (!noOfDaysElement) {
-            console.error(`Error: Element with id="no_of_days-${taskId}" not found.`);
-            return;
-        }
-        if (!deadlineElement) {
-            console.error(`Error: Element with id="deadline-${taskId}" not found.`);
-            return;
-        }
-        if (isNaN(startDate.getTime())) {
-            console.error(`Error: Invalid start date selected.`);
+        if (!noOfDaysElement || !deadlineElement) {
+            console.error("Missing inputs for task", taskId);
             return;
         }
 
-        const noOfDays = parseInt(noOfDaysElement.textContent);
+        const noOfDays = parseInt(noOfDaysElement.value || 0);
         const deadlineDate = new Date(startDate);
         deadlineDate.setDate(deadlineDate.getDate() + noOfDays);
 
-        // Format deadline as YYYY-MM-DD
-        const deadlineFormatted = deadlineDate.toISOString().split('T')[0];
-
-        // Update the deadline field
-        deadlineElement.value = deadlineFormatted;
-
-        console.log(`Task ${taskId}: Start Date - ${this.value}, Deadline - ${deadlineFormatted}`);
+        const formatted = deadlineDate.toISOString().split('T')[0];
+        deadlineElement.value = formatted;
     });
 });
 
@@ -533,43 +551,33 @@ document.querySelectorAll('.save-remark-btn').forEach(button => {
 });
 //redo count
 $(document).ready(function () {
-    $(".redo-btn").click(function () {
-        var taskId = $(this).data("task-id");
-        var button = $(this);
-        var redoCountCell = button.closest("td").find("span.redo-count");
-        var statusSelect = $("#status-" + taskId); // Dropdown
-        var statusText = $("#status-text-" + taskId); // Admin text
-        var scoreSpan = $("#score-" + taskId); // Score display
+ $('.redo-btn').off('click').on('click', function () {
+    const taskId = $(this).data('task-id');
+    const button = $(this);
+    const redoCountCell = button.closest("td").find("span.redo-count");
+    const statusSelect = $("#status-" + taskId);
+    const statusText = $("#status-text-" + taskId);
+    const scoreSpan = $("#score-" + taskId);
 
-        $.ajax({
-            url: "{{ route('tasks.redo') }}",
-            type: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                task_id: taskId
-            },
-            success: function (response) {
-                redoCountCell.text(response.redo_count);
-                scoreSpan.text(response.score);
-
-                // Update status in UI
-                if (statusSelect.length) {
-                    statusSelect.val(response.status);
-                } else {
-                    statusText.text(response.status);
-                }
-
-                // Optional: Show redo button again if status is not Completed
-                if (response.status !== 'Completed') {
-                    button.show();
-                }
-            },
-            error: function (error) {
-                alert("Error updating redo count!");
-                console.log(error);
-            }
-        });
+    $.ajax({
+        url: "{{ route('tasks.redo') }}",
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}",
+            task_id: taskId
+        },
+        success: function (response) {
+            redoCountCell.text(response.redo_count ?? 0);
+            if (scoreSpan.length) scoreSpan.text(response.score);
+            if (statusSelect.length) statusSelect.val(response.status);
+            else if (statusText.length) statusText.text(response.status);
+        },
+        error: function (error) {
+            alert("Error updating redo count!");
+        }
     });
+});
+
 });
 
 
