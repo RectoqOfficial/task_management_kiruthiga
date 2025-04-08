@@ -101,6 +101,7 @@
         <table class="w-full text-center border-collapse">
             <thead>
                 <tr class="bg-red-600 text-white text-sm">
+                      <th class="p-2">ID</th>
                     <th class="p-2">Task Title</th>
                     <th class="p-2">Description</th>
                     <th class="p-2">Assigned To</th>
@@ -117,6 +118,15 @@
             <tbody id="task-table-body" class="text-sm">
                 @foreach ($tasks as $task)
                     <tr class="bg-gray-800 hover:bg-gray-700 text-white">
+                        <td class="p-2">
+    <input 
+        type="number" 
+        class="w-full p-1 rounded text-black no-of-days-input" 
+        value="{{ $task->no_of_days }}" 
+        id="no_of_days-{{ $task->id }}"
+        data-task-id="{{ $task->id }}" 
+    />
+</td>
                         <td class="p-2">{{ $task->task_title }}</td>
                         <td class="p-2">{{ $task->description }}</td>
                         <td class="p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
@@ -139,15 +149,29 @@
                             @endif
                         </td>
                         <td class="p-2">{{ $task->task_create_date }}</td>
-                        <td class="p-2">
-                            <input type="date" class="w-full p-1 rounded text-black task-start-date" value="{{ $task->task_start_date }}" data-task-id="{{ $task->id }}" />
-                        </td>
+                      <td class="p-2">
+    <input 
+        type="date" 
+        class="w-full p-1 rounded text-white task-start-date" 
+        value="{{ $task->task_start_date }}" 
+        data-task-id="{{ $task->id }}"
+        @if(Auth::guard('employee')->check() && $task->task_start_date) disabled @endif
+    />
+</td>
+
                         <td class="p-2">
                             <input type="number" class="w-full p-1 rounded text-black no-of-days-input" value="{{ $task->no_of_days }}" data-task-id="{{ $task->id }}" />
                         </td>
-                        <td class="p-2">
-                            <input type="date" readonly class="w-full p-1 rounded text-white bg-gray-700 task-deadline" value="{{ $task->deadline }}" data-task-id="{{ $task->id }}" />
-                        </td>
+                     <td class="p-2">
+    <input 
+        type="date" 
+        readonly 
+        class="w-full p-1 rounded text-white bg-gray-700 task-deadline" 
+        value="{{ $task->deadline }}" 
+        id="deadline-{{ $task->id }}"
+        data-task-id="{{ $task->id }}" 
+    />
+</td>
                         <td class="p-2">
                             <textarea class="w-full p-1 rounded text-black remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
                             <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="{{ $task->id }}">Save</button>
@@ -397,6 +421,7 @@ document.querySelectorAll('.task-start-date').forEach(input => {
         deadlineElement.value = formatted;
     });
 });
+
 
 
  

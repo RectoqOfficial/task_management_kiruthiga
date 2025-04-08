@@ -32,7 +32,7 @@
             <td class=" p-2">{{ $task->status }}</td>
 <td class=" p-2">
     <span class="redo-count" id="redo-{{ $task->id }}">
-        {{ $task->overdue_count ?? 0 }}
+      {{ $task->score->overdue_count ?? 0 }}
     </span>
 </td>
 
