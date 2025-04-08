@@ -36,10 +36,11 @@
 </head>
 
 <body class="bg-black flex h-screen ">
+    
 {{ session('user_role') }}
 
 <!-- Sidebar -->
-<div id="sidebar" class="w-64 bg-black h-screen p-4 hidden md:block">
+<div id="sidebar" class="w-64 bg-black h-screen p-4 hidden md:block ">
     <a class="text-lg font-bold text-white block text-center mb-6 animate-pulse" href="#">ADMIN PANEL</a>
         <style>
             @keyframes pulse {

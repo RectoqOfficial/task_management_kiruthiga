@@ -15,7 +15,7 @@
     <tr class="bg-[#ff0003] text-white font-bold">
         <th class="p-2 min-w-[80px] whitespace-nowrap">ID</th>
         <th class="p-2 min-w-[200px] whitespace-nowrap">Task Title</th>
-        <th class="p-2 min-w-[180px] whitespace-nowrap">Task Member</th>
+       
         <th class="p-2 min-w-[140px] whitespace-nowrap">Status</th>
         <th class="p-2 min-w-[150px] whitespace-nowrap">Overdue Count</th>
         <th class="p-2 min-w-[150px] whitespace-nowrap">Redo Count</th>
@@ -28,7 +28,7 @@
         <tr class="bg-gray-900 hover:bg-gray-700">
             <td class="p-2">{{ $task->id }}</td>
             <td class=" p-2">{{ $task->task_title }}</td>
-            <td class="p-2">{{ $task->assigned_to}}</td>
+              
             <td class=" p-2">{{ $task->status }}</td>
 <td class=" p-2">
     <span class="redo-count" id="redo-{{ $task->id }}">

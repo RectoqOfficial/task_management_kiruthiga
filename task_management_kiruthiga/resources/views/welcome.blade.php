@@ -6,7 +6,7 @@
     <title>Welcome | Task Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center min-h-screen p-4">
+<body class="flex items-center justify-center min-h-screen p-4 bg-gradient-to-r from-gray-800 via-gray-700 to-gray-900 animate-gradient-x">
 
     <div class="bg-gray-800 shadow-2xl rounded-lg p-6 sm:p-8 lg:p-10 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl text-center transform hover:scale-105 transition-transform duration-300">
         <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white">

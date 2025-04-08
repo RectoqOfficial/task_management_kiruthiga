@@ -104,7 +104,7 @@
     </div>
 
     <!-- Mobile Sidebar -->
-    <div id="mobileSidebar" class="fixed inset-0 bg-black w-64 p-4 transform -translate-x-full transition-transform duration-300 md:hidden">
+     <div id="mobileSidebar" class="fixed inset-0 z-50 bg-black w-64 p-4 transform -translate-x-full transition-transform duration-300 md:hidden">
         <button onclick="toggleSidebar()" class="absolute top-4 right-4 text-white text-2xl">×</button>
    <a class="text-lg font-bold text-white block text-center mb-6 animate-pulse" href="#">EMPLOYEE PANEL</a>
         <ul>
