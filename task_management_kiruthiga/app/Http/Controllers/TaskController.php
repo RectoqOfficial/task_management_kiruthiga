@@ -273,33 +273,6 @@ if ($task && $task->score) {
     return response()->json(['error' => 'Task not found!'], 404);
 }
 
-public function updateOverdueTasks()
-{
-    $tasks = Task::with('score')
-        ->where('deadline', '<', now())
-        ->where('status', '!=', 'Completed')
-        ->get();
-
-    foreach ($tasks as $task) {
-        if ($task->score) {
-            $task->score->overdue_count += 1;
-            $task->score->score -= 5;
-
-            // ✅ Add this log line here to debug
-            \Log::info("Task {$task->id} updated: overdue={$task->score->overdue_count}, score={$task->score->score}");
-
-            $task->score->save();
-        }
-
-        // Optional status auto-complete if overdue count is too high
-        if ($task->score && $task->score->overdue_count >= $task->no_of_days) {
-            $task->status = "Completed";
-            $task->save();
-        }
-    }
-
-    \Log::info("Overdue tasks updated and score decreased.");
-}
 
 
 

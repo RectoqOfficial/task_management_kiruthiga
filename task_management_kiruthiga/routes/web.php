@@ -107,7 +107,7 @@ Route::post('/tasks/{id}/update-remarks', [TaskController::class, 'updateRemarks
 Route::post('/tasks/{task}/redo', [TaskController::class, 'redoTask'])->name('tasks.redo');
 
 // web.php
-Route::get('/run-overdue-update', [TaskController::class, 'updateOverdueTasks']);
+// Route::get('/run-overdue-update', [TaskController::class, 'updateOverdueTasks']);
 
 
 Route::post('/tasks/redo', [TaskController::class, 'redoTask'])->name('tasks.redo');
@@ -121,3 +121,5 @@ Route::get('/scores', [ScoreController::class, 'index'])->name('scores.index');
 Route::post('/scores/update/{task_id}', [ScoreController::class, 'updateScore'])->name('scores.update');
 
 Route::get('/employee/score', [ScoreController::class, 'myScore'])->name('employee.score');
+Route::get('/scoreboard', [ScoreController::class, 'showScoreboard'])->name('scoreboard');
+Route::get('/update-overdue-tasks', [ScoreController::class, 'updateOverdueTasks'])->name('updateOverdueTasks');
