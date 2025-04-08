@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,46 +10,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="{{ asset('js/tasks.js') }}"></script>
     <style>
-            /* Custom scrollbar styles */
-            .max-w-5xl::-webkit-scrollbar {
-                width: 6px;
-            }
-            .max-w-5xl::-webkit-scrollbar-thumb {
-                background-color: #888;
-                border-radius: 10px;
-            }
-            .max-w-5xl::-webkit-scrollbar-thumb:hover {
-                background-color: #555;
-            }
-        </style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+    </style>
 </head>
-
-<body class="bg-black text-white p-6">
+<body class="bg-gray-900 text-white p-6">
 <div class="max-w-5xl mx-auto">
     <h1 class="text-3xl font-bold mb-6 text-center">Task Management</h1>
 
     <!-- Task Creation Form -->
-    <form action="{{ route('tasks.store') }}" method="POST" id="taskForm" class="mb-6 p-4 rounded-lg">
+    <form action="{{ route('tasks.store') }}" method="POST" id="taskForm" class="mb-6 p-4 rounded-lg bg-gray-800 shadow-lg">
         @csrf
 
         <!-- Task Title -->
         <div class="mb-4">
             <label class="block text-white mb-2">Task Title</label>
-            <input type="text" name="task_title" required class="w-full p-3 rounded text-white bg-gray-700">
+            <input type="text" name="task_title" required class="w-full p-3 rounded text-white bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500">
         </div>
 
         <!-- Description -->
         <div class="mb-4">
             <label class="block text-white mb-2">Description</label>
-            <textarea name="description" required class="w-full p-3 rounded text-white bg-gray-700"></textarea>
+            <textarea name="description" required class="w-full p-3 rounded text-white bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
         </div>
 
         <!-- Flex container for three fields -->
-        <div class="flex space-x-4 mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <!-- Department -->
-            <div class="flex-1">
+            <div>
                 <label class="block text-white mb-2">Department</label>
-                <select name="department_id" id="department_id" required class="w-full p-3 rounded text-white bg-gray-700">
+                <select name="department_id" id="department_id" required class="w-full p-3 rounded text-white bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500">
                     <option value="">Select Department</option>
                     @foreach ($departments as $department)
                         <option value="{{ $department->id }}">{{ $department->name }}</option>
@@ -59,9 +59,9 @@
             </div>
 
             <!-- Role -->
-            <div class="flex-1">
+            <div>
                 <label class="block text-white mb-2">Role</label>
-                <select name="role_id" id="role_id" required class="w-full p-3 rounded text-white bg-gray-700">
+                <select name="role_id" id="role_id" required class="w-full p-3 rounded text-white bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500">
                     <option value="">Select Role</option>
                     @foreach($roles as $role)
                         <option value="{{ $role->id }}">{{ $role->name }}</option>
@@ -70,9 +70,9 @@
             </div>
 
             <!-- Assigned To -->
-            <div class="flex-1">
+            <div>
                 <label class="block text-white mb-2">Assigned To</label>
-                <select name="assigned_to" id="assigned_to" required class="w-full p-3 rounded text-white bg-gray-700">
+                <select name="assigned_to" id="assigned_to" required class="w-full p-3 rounded text-white bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500">
                     <option value="">Select Employee</option>
                     @foreach($employees as $employee)
                         <option value="{{ $employee->id }}">
@@ -86,52 +86,42 @@
         <!-- No. of Days -->
         <div class="mb-4">
             <label class="block text-white mb-2">No. of Days</label>
-            <input type="number" name="no_of_days" id="no_of_days" required class="w-full p-3 rounded text-white bg-gray-700">
+            <input type="number" name="no_of_days" id="no_of_days" required class="w-full p-3 rounded text-white bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500">
         </div>
 
-       <button type="submit" id="createTaskBtn" onclick="console.log('Create Task Clicked');" class="mt-4 w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded">
-    Create Task
-</button>
-
+        <button type="submit" id="createTaskBtn" class="mt-4 w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white font-semibold">
+            Create Task
+        </button>
     </form>
 </div>
+
 <div class="max-w-5xl mx-auto">
     <h2 class="text-xl font-semibold mb-4">Task List</h2>
-    <div class="max-w-5xl mx-auto overflow-x-auto" style="max-height: 500px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #888 #444;">
-    
-        <table class="w-full text-center">
+    <div class="overflow-x-auto custom-scrollbar" style="max-height: 500px; overflow-y: auto;">
+        <table class="w-full text-center border-collapse">
             <thead>
-                <tr class="bg-[#ff0003] text-white text-sm">
-                    {{-- <th class="p-2 whitespace-nowrap min-w-[60px]">ID</th> --}}
-                    <th class="p-2 whitespace-nowrap min-w-[120px]">Task Title</th>
-                    <th class="p-2 whitespace-nowrap min-w-[160px]">Description</th>
-                    <th class="p-2 whitespace-nowrap min-w-[140px]">Assigned To</th>
-                    <th class="p-2 whitespace-nowrap min-w-[100px]">Status</th>
-                    <th class="p-2 whitespace-nowrap min-w-[130px]">Redo Count</th>
-                    <th class="p-2 whitespace-nowrap min-w-[160px]">Task Create Date</th>
-                    <th class="p-2 whitespace-nowrap min-w-[160px]">Task Start Date</th>
-                    <th class="p-2 whitespace-nowrap min-w-[130px]">No. of Days</th>
-                    <th class="p-2 whitespace-nowrap min-w-[120px]">Deadline</th>
-                    <th class="p-2 whitespace-nowrap min-w-[140px]">Remarks</th>
-                    <th class="p-2 whitespace-nowrap min-w-[100px]">Actions</th>
+                <tr class="bg-red-600 text-white text-sm">
+                    <th class="p-2">Task Title</th>
+                    <th class="p-2">Description</th>
+                    <th class="p-2">Assigned To</th>
+                    <th class="p-2">Status</th>
+                    <th class="p-2">Redo Count</th>
+                    <th class="p-2">Task Create Date</th>
+                    <th class="p-2">Task Start Date</th>
+                    <th class="p-2">No. of Days</th>
+                    <th class="p-2">Deadline</th>
+                    <th class="p-2">Remarks</th>
+                    <th class="p-2">Actions</th>
                 </tr>
             </thead>
             <tbody id="task-table-body" class="text-sm">
                 @foreach ($tasks as $task)
-                    <tr class="bg-gray-900 hover:bg-gray-700 text-white">
-                        {{-- <td class="p-2">{{ $task->id }}</td> --}}
+                    <tr class="bg-gray-800 hover:bg-gray-700 text-white">
                         <td class="p-2">{{ $task->task_title }}</td>
                         <td class="p-2">{{ $task->description }}</td>
                         <td class="p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
                         <td class="p-2">
                             @if (Auth::guard('admin')->check() && $task->status !== 'Completed')
-                                <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
-                                    <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-                                    <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
-                                    <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                                </select>
-                            @elseif (Auth::guard('employee')->check() && $task->status !== 'Completed')
                                 <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
                                     <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
                                     <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
@@ -174,7 +164,8 @@
         </table>
     </div>
 </div>
-
+</body>
+</html>
 
 
     <script>

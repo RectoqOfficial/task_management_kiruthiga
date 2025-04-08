@@ -6,27 +6,35 @@
     <title>Departments & Roles</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
- 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-            /* Custom scrollbar styles */
-            .max-w-5xl::-webkit-scrollbar {
-                width: 6px;
-            }
-            .max-w-5xl::-webkit-scrollbar-thumb {
-                background-color: #888;
-                border-radius: 10px;
-            }
-            .max-w-5xl::-webkit-scrollbar-thumb:hover {
-                background-color: #555;
-            }
-        </style>
+        /* Custom scrollbar styles */
+        .max-w-5xl::-webkit-scrollbar {
+            width: 6px;
+        }
+        .max-w-5xl::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+        }
+        .max-w-5xl::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+        /* Responsive table styles */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            word-wrap: break-word;
+            white-space: normal;
+        }
+    </style>
 </head>
 @extends('layouts.app')
 
 @section('content')
-@if(sesscriptsuccess'))
+@if(session('success'))
     <script>
         alert("✅ {{ session('success') }}");
     </script>
@@ -34,15 +42,15 @@
 
 <div class="container mx-auto p-6 bg-black text-white min-h-screen">
 
-    <h2 class="text-2xl font-bold mb-4 max-w-5xl mx-auto">Employee Details</h2>
+    <h2 class="text-2xl font-bold mb-4 max-w-5xl mx-auto text-center">Employee Details</h2>
 
     <!-- Success Message -->
     @if(session('success'))
-        <div class="bg-green-500 text-white p-2 mb-4 rounded">{{ session('success') }}</div>
+        <div class="bg-green-500 text-white p-2 mb-4 rounded text-center">{{ session('success') }}</div>
     @endif
 
     <!-- Employee Form -->
-    <form id="addEmployeeForm" method="POST" action="{{ route('admin.addEmployee') }}" class="max-w-5xl mx-auto ">
+    <form id="addEmployeeForm" method="POST" action="{{ route('admin.addEmployee') }}" class="max-w-5xl mx-auto">
         @csrf
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -112,16 +120,10 @@
         </div>
     </form>
 
-<!-- Success Message -->
-<!-- Success message that will show after employee is added -->
-<div id="successMessage" class="hidden text-green-600"></div>
-
-
-
     <hr class="my-6 border-gray-600">
     
-   <h2 class="text-2xl font-bold mb-4 max-w-5xl mx-auto ">Table Details </h2>
-  <div class="flex flex-wrap gap-6 p-7 text-white max-w-5xl mx-auto">
+    <h2 class="text-2xl font-bold mb-4 max-w-5xl mx-auto text-center">Table Details</h2>
+    <div class="flex flex-wrap gap-6 p-7 text-white max-w-5xl mx-auto">
         <!-- Email Search -->
         <div class="w-full md:w-auto">
             <input type="text" id="searchEmail" placeholder="Search by Email" class="w-full p-2 text-white border rounded">
@@ -148,32 +150,29 @@
         </div>
 
         <div class="w-full md:w-auto">
-            <button onclick="filterEmployees()" class="w-full px-4 py-2 bg-[#ff0003] hover:bg-red-700 text-white rounded ">
+            <button onclick="filterEmployees()" class="w-full px-4 py-2 bg-[#ff0003] hover:bg-red-700 text-white rounded">
                 Search
             </button>
         </div>
     </div>
 
     <!-- Employee Table -->
-       <div class="max-w-5xl mx-auto overflow-x-auto" style="max-height: 500px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #888 #444;">
-            <!-- Filters Section -->
-  
+    <div class="max-w-5xl mx-auto overflow-x-auto" style="max-height: 500px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #888 #444;">
         <table class="w-full text-left bg-[#ff0003] text-sm md:text-base" id="employeeList">
-          <thead class="bg-[#ff0003] text-white text-sm font-semibold text-center">
-    <tr>
-        <th class="p-4 min-w-[80px] max-w-[100px] truncate">ID</th>
-        <th class="p-4 min-w-[160px] max-w-[180px] truncate">Full Name</th>
-        <th class="p-4 min-w-[100px] max-w-[120px] truncate">Gender</th>
-        <th class="p-4 min-w-[120px] max-w-[140px] truncate">D.O.J</th>
-        <th class="p-4 min-w-[140px] max-w-[160px] truncate">Contact</th>
-        <th class="p-4 min-w-[180px] max-w-[220px] truncate">Email ID</th>
-        <th class="p-4 min-w-[140px] max-w-[160px] truncate">Department</th>
-        <th class="p-4 min-w-[100px] max-w-[120px] truncate">Role</th>
-        <th class="p-4 min-w-[120px] max-w-[140px] truncate">Job Type</th>
-        <th class="p-4 min-w-[100px] max-w-[120px] truncate">Actions</th>
-    </tr>
-</thead>
-
+            <thead class="bg-[#ff0003] text-white text-sm font-semibold text-center">
+                <tr>
+                    <th class="p-4 min-w-[80px] max-w-[100px] truncate">ID</th>
+                    <th class="p-4 min-w-[160px] max-w-[180px] truncate">Full Name</th>
+                    <th class="p-4 min-w-[100px] max-w-[120px] truncate">Gender</th>
+                    <th class="p-4 min-w-[120px] max-w-[140px] truncate">D.O.J</th>
+                    <th class="p-4 min-w-[140px] max-w-[160px] truncate">Contact</th>
+                    <th class="p-4 min-w-[180px] max-w-[220px] truncate">Email ID</th>
+                    <th class="p-4 min-w-[140px] max-w-[160px] truncate">Department</th>
+                    <th class="p-4 min-w-[100px] max-w-[120px] truncate">Role</th>
+                    <th class="p-4 min-w-[120px] max-w-[140px] truncate">Job Type</th>
+                    <th class="p-4 min-w-[100px] max-w-[120px] truncate">Actions</th>
+                </tr>
+            </thead>
             <tbody class="overflow-y-auto thin-scrollbar">
                 @foreach($employees as $employee)
                     <tr class="bg-gray-700 hover:bg-gray-600">
