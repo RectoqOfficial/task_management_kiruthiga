@@ -86,7 +86,7 @@
         <!-- No. of Days -->
         <div class="mb-4">
             <label class="block text-white mb-2">No. of Days</label>
-            <input type="number" name="no_of_days" id="no_of_days" required class="w-full p-3 rounded text-black bg-gray-700">
+            <input type="number" name="no_of_days" id="no_of_days" required class="w-full p-3 rounded text-white bg-gray-700">
         </div>
 
        <button type="submit" id="createTaskBtn" onclick="console.log('Create Task Clicked');" class="mt-4 w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded">
@@ -102,7 +102,7 @@
         <table class="w-full text-center">
             <thead>
                 <tr class="bg-[#ff0003] text-white text-sm">
-                    <th class="p-2 whitespace-nowrap min-w-[60px]">ID</th>
+                    {{-- <th class="p-2 whitespace-nowrap min-w-[60px]">ID</th> --}}
                     <th class="p-2 whitespace-nowrap min-w-[120px]">Task Title</th>
                     <th class="p-2 whitespace-nowrap min-w-[160px]">Description</th>
                     <th class="p-2 whitespace-nowrap min-w-[140px]">Assigned To</th>
@@ -119,7 +119,7 @@
             <tbody id="task-table-body" class="text-sm">
                 @foreach ($tasks as $task)
                     <tr class="bg-gray-900 hover:bg-gray-700 text-white">
-                        <td class="p-2">{{ $task->id }}</td>
+                        {{-- <td class="p-2">{{ $task->id }}</td> --}}
                         <td class="p-2">{{ $task->task_title }}</td>
                         <td class="p-2">{{ $task->description }}</td>
                         <td class="p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
@@ -153,7 +153,7 @@
                             <input type="date" class="w-full p-1 rounded text-black task-start-date" value="{{ $task->task_start_date }}" data-task-id="{{ $task->id }}" />
                         </td>
                         <td class="p-2">
-                            <input type="number" class="w-full p-1 rounded text-white no-of-days-input" value="{{ $task->no_of_days }}" data-task-id="{{ $task->id }}" />
+                            <input type="number" class="w-full p-1 rounded text-black no-of-days-input" value="{{ $task->no_of_days }}" data-task-id="{{ $task->id }}" />
                         </td>
                         <td class="p-2">
                             <input type="date" readonly class="w-full p-1 rounded text-white bg-gray-700 task-deadline" value="{{ $task->deadline }}" data-task-id="{{ $task->id }}" />
@@ -238,10 +238,11 @@
 if (response.task) {
     $('#task-table-body').append(`
         <tr class="bg-gray-900 hover:bg-gray-700 text-white">
-            <td>${response.task.id}</td>
+       
             <td>${response.task.task_title}</td>
             <td>${response.task.description}</td>
-            <td>${response.emploee.email_id?? 'Not Assigned'}</td>
+           <td>${response.employee?.email_id ?? 'Not Assigned'}</td>
+
             <td>
                 <select class="p-1 text-black rounded status-select" id="status-${response.task.id}" data-task-id="${response.task.id}">
                     <option value="Pending" ${response.task.status === 'Pending' ? 'selected' : ''}>Pending</option>
@@ -251,7 +252,7 @@ if (response.task) {
                 </select>
             </td>
             <td>
-                <span class="redo-count">${response.task.redo_count ?? 0}</span>
+<span class="redo-count">${response.score?.redo_count ?? 0}</span>
                 <button class="px-2 py-1 bg-red-600 text-white rounded redo-btn" data-task-id="${response.task.id}">Redo</button>
             </td>
             <td>${response.task.task_create_date ?? '-'}</td>
@@ -349,32 +350,6 @@ document.querySelectorAll('.task-start-date').forEach(input => {
 });
 
 
-//submit buttton
-$(document).on('submit', '#taskForm', function(event) {
-    event.preventDefault();
-
-    let formData = $(this).serialize();
-    $.ajax({
-        url: $(this).attr('action'),
-        method: 'POST',
-        data: formData,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            if (response.success) {
-                alert(response.message);  
-               
-            } else {
-                alert("Error creating task.");
-            }
-        },
-        error: function(xhr) {
-            alert("Something went wrong! Check console.");
-            console.log(xhr.responseText);
-        }
-    });
-});
 
 
 
@@ -450,7 +425,7 @@ $(document).ready(function () {
                 },
                 success: function (response) {
                     if (response.success) {
-                        alert(response.message); // Optional alert
+                        alert("delete successfully"); // Optional alert
                         row.fadeOut(300, function () {
                             $(this).remove();
                         });

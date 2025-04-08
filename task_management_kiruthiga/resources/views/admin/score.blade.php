@@ -12,7 +12,7 @@
     <div class="max-w-5xl mx-auto">
         <h1 class="text-3xl font-bold mb-6 text-center">Scoreboard</h1>
 
-        <div class="bg-gray-800 p-4 rounded-lg">
+        <div class=" p-4 rounded-lg">
             <h2 class="text-xl font-semibold mb-4">Score List</h2>
             <div class="overflow-x-auto">
                 <table class="w-full  text-center">
@@ -37,7 +37,8 @@
             <td class=" p-2">{{ $task->status }}</td>
 <td class=" p-2">
     <span class="redo-count" id="redo-{{ $task->id }}">
-        {{ $task->redo_count ?? 0 }}
+    {{ $task->score->overdue_count ?? 0 }}
+
     </span>
 </td>
 

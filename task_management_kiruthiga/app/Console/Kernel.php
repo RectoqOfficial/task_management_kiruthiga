@@ -4,7 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
+use App\Http\Controllers\ScoreController;
+use Illuminate\Support\Facades\Log;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -13,9 +14,12 @@ class Kernel extends ConsoleKernel
 protected function schedule(Schedule $schedule)
 {
     $schedule->call(function () {
-        \App\Http\Controllers\TaskController::updateOverdueTasks();
-    })->daily(); // or ->hourly()
+        \Log::info("Scheduler ran and updateOverdueTasks called!");
+        app(\App\Http\Controllers\ScoreController::class)->updateOverdueTasks();
+    })->everyMinute();
 }
+
+
 
     /**
      * Register the commands for the application.

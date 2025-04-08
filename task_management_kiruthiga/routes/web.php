@@ -106,7 +106,9 @@ Route::post('/tasks/{id}/update-remarks', [TaskController::class, 'updateRemarks
 
 Route::post('/tasks/{task}/redo', [TaskController::class, 'redoTask'])->name('tasks.redo');
 
-Route::post('/tasks/update-overdue', [TaskController::class, 'updateOverdueTasks']);
+// web.php
+Route::get('/run-overdue-update', [TaskController::class, 'updateOverdueTasks']);
+
 
 Route::post('/tasks/redo', [TaskController::class, 'redoTask'])->name('tasks.redo');
 

@@ -287,6 +287,7 @@ function loadMyTasks(event) {
     $.ajax({
         url: "/employee/profile",
         type: "GET",
+              dataType: "html", // Expecting HTML response
         success: function(response) {
             $("#contentArea").html(response);
         },

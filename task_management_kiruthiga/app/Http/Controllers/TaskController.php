@@ -74,7 +74,20 @@ public function store(Request $request)
             'score' => 100,
         ]);
 
-        return response()->json(['success' => true, 'message' => 'Task created successfully', 'task' => $task], 201);
+  $employee = Employee::find($request->assigned_to);
+
+return response()->json([
+    'success' => true,
+    'message' => 'Task created successfully',
+    'task' => $task,
+    'employee' => $employee,
+        'score' => [
+        'redo_count' => 0,
+        'overdue_count' => 0,
+        'score' => 100
+    ]
+], 201);
+
     } catch (\Exception $e) {
         \Log::error('Error creating task: ' . $e->getMessage());
         return response()->json(['success' => false, 'message' => 'Error creating task'], 500);
@@ -262,17 +275,34 @@ if ($task && $task->score) {
 
 public function updateOverdueTasks()
 {
-    $tasks = Task::where('due_date', '<', now()) // Find overdue tasks
-                 ->where('status', '!=', 'Completed') // Ignore completed tasks
-                 ->get();
+    $tasks = Task::with('score')
+        ->where('deadline', '<', now())
+        ->where('status', '!=', 'Completed')
+        ->get();
 
     foreach ($tasks as $task) {
-        $task->increment('overdue_count'); // Increase overdue count
-        $task->save();
+        if ($task->score) {
+            $task->score->overdue_count += 1;
+            $task->score->score -= 5;
+
+            // ✅ Add this log line here to debug
+            \Log::info("Task {$task->id} updated: overdue={$task->score->overdue_count}, score={$task->score->score}");
+
+            $task->score->save();
+        }
+
+        // Optional status auto-complete if overdue count is too high
+        if ($task->score && $task->score->overdue_count >= $task->no_of_days) {
+            $task->status = "Completed";
+            $task->save();
+        }
     }
 
-    \Log::info("Overdue tasks updated successfully.");
+    \Log::info("Overdue tasks updated and score decreased.");
 }
+
+
+
 
 
 public function showScoreboard()

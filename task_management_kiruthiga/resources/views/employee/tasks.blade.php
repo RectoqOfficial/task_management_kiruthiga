@@ -8,7 +8,7 @@
         <table class="w-full text-center">
             <thead>
                 <tr class="bg-[#ff0003] text-white text-sm">
-                    <th class="p-2 whitespace-nowrap min-w-[60px]">ID</th>
+                    {{-- <th class="p-2 whitespace-nowrap min-w-[60px]">ID</th> --}}
                     <th class="p-2 whitespace-nowrap min-w-[120px]">Task Title</th>
                     <th class="p-2 whitespace-nowrap min-w-[160px]">Description</th>
                     <th class="p-2 whitespace-nowrap min-w-[140px]">Assigned To</th>
@@ -25,7 +25,7 @@
             <tbody id="task-table-body" class="text-sm">
                 @foreach ($tasks as $task)
                     <tr class="bg-gray-900 hover:bg-gray-700 text-white">
-                        <td class="p-2">{{ $task->id }}</td>
+                        {{-- <td class="p-2">{{ $task->id }}</td> --}}
                         <td class="p-2">{{ $task->task_title }}</td>
                         <td class="p-2">{{ $task->description }}</td>
                         <td class="p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>

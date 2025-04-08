@@ -26,7 +26,7 @@
 @extends('layouts.app')
 
 @section('content')
-@if(session('success'))
+@if(sesscriptsuccess'))
     <script>
         alert("✅ {{ session('success') }}");
     </script>
