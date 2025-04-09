@@ -123,38 +123,44 @@
     <hr class="my-6 border-gray-600">
     
     <h2 class="text-2xl font-bold mb-4 max-w-5xl mx-auto text-center">Table Details</h2>
-    <div class="flex flex-wrap gap-6 p-7 text-white max-w-5xl mx-auto">
-        <!-- Email Search -->
-        <div class="w-full md:w-auto">
-            <input type="text" id="searchEmail" placeholder="Search by Email" class="w-full p-2 text-white border rounded">
-        </div>
-
-        <!-- Department Filter -->
-        <div class="w-full md:w-auto">
-            <select id="filterDepartment" class="w-full p-2 text-white border rounded">
-                <option value="" class="text-black">Filter by Department</option>
-                @foreach($departments as $department)
-                    <option value="{{ $department->id }}" class="text-black">{{ $department->name }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        <!-- Role Filter -->
-        <div class="w-full md:w-auto">
-            <select id="filterRole" class="w-full p-2 text-white border rounded">
-                <option value="" class="text-black">Filter by Role</option>
-                @foreach($roles as $role)
-                    <option value="{{ $role->id }}" class="text-black">{{ $role->name }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="w-full md:w-auto">
-            <button onclick="filterEmployees()" class="w-full px-4 py-2 bg-[#ff0003] hover:bg-red-700 text-white rounded">
-                Search
-            </button>
-        </div>
+ <div class="flex flex-wrap gap-6 p-7 text-white max-w-5xl mx-auto">
+    <!-- Email Search -->
+    <div class="w-full md:w-auto">
+        <input type="text" id="searchEmail" placeholder="Search by Email"
+               class="w-full p-2 text-black border border-white rounded bg-white">
     </div>
+
+    <!-- Department Filter -->
+    <div class="w-full md:w-auto">
+        <select id="filterDepartment"
+                class="w-full p-2 text-black border border-white rounded bg-white">
+            <option value="">Filter by Department</option>
+            @foreach($departments as $department)
+                <option value="{{ $department->id }}">{{ $department->name }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <!-- Role Filter -->
+    <div class="w-full md:w-auto">
+        <select id="filterRole"
+                class="w-full p-2 text-black border border-white rounded bg-white">
+            <option value="">Filter by Role</option>
+            @foreach($roles as $role)
+                <option value="{{ $role->id }}">{{ $role->name }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <!-- Search Button -->
+    <div class="w-full md:w-auto">
+        <button onclick="filterEmployees()"
+                class="w-full px-4 py-2 bg-[#ff0003] hover:bg-red-700 text-white rounded border border-white">
+            Search
+        </button>
+    </div>
+</div>
+
 
     <!-- Employee Table -->
     <div class="max-w-5xl mx-auto overflow-x-auto" style="max-height: 500px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #888 #444;">
@@ -236,10 +242,12 @@ let $api_url = window.API_BASE_URL + "/admin/check-email";
             } else {
                 // Proceed with form submission
                 var formData = $('#addEmployeeForm').serialize();
-
+ window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+   console.log("API Base URL:", API_BASE_URL);
+let $api_url = window.API_BASE_URL + "/admin/employees/add";
 
                 $.ajax({
-                    url: '/admin/employees/add',
+                    url: $api_url,
                     type: 'POST',
                     data: formData + "&_token=" + $('meta[name="csrf-token"]').attr('content'),
                     success: function (response) {
@@ -340,8 +348,8 @@ function deleteEmployee(event, employeeId) {
         let email = document.getElementById('searchEmail').value;
         let departmentId = document.getElementById('filterDepartment').value;
         let roleId = document.getElementById('filterRole').value;
+fetch(`/employees/filter?email=${email}&department_id=${departmentId}&role_id=${roleId}`)
 
-        fetch(`{{ route('employees.filter') }}?email=${email}&department_id=${departmentId}&role_id=${roleId}`)
             .then(response => response.json())
             .then(data => {
                 let tbody = document.querySelector("#employeeList tbody");
