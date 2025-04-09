@@ -15,28 +15,31 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/employee/login', [AuthController::class, 'showLogin'])->name('employee.login');
 Route::post('/employee/login', [AuthController::class, 'login'])->name('employee.login.submit');
 
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\EmployeeDashboardController;
+
+
+
 // Department Routes
+
+use App\Http\Controllers\DepartmentController;
 Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
 Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
 Route::resource('departments', DepartmentController::class)->except(['index', 'store']); // Removing redundant routes
-
-// Role Routes
-Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
-Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
-Route::resource('roles', RoleController::class)->except(['index', 'store']); // Removing redundant routes
-
-
-
 Route::delete('/departments/{id}', [DepartmentController::class, 'destroy'])->name('departments.destroy');
-Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
-Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
 Route::put('/departments/{id}', [DepartmentController::class, 'update'])->name('departments.update');
 
 
+
+// Role Routes
+use App\Http\Controllers\RoleController;
+Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+Route::resource('roles', RoleController::class)->except(['index', 'store']); // Removing redundant routes
+Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
+
+
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\EmployeeDashboardController;
 //admin middleware
 Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/dashboard', function () {
@@ -58,28 +61,23 @@ Route::get('/admin/departments', [DepartmentController::class, 'index'])->name('
 
 use App\Http\Controllers\EmployeeController;
 
-
-// Display employee list page
-
 // Routes for the employee management and AJAX actions
 Route::get('/admin/employees', [EmployeeController::class, 'index'])->name('admin.employees');
 Route::post('/admin/employees/add', [EmployeeController::class, 'addEmployee'])->name('admin.addEmployee');
 Route::get('/admin/employees/roles/{departmentId}', [EmployeeController::class, 'getRolesByDepartment'])->name('admin.getRolesByDepartment');
 Route::delete('/admin/employees/{id}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
 Route::get('/employees/filter', [EmployeeController::class, 'filterEmployees'])->name('employees.filter');
-
 Route::get('/employee/profile', [EmployeeController::class, 'profile'])->name('employee.profile');
-
 Route::get('/employee/task-stats', [EmployeeController::class, 'getEmployeeTaskStats']);
 Route::get('/employee/dashboard', [EmployeeController::class, 'dashboard'])->name('employee.dashboard');
-    Route::get('/admin/employees', [EmployeeController::class, 'employeeList'])->name('admin.employeeList');
-    Route::post('/admin/check-email', [EmployeeController::class, 'checkEmail'])->name('admin.checkEmail');
+Route::get('/admin/employees', [EmployeeController::class, 'employeeList'])->name('admin.employeeList');
+Route::post('/admin/check-email', [EmployeeController::class, 'checkEmail'])->name('admin.checkEmail');
+
+
+
+
 
 use App\Http\Controllers\TaskController;
-
-
-
-
 Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
 Route::post('/tasks/store', [TaskController::class, 'store'])->name('tasks.store');
 

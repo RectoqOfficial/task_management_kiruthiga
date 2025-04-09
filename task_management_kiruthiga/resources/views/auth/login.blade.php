@@ -38,7 +38,7 @@
 
     <!-- Email -->
     <div class="mb-3 sm:mb-4 text-left">
-        <input type="email" id="email" name="email" placeholder="Enter Email" 
+        <input type="email" id="email" name="email" placeholder="Enter your Email" 
                class="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-200" required>
         <p id="emailError" class="text-red-500 text-xs mt-1 hidden">Email is required.</p>
     </div>
@@ -46,7 +46,7 @@
   
   <!-- Password -->
 <div class="mb-3 sm:mb-4 text-left relative">
-    <input type="password" id="password" name="password" placeholder="Enter Password" 
+    <input type="password" id="password" name="password" placeholder="Enter your  Password" 
            class="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-200 pr-10" required>
     
     <!-- Eye Icon -->

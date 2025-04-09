@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 class AuthController extends Controller
 {
     // Show Login Page
-    public function showLogin()
+    public function showLogin() 
     {
         return view('auth.login');
     }
