@@ -119,7 +119,9 @@
             <tbody id="task-table-body" class="text-sm">
                 @foreach ($tasks as $task)
                     <tr class="bg-gray-800 hover:bg-gray-700 text-white">
-                       
+                                                                  
+
+
                          <td class="p-2">{{ $task->id }}</td>
                         <td class="p-2">{{ $task->task_title }}</td>
                         <td class="p-2">{{ $task->description }}</td>
@@ -154,7 +156,13 @@
 </td>
 
                         <td class="p-2">
-                            <input type="number" class="w-full p-1 rounded text-black no-of-days-input" value="{{ $task->no_of_days }}" data-task-id="{{ $task->id }}" />
+       <input 
+    type="number" 
+    class="w-full p-1 rounded text-black bg-white border border-white no-of-days-input" 
+    value="{{ $task->no_of_days }}" 
+    data-task-id="{{ $task->id }}" 
+    @if($task->no_of_days) readonly @endif
+/>
                         </td>
                      <td class="p-2">
     <input 
