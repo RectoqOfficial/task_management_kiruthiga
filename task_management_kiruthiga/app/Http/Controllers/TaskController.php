@@ -24,7 +24,7 @@ class TaskController extends Controller
         return view('admin.task', compact('tasks', 'departments', 'roles', 'employees'));
     }
 
-    // Store a new task (Admin creates a task without task_start_date)
+
 // Store a new task (Admin creates a task without task_start_date)
 public function store(Request $request)
 {

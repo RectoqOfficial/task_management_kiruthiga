@@ -31,6 +31,7 @@
                 class="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-200" required>
             <option value="">Select Login As</option>
             <option value="admin">Admin</option>
+                <option value="manager">Manager</option>
             <option value="employee">Employee</option>
         </select>
         <p id="userTypeError" class="text-red-500 text-xs mt-1 hidden">Please select a login type.</p>

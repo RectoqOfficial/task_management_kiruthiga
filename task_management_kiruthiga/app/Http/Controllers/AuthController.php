@@ -31,21 +31,22 @@ class AuthController extends Controller
             Auth::guard('admin')->login($admin);
             $request->session()->regenerate();
     // ✅ Log session after successful admin login
-        Log::info('Session after login (admin): ' . session()->getId());
+        Log::info('Session after login (admin/manager): ' . session()->getId());
             if (!$admin->role) {
                 Auth::guard('admin')->logout();
                 return redirect()->route('login')->with('error', 'No role assigned. Contact Admin.');
             }
-
-            $role = strtolower($admin->role->name);
-            if ($role === 'admin') {
-                return redirect()->route('admin.dashboard');
-            } elseif ($role === 'employee') {
-                return redirect()->route('employee.dashboard');
-            } else {
-                Auth::guard('admin')->logout();
-                return redirect()->route('login')->with('error', 'Access Denied. Invalid Role.');
-            }
+ $role = strtolower($admin->role->name);
+    
+    // ✅ This is where you check for 'manager' role
+    if ($role === 'admin' || $role === 'manager') {
+        return redirect()->route('admin.dashboard'); // Same dashboard, you can limit views using @if
+    } elseif ($role === 'employee') {
+        return redirect()->route('employee.dashboard');
+    } else {
+        Auth::guard('admin')->logout();
+        return redirect()->route('login')->with('error', 'Access Denied. Invalid Role.');
+    }
         }
 
         // If Admin Login Fails, Try Employee Login
@@ -57,6 +58,10 @@ class AuthController extends Controller
             $request->session()->regenerate();
  // ✅ Log session after successful employee login
         Log::info('Session after login (employee): ' . session()->getId());
+         // ✅ Check if employee has a role and it's 'manager'
+        if ($employee->role && strtolower($employee->role->name) === 'manager') {
+        return redirect()->route('admin.dashboard'); // ✅ Go to admin dashboard
+    }
 
             return redirect()->route('employee.dashboard');
         }
