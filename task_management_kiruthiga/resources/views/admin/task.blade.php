@@ -15,6 +15,7 @@
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
+                height: 6px; 
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background-color: #888;
