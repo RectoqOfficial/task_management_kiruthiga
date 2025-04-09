@@ -41,6 +41,19 @@
                 </div>
                 </div>
 
+<!-- ✅ Hidden Edit Form for Department -->
+<div id="dept-edit-{{ $department->id }}" class="hidden mt-2 w-full">
+    <form onsubmit="event.preventDefault(); updateDepartment({{ $department->id }});" class="w-full">
+        @csrf
+        <input type="text" id="dept-name-{{ $department->id }}" name="name" value="{{ $department->name }}" class="w-full p-2 rounded text-black hover:outline hover:outline-2 hover:outline-[#ff0003] transition-colors duration-300">
+
+      <button type="submit" class="mt-2 w-full px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm">
+                                        <img src="/build/assets/img/save.png" alt="Save" class="inline w-4 h-4 mr-1">
+                                        <span>Save</span>
+                                    </button>
+    </form>
+</div>
+
                 <!-- Role Form -->
                 <form class="role-form mb-2 w-full flex flex-col items-center space-y-2 hover:shadow-lg transition-shadow duration-300" data-department-id="{{ $department->id }}">
                 @csrf
@@ -106,9 +119,12 @@ function toggleEditForm(id) {
 // ✅ Add Department
 function addDepartment() {
     var name = $("#departmentName").val();
-
+   window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+   console.log("API Base URL:", API_BASE_URL);
+let $api_url = window.API_BASE_URL + "/departments";
+console.log("test13");
     $.ajax({
-        url: '{{ route("departments.store") }}',
+        url:  $api_url,
         type: 'POST',
         data: {
             _token: '{{ csrf_token() }}',
@@ -160,9 +176,11 @@ $(document).on('submit', ".role-form", function(event) {
     event.preventDefault();
     var form = $(this);
     var departmentId = form.data('department-id');
-
+   window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+   console.log("API Base URL:", API_BASE_URL);
+let $api_url = window.API_BASE_URL + "/roles";
     $.ajax({
-        url: '{{ route("roles.store") }}',
+        url: $api_url,
         method: 'POST',
         data: form.serialize(),
         success: function(response) {
@@ -243,9 +261,9 @@ $(document).on('submit', ".role-form", function(event) {
 // ✅ Update Department
 function updateDepartment(id) {
     var newName = $("#dept-name-" + id).val();
-    
+   console.log(" test + '/departments/' + id",id);    
     $.ajax({
-        url: '{{ url("departments") }}/' + id,
+        url: '/departments/' + id,
         type: 'POST', // Use POST with _method override
         data: {
             _token: '{{ csrf_token() }}',
@@ -267,7 +285,7 @@ function updateRole(id) {
     var newName = $("#role-name-" + id).val();
     
     $.ajax({
-        url: '{{ url("roles") }}/' + id,
+        url: '/roles/' + id,
         type: 'POST', // Laravel doesn't support PUT directly in forms, so use POST with `_method`
         data: {
             _token: '{{ csrf_token() }}',

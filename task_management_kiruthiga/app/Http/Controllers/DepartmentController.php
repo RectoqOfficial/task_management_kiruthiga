@@ -33,7 +33,7 @@ class DepartmentController extends Controller
 public function update(Request $request, $id)
 {
     $request->validate([
-        'name' => 'required|string|max:255'
+        'name' => 'required|string|max:255|unique:departments,name,' . $id
     ]);
 
     $department = Department::find($id);
@@ -45,8 +45,12 @@ public function update(Request $request, $id)
     $department->name = $request->name;
     $department->save();
 
-    return response()->json(['message' => 'Department updated successfully!', 'department' => $department]);
+    return response()->json([
+        'message' => 'Department updated successfully!',
+        'department' => $department
+    ]);
 }
+
 
 
 }

@@ -253,7 +253,7 @@
 if (response.task) {
     $('#task-table-body').append(`
         <tr class="bg-gray-900 hover:bg-gray-700 text-white">
-       
+          <td>${response.task.id}</td>
             <td>${response.task.task_title}</td>
             <td>${response.task.description}</td>
            <td>${response.employee?.email_id ?? 'Not Assigned'}</td>

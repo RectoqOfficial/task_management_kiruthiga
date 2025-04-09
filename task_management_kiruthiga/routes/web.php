@@ -104,7 +104,7 @@ Route::delete('/employee/task/delete/{id}', [TaskController::class, 'deleteTask'
 Route::post('/employee/task/update-deadline/{id}', [TaskController::class, 'updateDeadline']);
 Route::post('/tasks/{id}/update-remarks', [TaskController::class, 'updateRemarks'])->name('tasks.updateRemarks');
 
-Route::post('/tasks/{task}/redo', [TaskController::class, 'redoTask'])->name('tasks.redo');
+// Route::post('/tasks/{task}/redo', [TaskController::class, 'redoTask'])->name('tasks.redo');
 
 // web.php
 // Route::get('/run-overdue-update', [TaskController::class, 'updateOverdueTasks']);

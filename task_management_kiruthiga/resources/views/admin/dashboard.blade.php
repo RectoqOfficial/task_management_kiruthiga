@@ -324,9 +324,11 @@
 // Function to load Role Details content into the #contentArea div
 function loadDepartmentDetails(event) {
     event.preventDefault(); // Prevent the default behavior of the link/button click
-
+   window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+   console.log("API Base URL:", API_BASE_URL);
+   let $api_url = window.API_BASE_URL + "/admin/departments";
     $.ajax({
-        url: "/admin/departments",  // The correct endpoint for fetching department details
+        url: $api_url,  // The correct endpoint for fetching department details
         method: "GET",  // HTTP GET request
         dataType: "html",  // Expecting an HTML response
         success: function (response) {
@@ -345,9 +347,11 @@ function loadDepartmentDetails(event) {
 // Function to load Employee Details content into the #contentArea div
 function loadEmployeeDetails(event) {
     event.preventDefault(); // Prevent default behavior
-
+   window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+   console.log("API Base URL:", API_BASE_URL);
+   let $api_url = window.API_BASE_URL + "/admin/employees";
    $.ajax({
-    url: '/admin/employees',
+    url: $api_url,
     method: 'GET',
     success: function(response) {
         console.log(response); // Log response to see what data is returned
@@ -369,9 +373,11 @@ function loadEmployeeDetails(event) {
 // Function to load Task Details content into the #contentArea div
 function loadTaskDetails(event) {
     event.preventDefault(); // Prevent default behavior (navigation)
-
+ window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+   console.log("API Base URL:", API_BASE_URL);
+   let $api_url = window.API_BASE_URL + "/tasks";
     $.ajax({
-        url: "/tasks", // The route for fetching tasks
+        url: $api_url, // The route for fetching tasks
         method: 'GET',
         success: function(response) {
             $('#contentArea').html(response); // Inject the response into the content area
@@ -390,9 +396,11 @@ function loadTaskDetails(event) {
 // Function to load Scoreboard content into the #contentArea div
 function loadScoreDetails(event) {
     event.preventDefault(); // Prevent default behavior
-
+window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+   console.log("API Base URL:", API_BASE_URL);
+   let $api_url = window.API_BASE_URL + "/scores";
     $.ajax({
-        url: "/scores", // Updated URL to match scoreboard route
+        url: $api_url, // Updated URL to match scoreboard route
         method: 'GET',
         success: function(response) {
             $('#contentArea').html(response); // Inject the response into the content area

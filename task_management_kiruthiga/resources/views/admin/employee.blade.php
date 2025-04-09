@@ -219,10 +219,12 @@ $('#addEmployeeForm').on('submit', function (e) {
         alert('❌ Password must be at least 8 characters long and contain both letters and numbers');
         return;
     }
-
+ window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+   console.log("API Base URL:", API_BASE_URL);
+let $api_url = window.API_BASE_URL + "/admin/check-email";
     // ✅ Check if email already exists via AJAX
     $.ajax({
-        url: "{{ route('admin.checkEmail') }}",
+        url: $api_url,
         type: "POST",
         data: {
             email_id: email,
@@ -235,8 +237,9 @@ $('#addEmployeeForm').on('submit', function (e) {
                 // Proceed with form submission
                 var formData = $('#addEmployeeForm').serialize();
 
+
                 $.ajax({
-                    url: "{{ route('admin.addEmployee') }}",
+                    url: '/admin/employees/add',
                     type: 'POST',
                     data: formData + "&_token=" + $('meta[name="csrf-token"]').attr('content'),
                     success: function (response) {
