@@ -118,15 +118,8 @@
             <tbody id="task-table-body" class="text-sm">
                 @foreach ($tasks as $task)
                     <tr class="bg-gray-800 hover:bg-gray-700 text-white">
-                        <td class="p-2">
-    <input 
-        type="number" 
-        class="w-full p-1 rounded text-black no-of-days-input" 
-        value="{{ $task->no_of_days }}" 
-        id="no_of_days-{{ $task->id }}"
-        data-task-id="{{ $task->id }}" 
-    />
-</td>
+                       
+                         <td class="p-2">{{ $task->id }}</td>
                         <td class="p-2">{{ $task->task_title }}</td>
                         <td class="p-2">{{ $task->description }}</td>
                         <td class="p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
