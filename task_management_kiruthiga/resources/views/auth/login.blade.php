@@ -43,12 +43,27 @@
         <p id="emailError" class="text-red-500 text-xs mt-1 hidden">Email is required.</p>
     </div>
 
-    <!-- Password -->
-    <div class="mb-3 sm:mb-4 text-left">
-        <input type="password" id="password" name="password" placeholder="Enter Password" 
-               class="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-200" required>
-        <p id="passwordError" class="text-red-500 text-xs mt-1 hidden">Password is required.</p>
-    </div>
+  
+  <!-- Password -->
+<div class="mb-3 sm:mb-4 text-left relative">
+    <input type="password" id="password" name="password" placeholder="Enter Password" 
+           class="w-full px-4 py-2 border border-gray-600 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition duration-200 pr-10" required>
+    
+    <!-- Eye Icon -->
+    <button type="button" onclick="togglePassword()" 
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-white focus:outline-none">
+        <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" 
+             viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+        </svg>
+    </button>
+
+    <p id="passwordError" class="text-red-500 text-xs mt-1 hidden">Password is required.</p>
+</div>
+
 
     <!-- Submit -->
     <button type="submit" 
@@ -84,6 +99,24 @@
 
             if (!valid) event.preventDefault();
         });
+
+        //password eye option
+         function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+
+        // Optional: Change the eye icon (you can swap to eye-off here if you want)
+        eyeIcon.innerHTML = isPassword
+            ? `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.973 9.973 0 012.242-3.528m1.405-1.405A9.965 9.965 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.965 9.965 0 01-4.182 5.208M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />`
+            : `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+    }
     </script>
 
 </body>
