@@ -20,7 +20,7 @@
 <body class="bg-gradient-to-r from-blue-500 to-purple-600 min-h-screen flex items-center justify-center">
     <div class="max-w-4xl mx-auto bg-white shadow-2xl rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
         <div class="px-6 py-4 bg-gradient-to-r from-red-500 to-pink-500 text-white text-center text-2xl font-bold uppercase tracking-wide">
-            Employee Profile
+            My Profile
         </div>
         <div class="p-8 space-y-6">
             <div class="flex items-center space-x-4">

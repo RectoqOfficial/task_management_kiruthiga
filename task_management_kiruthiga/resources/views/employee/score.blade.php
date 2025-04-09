@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-100 text-gray-900">
     <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold mb-4 text-center">Employee Task Scores</h1>
+        <h1 class="text-2xl font-bold mb-4 text-center">My Scores</h1>
         <div class="overflow-x-auto">
             <table class="w-full  text-center">
                   <thead>
