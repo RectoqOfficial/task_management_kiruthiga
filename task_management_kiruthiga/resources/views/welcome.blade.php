@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Task Management App - Organize, assign, and track your tasks efficiently with a clean and responsive interface.">
+    <meta name="keywords" content="Task Management, Productivity, Laravel, Project Tracking, Team Collaboration, To-do List">
+    <meta name="author" content="kiruthi">
     <title>Welcome | Task Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
