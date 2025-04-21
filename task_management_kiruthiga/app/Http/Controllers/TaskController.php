@@ -275,6 +275,46 @@ if ($task && $task->score) {
 
 
 
+// app/Http/Controllers/TaskController.php
+
+public function updateOverdueTasks()
+{
+    // Retrieve all tasks with the associated score
+    $tasks = Task::with('score')
+        ->where('status', '!=', 'Completed')  // Only tasks that are not completed
+        ->where('deadline', '<', now())      // Tasks where the deadline has passed
+        ->get();
+
+    foreach ($tasks as $task) {
+        // Ensure there is a related score record
+        if ($task->score) {
+            // Increment overdue count
+            $task->score->overdue_count += 1;
+            
+            // Decrease score (you can adjust the value as needed, e.g., -5 or -10)
+            $task->score->score -= 5; 
+
+            // Save the updated score
+            $task->score->save();
+
+            // Log to check the changes
+            \Log::info('Task overdue updated:', [
+                'task_id' => $task->id,
+                'overdue_count' => $task->score->overdue_count,
+                'score' => $task->score->score
+            ]);
+        }
+
+        // Optionally, update the task status if overdue_count reaches a threshold (e.g., 3)
+        if ($task->score->overdue_count >= 3) {  // Adjust the threshold as needed
+            $task->status = 'Completed';
+            $task->save(); // Save task status as completed
+        }
+    }
+
+    \Log::info("Overdue tasks updated and score decreased.");
+}
+
 
 
 

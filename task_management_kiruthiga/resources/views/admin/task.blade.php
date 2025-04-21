@@ -585,17 +585,6 @@ $(document).ready(function () {
         }
     });
 });
-//overdue 
-$(document).ready(function () {
-    $('.task-deadline').each(function () {
-        let deadline = new Date($(this).data('deadline'));
-        let today = new Date();
-
-        if (deadline < today) {
-            $(this).closest('tr').addClass('bg-red-100 text-red-800');
-        }
-    });
-});
 
     </script>
 </body>

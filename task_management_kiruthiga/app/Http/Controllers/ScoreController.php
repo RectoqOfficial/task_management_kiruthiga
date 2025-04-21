@@ -71,34 +71,35 @@ public function updateScore($task_id)
 
     return view('employee.score', compact('tasks'));
 }
+// app/Http/Controllers/ScoreController.php
 
 public function updateOverdueTasks()
 {
     $tasks = Task::with('score')
+        ->where('status', 'Completed')
         ->where('deadline', '<', now())
-        ->where('status', '!=', 'Completed')
         ->get();
 
     foreach ($tasks as $task) {
-        if ($task->score) {
-            $task->score->overdue_count += 1;
-            $task->score->score -= 5;
+        // Calculate overdue days
+        $overdueDays = now()->diffInDays($task->deadline);
 
-            // ✅ Add this log line here to debug
-            \Log::info("Task {$task->id} updated: overdue={$task->score->overdue_count}, score={$task->score->score}");
-
-            $task->score->save();
-        }
-
-        // Optional status auto-complete if overdue count is too high
-        if ($task->score && $task->score->overdue_count >= $task->no_of_days) {
-            $task->status = "Completed";
-            $task->save();
+        if ($overdueDays > 0) {
+            if ($task->score) {
+                $task->score->overdue_count = $overdueDays;
+                $task->score->score -= 5 * $overdueDays; // Decrease score based on overdue days
+                $task->score->save();
+            }
         }
     }
 
     \Log::info("Overdue tasks updated and score decreased.");
 }
+
+
+
+
+
  public function showScoreboard()
     {
         $this->updateOverdueTasks(); // call it here temporarily
