@@ -34,7 +34,7 @@
                     <th class="p-2 whitespace-nowrap min-w-[130px]">No. of Days</th>
                     <th class="p-2 whitespace-nowrap min-w-[120px]">Deadline</th>
                     <th class="p-2 whitespace-nowrap min-w-[140px]">Remarks</th>
-                    <th class="p-2 whitespace-nowrap min-w-[100px]">Actions</th>
+                    
                 </tr>
             </thead>
              <tbody id="task-table-body" class="text-sm">
@@ -107,12 +107,7 @@
                             <textarea class="w-full p-1 rounded text-white remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
                             <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="{{ $task->id }}">Save</button>
                         </td>
-                        <td class="p-2">
-                            <form class="task-delete-form" data-task-id="{{ $task->id }}">
-                                @csrf
-                                <button type="button" class="px-2 py-1 bg-red-600 text-white rounded delete-task-btn">Delete</button>
-                            </form>
-                        </td>
+                       
                     </tr>
                 @endforeach
             </tbody>
