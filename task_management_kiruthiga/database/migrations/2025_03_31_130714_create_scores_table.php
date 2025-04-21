@@ -16,7 +16,7 @@ return new class extends Migration
         $table->foreignId('task_id')->constrained()->onDelete('cascade');
         $table->integer('overdue_count')->default(0);
         $table->integer('redo_count')->default(0);
-        $table->integer('score')->default(100);
+        $table->integer('score')->default(0);
         $table->timestamps();
     });
 }

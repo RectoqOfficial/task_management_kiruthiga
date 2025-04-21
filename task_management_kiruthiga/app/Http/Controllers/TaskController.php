@@ -67,12 +67,13 @@ public function store(Request $request)
             'status' => 'Pending',
         ]);
 
-        Score::create([
-            'task_id' => $task->id,
-            'redo_count' => 0,
-            'overdue_count' => 0,
-            'score' => 100,
-        ]);
+     Score::create([
+    'task_id' => $task->id,
+    'redo_count' => 0,
+    'overdue_count' => 0,
+    'score' => 0, // default score is now zero
+]);
+
 
   $employee = Employee::find($request->assigned_to);
 
@@ -81,11 +82,12 @@ return response()->json([
     'message' => 'Task created successfully',
     'task' => $task,
     'employee' => $employee,
-        'score' => [
-        'redo_count' => 0,
-        'overdue_count' => 0,
-        'score' => 100
-    ]
+  'score' => [
+    'redo_count' => 0,
+    'overdue_count' => 0,
+    'score' => 0,
+]
+
 ], 201);
 
     } catch (\Exception $e) {

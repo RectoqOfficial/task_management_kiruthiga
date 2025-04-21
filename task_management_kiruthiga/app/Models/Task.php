@@ -53,7 +53,7 @@ class Task extends Model
                     [
                         'redo_count' => 0,
                         'overdue_count' => 0,
-                        'score' => 100,
+                        'score' => 0,
                     ]
                 );
                 Log::info("✅ Score created for Task ID: " . $task->id);

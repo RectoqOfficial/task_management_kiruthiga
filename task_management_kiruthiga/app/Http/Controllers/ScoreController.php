@@ -34,7 +34,7 @@ public function updateScore($task_id)
         $score->task_id = $task->id;
         $score->redo_count = 0;
         $score->overdue_count = 0;
-        $score->score = 100; // Default max score
+        $score->score = 0; // Default max score
     }
 
     if ($task->status == 'Completed' && $task->completed_at) {

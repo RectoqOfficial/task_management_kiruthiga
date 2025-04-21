@@ -462,61 +462,7 @@ $(document).ready(function () {
 });
 
 
-//filter
-$(document).ready(function () {
-    // Listen for the filter form submission
-    $('#taskFilterForm').on('submit', function (e) {
-        e.preventDefault(); // Prevent form submission
 
-        // Get the values from the filters
-        let taskTitle = $('#filter_task_title').val().toLowerCase();
-        let assignedTo = $('#filter_assigned_to').val();
-        let status = $('#filter_status').val();
-
-        // Loop through each table row and hide/show based on filter criteria
-        $('table tbody tr').each(function () {
-            let taskRow = $(this);
-            let taskTitleCell = taskRow.find('td:nth-child(2)').text().toLowerCase();
-            let assignedToCell = taskRow.find('td:nth-child(4)').text().toLowerCase();
-            let statusCell = taskRow.find('td:nth-child(5)').text().toLowerCase();
-
-            let showRow = true;
-
-            // Check if the row matches the taskTitle filter
-            if (taskTitle && !taskTitleCell.includes(taskTitle)) {
-                showRow = false;
-            }
-
-            // Check if the row matches the assignedTo filter
-            if (assignedTo && !assignedToCell.includes(assignedTo)) {
-                showRow = false;
-            }
-
-            // Check if the row matches the status filter
-            if (status && !statusCell.includes(status)) {
-                showRow = false;
-            }
-
-            // Show or hide the row based on filter results
-            if (showRow) {
-                taskRow.show();
-            } else {
-                taskRow.hide();
-            }
-        });
-    });
-});
-$('#filter_task_title').on('keyup', function () {
-    let searchText = $(this).val().toLowerCase();
-    $('table tbody tr').each(function () {
-        let taskTitle = $(this).find('td:nth-child(2)').text().toLowerCase();
-        if (taskTitle.includes(searchText)) {
-            $(this).show();
-        } else {
-            $(this).hide();
-        }
-    });
-});
 //update remarks
 document.querySelectorAll('.save-remark-btn').forEach(button => {
     button.addEventListener('click', function() {
