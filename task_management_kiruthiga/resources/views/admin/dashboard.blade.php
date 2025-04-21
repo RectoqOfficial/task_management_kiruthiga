@@ -54,10 +54,14 @@
             .animate-pulse {
             animation: pulse 2s infinite;
             }
+              .active-link {
+        color: #ff0003 !important;
+        font-weight: bold;
+    }
         </style>
     <ul class="text-sm"> <!-- Reduced font size -->   
         <li class="px-4 py-3">
-        <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDashboard(event)">
+        <a href="#" id="dashboardLink" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDashboard(event)">
         <span class="icon-container w-5 h-5">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M3 10h18M3 14h18M5 6h14M5 18h14"></path>
@@ -67,7 +71,7 @@
         </a>
     </li>
         <li class="px-4 py-3">
-            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDepartmentDetails(event)">
+            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadDepartmentDetails(event) " id="departmentLink">
                 <span class="icon-container w-5 h-5">
                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
@@ -77,7 +81,7 @@
             </a>
         </li>
         <li class="px-4 py-3">
-            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeDetails(event)" data-icon="employee">
+            <a href="#" id="employeeLink" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeDetails(event)" data-icon="employee">
                   <span class="icon-container w-5 h-5">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4z"></path>
@@ -87,7 +91,7 @@
             </a>
         </li>
         <li class="px-4 py-3">
-            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadTaskDetails(event)" data-icon="task">
+            <a href="#" id="taskLink" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadTaskDetails(event)" data-icon="task">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
@@ -96,7 +100,7 @@
             </a>
         </li>
         <li class="px-4 py-3">
-            <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadScoreDetails(event)" data-icon="score">
+            <a href="#" id="scoreLink" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadScoreDetails(event)" data-icon="score">
                   <span class="icon-container w-5 h-5">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M12 8c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4zm0 6c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"></path>
@@ -211,7 +215,6 @@
         
       
 
-   <!-- ========== Start Section ========== -->
     
         <!-- ========== Start Section ========== -->
 <div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[80vh] text-white "> 
@@ -254,7 +257,6 @@
 
 
 
-<!-- ========== End Section ========== -->
 
    <!-- ========== End Section ========== -->
    
@@ -262,6 +264,20 @@
     </div>
 
 <script>
+    function setActiveLink(linkId) {
+        const links = ['dashboardLink', 'departmentLink', 'employeeLink', 'taskLink', 'scoreLink'];
+        links.forEach(id => {
+            const link = document.getElementById(id);
+            if (link) {
+                link.classList.remove('active-link');
+            }
+        });
+
+        const activeLink = document.getElementById(linkId);
+        if (activeLink) {
+            activeLink.classList.add('active-link');
+        }
+    }
  function toggleSidebar() {
             let sidebar = document.getElementById("mobileSidebar");
             if (sidebar.classList.contains("-translate-x-full")) {
@@ -318,12 +334,14 @@
 
     function loadDashboard(event) {
         event.preventDefault();
+         setActiveLink('dashboardLink');
         hideAllSections();
         document.getElementById("dashboard").classList.remove("hidden");
     }
 // Function to load Role Details content into the #contentArea div
 function loadDepartmentDetails(event) {
     event.preventDefault(); // Prevent the default behavior of the link/button click
+     setActiveLink('departmentLink');
    window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
    console.log("API Base URL:", API_BASE_URL);
    let $api_url = window.API_BASE_URL + "/admin/departments";
@@ -347,6 +365,7 @@ function loadDepartmentDetails(event) {
 // Function to load Employee Details content into the #contentArea div
 function loadEmployeeDetails(event) {
     event.preventDefault(); // Prevent default behavior
+     setActiveLink('employeeLink');
    window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
    console.log("API Base URL:", API_BASE_URL);
    let $api_url = window.API_BASE_URL + "/admin/employees";
@@ -369,10 +388,11 @@ function loadEmployeeDetails(event) {
 }
 
 
-// Function to load Task Details content into the #contentArea div
+
 // Function to load Task Details content into the #contentArea div
 function loadTaskDetails(event) {
     event.preventDefault(); // Prevent default behavior (navigation)
+     setActiveLink('taskLink');
  window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
    console.log("API Base URL:", API_BASE_URL);
    let $api_url = window.API_BASE_URL + "/tasks";
@@ -396,6 +416,7 @@ function loadTaskDetails(event) {
 // Function to load Scoreboard content into the #contentArea div
 function loadScoreDetails(event) {
     event.preventDefault(); // Prevent default behavior
+      setActiveLink('scoreLink');
 window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
    console.log("API Base URL:", API_BASE_URL);
    let $api_url = window.API_BASE_URL + "/scores";

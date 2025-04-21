@@ -27,6 +27,7 @@
     </style>
 </head>
 <body class="bg-gray-900 text-white p-6">
+    
 <div class="max-w-5xl mx-auto">
     <h1 class="text-3xl font-bold mb-6 text-center">Task Management</h1>
 
