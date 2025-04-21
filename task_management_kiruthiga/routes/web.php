@@ -120,4 +120,3 @@ Route::post('/scores/update/{task_id}', [ScoreController::class, 'updateScore'])
 
 Route::get('/employee/score', [ScoreController::class, 'myScore'])->name('employee.score');
 Route::get('/scoreboard', [ScoreController::class, 'showScoreboard'])->name('scoreboard');
-Route::get('/update-overdue-tasks', [ScoreController::class, 'updateOverdueTasks'])->name('updateOverdueTasks');
