@@ -553,7 +553,7 @@ $(document).ready(function () {
     const scoreSpan = $("#score-" + taskId);
 
     $.ajax({
-        url: "{{ route('tasks.redo') }}",
+        url: "https://intern1.rectoq.org/tasks/redo",
         type: "POST",
         data: {
             _token: "{{ csrf_token() }}",
