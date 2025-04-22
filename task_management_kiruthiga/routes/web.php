@@ -87,8 +87,6 @@ Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.de
 
 Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('tasks.show');
 
-// Route::middleware('auth', 'role:admin')->delete('/tasks/{task}', [TaskController::class, 'destroy']);
-
 Route::get('/get-roles-by-department', [TaskController::class, 'getRolesByDepartment'])->name('getRolesByDepartment');
 Route::get('/employees-by-role', [TaskController::class, 'getEmployeesByRole'])->name('getEmployeesByRole');
 Route::get('/get-employees-by-role', [TaskController::class, 'getEmployeesByRole'])->name('getEmployeesByRole');
@@ -101,11 +99,16 @@ Route::post('/employee/task/update-start-date/{id}', [TaskController::class, 'up
 Route::delete('/employee/task/delete/{id}', [TaskController::class, 'deleteTask']);
 Route::post('/employee/task/update-deadline/{id}', [TaskController::class, 'updateDeadline']);
 Route::post('/tasks/{id}/update-remarks', [TaskController::class, 'updateRemarks'])->name('tasks.updateRemarks');
-
+Route::get('/scoreboard', [TaskController::class, 'showScoreboard'])->name('scoreboard');
 
 
 Route::post('/tasks/redo', [TaskController::class, 'redoTask'])->name('tasks.redo');
 
+Route::post('/tasks/{id}/update-score', [TaskController::class, 'updateScore'])->name('tasks.updateScore');
+Route::post('/tasks/{task}/upload-document', [TaskController::class, 'uploadDocument'])->name('tasks.uploadDocument');
+Route::post('/tasks/{task}/upload-flowchart', [TaskController::class, 'uploadFlowchart'])->name('tasks.uploadFlowchart');
+Route::post('/tasks/{task}/upload-sheet', [TaskController::class, 'uploadSheet'])->name('tasks.uploadSheet');
+Route::get('/update-overdue', [TaskController::class, 'updateOverdueTasks']);
 
 
 
@@ -115,4 +118,4 @@ Route::get('/scores', [ScoreController::class, 'index'])->name('scores.index');
 Route::post('/scores/update/{task_id}', [ScoreController::class, 'updateScore'])->name('scores.update');
 
 Route::get('/employee/score', [ScoreController::class, 'myScore'])->name('employee.score');
-Route::get('/scoreboard', [ScoreController::class, 'showScoreboard'])->name('scoreboard');
+// Route::get('/scoreboard', [ScoreController::class, 'showScoreboard'])->name('scoreboard');

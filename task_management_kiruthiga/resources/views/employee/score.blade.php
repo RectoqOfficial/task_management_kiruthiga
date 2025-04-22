@@ -30,15 +30,33 @@
             <td class=" p-2">{{ $task->task_title }}</td>
               
             <td class=" p-2">{{ $task->status }}</td>
-<td class=" p-2">
-    <span class="redo-count" id="redo-{{ $task->id }}">
-      {{ $task->score->overdue_count ?? 0 }}
-    </span>
+<td class="p-2">
+    @php
+        $overdue = 0;
+        $penalty = 0;
+
+        if ($task->task_start_date && $task->deadline && $task->no_of_days) {
+            $deadline = \Carbon\Carbon::parse($task->deadline);
+            $now = $task->status === 'Completed' && $task->updated_at ? $task->updated_at : now();
+
+            if ($deadline->isPast()) {
+                $overdue = floor($deadline->floatDiffInRealDays($now));
+                $overdue = max($overdue, 0);
+            }
+        }
+
+        // Calculate penalty (-30 per day)
+        $penalty = $overdue * -30;
+    @endphp
+
+    <span>{{ $overdue }} day(s)</span><br>
+    {{-- <span class="text-red-600">Score: {{ $penalty }}</span> --}}
 </td>
 
+
             <td class=" p-2">{{ $task->redo_count ?? 0 }}</td>
-<td class=" p-2 font-bold" id="score-{{ $task->id }}">
-    {{ $task->score->score ?? 0 }}
+<td class=" p-2  ">
+    {{ $task->score ?? 0 }}
 </td>
          
         </tr>

@@ -91,6 +91,7 @@
             <input type="number" name="no_of_days" id="no_of_days" required class="w-full p-3 rounded text-white bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500">
         </div>
 
+
         <button type="submit" id="createTaskBtn" class="mt-4 w-full px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white font-semibold">
             Create Task
         </button>
@@ -103,30 +104,58 @@
         <table class="w-full text-center border-collapse">
             <thead>
                 <tr class="bg-red-600 text-white text-sm">
-                      <th class="p-2">ID</th>
+                    <th class="p-2">ID</th>
                     <th class="p-2">Task Title</th>
                     <th class="p-2">Description</th>
                     <th class="p-2">Assigned To</th>
+                    <th class="p-2">Overdue</th>
                     <th class="p-2">Status</th>
                     <th class="p-2">Redo Count</th>
                     <th class="p-2">Task Create Date</th>
                     <th class="p-2">Task Start Date</th>
                     <th class="p-2">No. of Days</th>
                     <th class="p-2">Deadline</th>
+                    <th class="p-2">Task Document</th>
+                    <th class="p-2">Flowchart</th>
+                    <th class="p-2">Sheet Detail</th>
                     <th class="p-2">Remarks</th>
+                    <th class="p-2">Score</th>
                     <th class="p-2">Actions</th>
                 </tr>
             </thead>
             <tbody id="task-table-body" class="text-sm">
                 @foreach ($tasks as $task)
                     <tr class="bg-gray-800 hover:bg-gray-700 text-white">
-                                                                  
-
-
-                         <td class="p-2">{{ $task->id }}</td>
+                        <td class="p-2">{{ $task->id }}</td>
                         <td class="p-2">{{ $task->task_title }}</td>
                         <td class="p-2">{{ $task->description }}</td>
                         <td class="p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
+<td class="p-2">
+    @php
+        $overdue = 0;
+        $penalty = 0;
+
+        if ($task->task_start_date && $task->deadline && $task->no_of_days) {
+            $deadline = \Carbon\Carbon::parse($task->deadline);
+            $now = $task->status === 'Completed' && $task->updated_at ? $task->updated_at : now();
+
+            if ($deadline->isPast()) {
+                $overdue = floor($deadline->floatDiffInRealDays($now));
+                $overdue = max($overdue, 0);
+            }
+        }
+
+        // Calculate penalty (-30 per day)
+        $penalty = $overdue * -30;
+    @endphp
+
+    <span>{{ $overdue }} day(s)</span><br>
+    {{-- <span class="text-red-600">Score: {{ $penalty }}</span> --}}
+</td>
+
+
+
+
                         <td class="p-2">
                             @if (Auth::guard('admin')->check() && $task->status !== 'Completed')
                                 <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
@@ -146,38 +175,62 @@
                             @endif
                         </td>
                         <td class="p-2">{{ $task->task_create_date }}</td>
-                      <td class="p-2">
-    <input 
-        type="date" 
-        class="w-full p-1 rounded text-white task-start-date" 
-        value="{{ $task->task_start_date }}" 
-        data-task-id="{{ $task->id }}"
-        @if(Auth::guard('employee')->check() && $task->task_start_date) disabled @endif
-    />
-</td>
-
                         <td class="p-2">
-       <input 
-    type="number" 
-    class="w-full p-1 rounded text-black bg-white border border-white no-of-days-input" 
-    value="{{ $task->no_of_days }}" 
-    data-task-id="{{ $task->id }}" 
-    @if($task->no_of_days) readonly @endif
-/>
+                            <input type="date" class="w-full p-1 rounded text-white task-start-date" 
+                                   value="{{ $task->task_start_date }}" data-task-id="{{ $task->id }}"
+                                   @if(Auth::guard('employee')->check() && $task->task_start_date) disabled @endif />
                         </td>
-                     <td class="p-2">
-    <input 
-        type="date" 
-        readonly 
-        class="w-full p-1 rounded text-white bg-gray-700 task-deadline" 
-        value="{{ $task->deadline }}" 
-        id="deadline-{{ $task->id }}"
-        data-task-id="{{ $task->id }}" 
-    />
-</td>
+                        <td class="p-2">
+                            <input type="number" class="w-full p-1 rounded text-black bg-white border border-white no-of-days-input" 
+                                   value="{{ $task->no_of_days }}" data-task-id="{{ $task->id }}" 
+                                   @if($task->no_of_days) readonly @endif />
+                        </td>
+                        <td class="p-2">
+                            <input type="date" readonly class="w-full p-1 rounded text-white bg-gray-700 task-deadline" 
+                                   value="{{ $task->deadline }}" id="deadline-{{ $task->id }}" data-task-id="{{ $task->id }}" />
+                        </td>
+                        <td class="p-2">
+                            @if($task->task_document)
+                                <a href="{{ asset('storage/' . $task->task_document) }}" target="_blank" class="text-blue-400 underline">View</a>
+                            @else
+                                <span class="text-gray-400">Not Uploaded</span>
+                            @endif
+                        </td>
+                        <td class="p-2">
+                            @if($task->flowchart)
+                                <a href="{{ asset('storage/' . $task->flowchart) }}" target="_blank" class="text-blue-400 underline">View</a>
+                            @else
+                                <span class="text-gray-400">Not Uploaded</span>
+                            @endif
+                        </td>
+                        <td class="p-2">
+                            @if($task->sheet_detail)
+                                <a href="{{ asset('storage/' . $task->sheet_detail) }}" target="_blank" class="text-blue-400 underline">View</a>
+                            @else
+                                <span class="text-gray-400">Not Uploaded</span>
+                            @endif
+                        </td>
                         <td class="p-2">
                             <textarea class="w-full p-1 rounded text-black remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
                             <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="{{ $task->id }}">Save</button>
+                        </td>
+                        <td class="p-2">
+                            @if(Auth::guard('admin')->check() && $task->status === 'Completed')
+                                <form method="POST" action="{{ route('tasks.updateScore', $task->id) }}">
+                                    @csrf
+                                    @php
+                                        $score = $task->score ?? 0;
+                                        if ($overdue > 0) {
+                                            $score -= $overdue * 30;
+                                        }
+                                    @endphp
+                                    <input type="number" name="score" value="{{ $score }}" 
+                                           class="w-20 p-1 rounded text-black bg-white border border-white" min="0" />
+                                    <button type="submit" class="px-2 py-1 bg-green-600 text-white rounded ml-2">Save</button>
+                                </form>
+                            @else
+                                <span>{{ $task->score ?? 0 }}</span>
+                            @endif
                         </td>
                         <td class="p-2">
                             <form class="task-delete-form" data-task-id="{{ $task->id }}">
@@ -191,6 +244,8 @@
         </table>
     </div>
 </div>
+
+
 </body>
 </html>
 
@@ -498,9 +553,12 @@ $(document).ready(function () {
     const statusSelect = $("#status-" + taskId);
     const statusText = $("#status-text-" + taskId);
     const scoreSpan = $("#score-" + taskId);
-
+window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+   console.log("API Base URL:", API_BASE_URL);
+   let $api_url = window.API_BASE_URL + "/tasks/redo";
     $.ajax({
-        url: "https://intern1.rectoq.org/tasks/redo",
+        url: $api_url, // Updated URL to match scoreboard route
+
         type: "POST",
         data: {
             _token: "{{ csrf_token() }}",
