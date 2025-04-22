@@ -9,20 +9,28 @@ use App\Models\Role;
 use App\Models\Employee;
 use App\Models\User;
 use App\Models\Score; 
+
+use Carbon\Carbon;
+
+
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     // Display the list of tasks, departments, roles, and employees
-    public function index()
-    {
-        $tasks = Task::with('employee')->get();
-        $departments = Department::all();
-        $roles = Role::all();
-        $employees = Employee::all();
+public function index()
+{
+    $tasks = Task::with('employee')->get();
+    $departments = Department::all();
+    $roles = Role::all();
+    $employees = Employee::all();
 
-        return view('admin.task', compact('tasks', 'departments', 'roles', 'employees'));
-    }
+    return view('admin.task', compact('tasks', 'departments', 'roles', 'employees'));
+}
+public function show($id)
+{
+    return redirect()->route('tasks.index');
+}
 
 
 // Store a new task (Admin creates a task without task_start_date)
@@ -38,6 +46,7 @@ public function store(Request $request)
         'assigned_to' => 'required|exists:employees,id',
         'task_start_date' => 'nullable|date',
         'no_of_days' => 'required|integer|min:1',
+     
     ]);
 
     // Use the provided start date, or default to today
@@ -67,12 +76,13 @@ public function store(Request $request)
             'status' => 'Pending',
         ]);
 
-     Score::create([
+ Score::create([
     'task_id' => $task->id,
     'redo_count' => 0,
     'overdue_count' => 0,
-    'score' => 0, // default score is now zero
+    'score' => $request->score, // ✅ updated from 0 to request value
 ]);
+
 
 
   $employee = Employee::find($request->assigned_to);
@@ -82,11 +92,12 @@ return response()->json([
     'message' => 'Task created successfully',
     'task' => $task,
     'employee' => $employee,
-  'score' => [
+'score' => [
     'redo_count' => 0,
     'overdue_count' => 0,
-    'score' => 0,
+    'score' => $request->score,
 ]
+
 
 ], 201);
 
@@ -256,75 +267,165 @@ public function updateRemarks(Request $request, $id)
 public function redoTask(Request $request)
 {
     $task = Task::find($request->task_id);
-if ($task && $task->score) {
-    $task->redo_count += 1;
-    $task->score->score -= 10;
-    $task->score->save();
 
-    $task->status = "Pending";
-    $task->save();
+    if ($task) {
+        // Increment redo count
+        $task->redo_count += 1;
 
-    return response()->json([
-        'redo_count' => $task->redo_count,
-        'status' => $task->status,
-        'score' => $task->score->score
-    ]);
-}
+        // Decrease the task's score
+        $task->score -= 20; // Directly updating 'score' field
+        $task->status = "Pending"; // Update status to Pending
 
+        // Save the changes
+        $task->save();
+
+        return response()->json([
+            'redo_count' => $task->redo_count,
+            'status' => $task->status,
+            'score' => $task->score,
+        ]);
+    }
 
     return response()->json(['error' => 'Task not found!'], 404);
 }
 
 
 
-// app/Http/Controllers/TaskController.php
 
+// app/Http/Controllers/TaskController.php
 public function updateOverdueTasks()
 {
-    // Retrieve all tasks with the associated score
-    $tasks = Task::with('score')
-        ->where('status', '!=', 'Completed')  // Only tasks that are not completed
-        ->where('deadline', '<', now())      // Tasks where the deadline has passed
-        ->get();
+    $tasks = Task::where('status', '!=', 'Completed')->get();
 
     foreach ($tasks as $task) {
-        // Ensure there is a related score record
-        if ($task->score) {
-            // Increment overdue count
-            $task->score->overdue_count += 1;
-            
-            // Decrease score (you can adjust the value as needed, e.g., -5 or -10)
-            $task->score->score -= 5; 
+        if ($task->task_start_date && $task->deadline && $task->no_of_days) {
+            $deadline = Carbon::parse($task->deadline);
+            $now = now();
+            $overdue = 0;
 
-            // Save the updated score
-            $task->score->save();
+            if ($deadline->isPast()) {
+                $overdue = floor($deadline->floatDiffInRealDays($now));
+                $overdue = max($overdue, 0);
+            }
 
-            // Log to check the changes
-            \Log::info('Task overdue updated:', [
-                'task_id' => $task->id,
-                'overdue_count' => $task->score->overdue_count,
-                'score' => $task->score->score
-            ]);
-        }
-
-        // Optionally, update the task status if overdue_count reaches a threshold (e.g., 3)
-        if ($task->score->overdue_count >= 3) {  // Adjust the threshold as needed
-            $task->status = 'Completed';
-            $task->save(); // Save task status as completed
+            $task->overdue_days = $overdue; // Make sure this column exists in your DB
+            $task->save();
         }
     }
 
-    \Log::info("Overdue tasks updated and score decreased.");
+    return response()->json(['message' => 'Overdue days updated successfully.']);
 }
-
-
 
 
 public function showScoreboard()
 {
-    $tasks = Task::with('score')->get(); // Ensure the relationship is loaded
+    $tasks = Task::with('employee')->get();
+
+    // Iterate through each task and dump the associated employee
+    foreach ($tasks as $task) {
+        dd($task->employee);  // Check each task's employee relationship
+    }
+
     return view('scoreboard', compact('tasks'));
 }
 
+
+public function updateScore(Request $request, $id)
+{
+    $request->validate([
+        'score' => 'required|integer|min:0'
+    ]);
+
+    $task = Task::findOrFail($id);
+    $task->score = $request->score;
+    $task->save();
+
+    return back()->with('success', 'Score updated successfully!');
+}// Upload Task Document
+public function uploadDocument(Request $request, Task $task)
+{
+    $request->validate([
+        'task_document' => 'required|file|mimes:pdf,docx,jpg,jpeg,png|max:2048',
+    ]);
+
+    // Store the file and get the path
+    $file = $request->file('task_document');
+    $path = $file->store('documents/task_docs', 'public');
+    
+    // Save the file path to the task record
+    $task->task_document = $path;
+    $task->save();
+
+    // Return JSON response for AJAX requests
+    if ($request->ajax()) {
+        return response()->json([
+            'success' => true,
+            'file_url' => asset('storage/' . $path),
+            'file_name' => $file->getClientOriginalName(), // Return the original file name
+            'message' => 'Task Document uploaded successfully.',
+        ]);
+    }
+
+    // Redirect back for normal requests
+    return back()->with('success', 'Task Document uploaded successfully.');
+}
+
+// Upload Flowchart
+public function uploadFlowchart(Request $request, Task $task)
+{
+    $request->validate([
+        'flowchart' => 'required|file|mimes:pdf,docx,jpg,jpeg,png|max:2048',
+    ]);
+
+    // Store the file and get the path
+    $file = $request->file('flowchart');
+    $path = $file->store('documents/flowcharts', 'public');
+    
+    // Save the file path to the task record
+    $task->flowchart = $path;
+    $task->save();
+
+    // Return JSON response for AJAX requests
+    if ($request->ajax()) {
+        return response()->json([
+            'success' => true,
+            'file_url' => asset('storage/' . $path),
+            'file_name' => $file->getClientOriginalName(),
+            'message' => 'Flowchart uploaded successfully.',
+        ]);
+    }
+
+    // Redirect back for normal requests
+    return back()->with('success', 'Flowchart uploaded successfully.');
+}
+
+// Upload Sheet Detail
+public function uploadSheet(Request $request, Task $task)
+{
+    $request->validate([
+        'sheet_detail' => 'required|file|mimes:pdf,docx,jpg,jpeg,png|max:2048',
+    ]);
+
+    // Store the file and get the path
+    $file = $request->file('sheet_detail');
+    $path = $file->store('documents/sheets', 'public');
+    
+    // Save the file path to the task record
+    $task->sheet_detail = $path;
+    $task->save();
+
+    // Return JSON response for AJAX requests
+    if ($request->ajax()) {
+        return response()->json([
+            'success' => true,
+            'file_url' => asset('storage/' . $path),
+            'file_name' => $file->getClientOriginalName(),
+            'message' => 'Sheet detail uploaded successfully.',
+        ]);
+    }
+
+    // Redirect back for normal requests
+    return back()->with('success', 'Sheet detail uploaded successfully.');
+}
 
 }

@@ -16,49 +16,53 @@ class ScoreController extends Controller
 }
 
 
-public function updateScore($task_id)
+// Update Score for Task
+public function updateScore(Request $request, $taskId)
 {
-    $task = Task::findOrFail($task_id);
+    $task = Task::find($taskId);
     
-    // ✅ Log task update attempt
-    \Log::info('Updating score for task:', [
-        'task_id' => $task_id,
-        'task_status' => $task->status,
-        'completed_at' => $task->completed_at,
-        'deadline' => $task->deadline
-    ]);
-    $score = Score::where('task_id', $task_id)->first();
+    if (!$task) {
+        return redirect()->back()->with('error', 'Task not found');
+    }
 
+    // Logic to calculate the score based on task status, redo_count, and overdue_count
+    $score = Score::where('task_id', $task->id)->first();
+    
     if (!$score) {
         $score = new Score();
         $score->task_id = $task->id;
-        $score->redo_count = 0;
-        $score->overdue_count = 0;
-        $score->score = 0; // Default max score
     }
 
-    if ($task->status == 'Completed' && $task->completed_at) {
-        if ($task->completed_at > $task->deadline) {
-            $score->overdue_count++;
-            $score->score = 80;
-        } else {
-            $score->score = max(100 - ($score->redo_count * 10), 0);
+    // Check if task is completed by employee
+    if ($task->status === 'Completed') {
+        $score->score = $request->score ?? 50;  // Default score for completion
+
+        // Check if redo count exists, and subtract 20 points for each redo
+        $score->score -= $task->redo_count * 20;
+
+        // Check if the task is overdue
+        $deadline = Carbon::parse($task->deadline);
+        $currentDate = Carbon::now();
+        if ($currentDate->gt($deadline)) {
+            $overdueDays = $currentDate->diffInDays($deadline);
+            $score->score -= $overdueDays * 30; // Subtract 30 points per overdue day
+            $score->overdue_count = $overdueDays;
         }
-    } elseif ($task->status == 'Redo') {
-        $score->redo_count++;
-        $score->score = max(100 - ($score->redo_count * 10), 0);
+
+        // Ensure score doesn't go negative
+        $score->score = max(0, $score->score);
     }
 
+    // Save score updates
     $score->save();
-      // ✅ Log successful score update
-    \Log::info('Score updated successfully:', [
-        'task_id' => $task->id,
-        'new_score' => $score->score,
-        'redo_count' => $score->redo_count,
-        'overdue_count' => $score->overdue_count
+
+    // Return updated score to the frontend
+    return response()->json([
+        'score' => $score->score,
+        'message' => 'Score updated successfully',
     ]);
-    return redirect()->route('scores.index')->with('success', 'Score updated successfully.');
 }
+
 
    public function myScore()
 {
@@ -87,7 +91,7 @@ public function updateOverdueTasks()
         if ($overdueDays > 0) {
             if ($task->score) {
                 $task->score->overdue_count = $overdueDays;
-                $task->score->score -= 5 * $overdueDays; // Decrease score based on overdue days
+                $task->score->score -= 20 * $overdueDays; // Decrease score based on overdue days
                 $task->score->save();
             }
         }
@@ -97,16 +101,40 @@ public function updateOverdueTasks()
 }
 
 
+public function redoTask(Request $request)
+{
+    $task = Task::with('score')->find($request->task_id);
 
+    if ($task && $task->score) {
+        // Increment redo count
+        $task->redo_count += 1;
 
+        // Decrease the score in the related Score model
+        $task->score->score -= 20;
+        $task->score->save(); // Save the related Score model
 
- public function showScoreboard()
-    {
-        $this->updateOverdueTasks(); // call it here temporarily
+        $task->status = "Pending"; // Update status to Pending
+        $task->save(); // Save the task model
 
-        $tasks = Task::with(['employee', 'score'])->get();
-
-return view('admin.score', compact('tasks'));
-
+        return response()->json([
+            'redo_count' => $task->redo_count,
+            'status' => $task->status,
+            'score' => $task->score->score, // Access the updated score
+        ]);
     }
+
+    return response()->json(['error' => 'Task not found!'], 404);
+}
+
+
+
+//  public function showScoreboard()
+//     {
+//         $this->updateOverdueTasks(); // call it here temporarily
+
+//         $tasks = Task::with(['employee', 'score'])->get();
+
+// return view('admin.score', compact('tasks'));
+
+//     }
 }

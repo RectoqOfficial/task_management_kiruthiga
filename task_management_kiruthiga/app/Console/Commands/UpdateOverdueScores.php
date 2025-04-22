@@ -15,36 +15,40 @@ class UpdateOverdueScores extends Command
     {
         $today = Carbon::today();
 
-        // Get all tasks that are not completed
-        $tasks = Task::with('score')->where('status', '!=', 'Completed')->get();
+     $tasks = Task::with('score')->where('status', '!=', 'Completed')->get();
+$tasksWithNoScores = Task::doesntHave('score')->get();
+
+        if ($tasksWithNoScores->isNotEmpty()) {
+            $this->info('Tasks without score records:');
+            foreach ($tasksWithNoScores as $task) {
+                $this->info("Task ID: {$task->id}");
+            }
+        }
 
         foreach ($tasks as $task) {
-            // Skip if task has no score relationship
-            if (!$task->score) {
+            if (!$task->taskScore) {
                 $this->warn("⚠️ No score record for Task ID: {$task->id}");
                 continue;
             }
 
-            // Only apply logic if the deadline is in the past
+            $this->info("Task #{$task->id} - Score: {$task->taskScore->score}, Overdue Count: {$task->taskScore->overdue_count}");
+
             if ($task->deadline && Carbon::parse($task->deadline)->lt($today)) {
                 $totalOverdueDays = $today->diffInDays(Carbon::parse($task->deadline));
-                $newOverdueDays = $totalOverdueDays - $task->score->last_overdue_count;
+                $newOverdueDays = $totalOverdueDays - $task->taskScore->last_overdue_count;
 
                 if ($newOverdueDays > 0) {
-                    // Update overdue_count
-                    $task->score->overdue_count = $totalOverdueDays;
+                    $task->taskScore->overdue_count = $totalOverdueDays;
 
-                    // Deduct score only for NEW overdue days, ensuring the score does not go below zero
                     $scoreReduction = $newOverdueDays * 5;
-                    $newScore = $task->score->score - $scoreReduction;
-                    $task->score->score = max(0, $newScore);  // Ensure score does not go below zero
+                    $newScore = $task->taskScore->score - $scoreReduction;
+                    $task->taskScore->score = max(0, $newScore);
 
-                    // Update last_overdue_count so we don't subtract again for the same days
-                    $task->score->last_overdue_count = $totalOverdueDays;
+                    $task->taskScore->last_overdue_count = $totalOverdueDays;
 
-                    $task->score->save();
+                    $task->taskScore->save();
 
-                    $this->info("✅ Task #{$task->id} | New Overdue: {$newOverdueDays} days | Score: {$task->score->score}");
+                    $this->info("✅ Task #{$task->id} | New Overdue: {$newOverdueDays} days | Score: {$task->taskScore->score}");
                 } else {
                     $this->line("⏩ Task #{$task->id} already processed for {$totalOverdueDays} overdue days.");
                 }
@@ -53,6 +57,4 @@ class UpdateOverdueScores extends Command
 
         $this->info('🎯 Overdue counts and scores updated successfully.');
     }
-}
-
-//php artisan tasks:update-overdue-scores
+} 

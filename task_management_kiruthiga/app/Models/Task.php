@@ -36,13 +36,7 @@ class Task extends Model
     {
         return $this->hasOne(Score::class, 'task_id', 'id');
     }
-      public function calculateOverdue()
-    {
-        if ($this->status != 'Completed' && now()->greaterThan($this->deadline)) {
-            $this->overdue_count += 1;
-            $this->save();
-        }
-    }
+   
  // Automatically create a score entry when a task is created
  protected static function booted()
     {

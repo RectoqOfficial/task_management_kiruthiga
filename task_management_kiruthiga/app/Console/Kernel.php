@@ -11,10 +11,15 @@ class Kernel extends ConsoleKernel
      * Define the application's command schedule.
      */
  // In app/Console/Kernel.php
+protected $commands = [
+    \App\Console\Commands\UpdateOverdueDays::class,
+];
+
 protected function schedule(Schedule $schedule)
 {
-    $schedule->command('tasks:update-overdue-scores')->daily();
+    $schedule->command('tasks:update-overdue')->daily(); // Run daily
 }
+
 
 
     /**
