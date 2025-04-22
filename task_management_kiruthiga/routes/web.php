@@ -122,3 +122,25 @@ Route::post('/scores/update/{task_id}', [ScoreController::class, 'updateScore'])
 
 Route::get('/employee/score', [ScoreController::class, 'myScore'])->name('employee.score');
 // Route::get('/scoreboard', [ScoreController::class, 'showScoreboard'])->name('scoreboard');
+
+
+
+// routes/web.php
+
+use App\Http\Controllers\Admin\LeaveController as AdminLeaveController;
+
+
+Route::get('admin/leave/approve/{id}', [AdminLeaveController::class, 'approve'])->name('admin.leave.approve');
+Route::get('admin/leave/reject/{id}', [AdminLeaveController::class, 'reject'])->name('admin.leave.reject');
+Route::get('admin/leave/view/{id}', [AdminLeaveController::class, 'view'])->name('admin.leave.view');
+
+
+Route::get('admin/leave', [AdminLeaveController::class, 'index'])->name('admin.leave.index');
+use App\Http\Controllers\Employee\LeaveController;
+
+// Employee Leave Routes (without middleware)
+Route::get('employee/leave', [LeaveController::class, 'index'])->name('employee.leave.index');
+Route::post('employee/leave', [LeaveController::class, 'store'])->name('employee.leave.store');
+
+Route::patch('/employee/leave/{id}/update-status/{status}', [LeaveController::class, 'updateStatus'])
+    ->name('employee.leave.updateStatus');

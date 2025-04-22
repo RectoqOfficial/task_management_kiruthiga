@@ -77,6 +77,38 @@
                     <span class="ml-4">My Score</span>
                 </a>
             </li>
+<li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyLeave(event)">
+        <span class="icon-container w-5 h-5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M8 7V3m8 4V3M3 11h18M5 19h14a2 2 0 002-2v-6H3v6a2 2 0 002 2z"></path>
+            </svg>
+        </span>
+        <span class="ml-4">My Leave</span>
+    </a>
+</li>
+
+<li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMySalary(event)">
+        <span class="icon-container w-5 h-5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3m0-6c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3m0 6v6m-3-3h6"></path>
+            </svg>
+        </span>
+        <span class="ml-4">My Salary</span>
+    </a>
+</li>
+
+<li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyRating(event)">
+        <span class="icon-container w-5 h-5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 17.27L18.18 21l-1.45-6.21L22 9.24l-6.36-.54L12 3 9.36 8.7 3 9.24l5.27 5.55L6.82 21z"></path>
+            </svg>
+        </span>
+        <span class="ml-4">My Rating</span>
+    </a>
+</li>
 
             <li class="px-4 py-3">
             <a href="{{ route('logout') }}" 
@@ -152,6 +184,38 @@
                 </a>
             </li>
 
+<li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyLeave(event)">
+        <span class="icon-container w-5 h-5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M8 7V3m8 4V3M3 11h18M5 19h14a2 2 0 002-2v-6H3v6a2 2 0 002 2z"></path>
+            </svg>
+        </span>
+        <span class="ml-4">My Leave</span>
+    </a>
+</li>
+
+<li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMySalary(event)">
+        <span class="icon-container w-5 h-5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3m0-6c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3m0 6v6m-3-3h6"></path>
+            </svg>
+        </span>
+        <span class="ml-4">My Salary</span>
+    </a>
+</li>
+
+<li class="px-4 py-3">
+    <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadMyRating(event)">
+        <span class="icon-container w-5 h-5">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 17.27L18.18 21l-1.45-6.21L22 9.24l-6.36-.54L12 3 9.36 8.7 3 9.24l5.27 5.55L6.82 21z"></path>
+            </svg>
+        </span>
+        <span class="ml-4">My Rating</span>
+    </a>
+</li>
 
             <li class="px-4 py-3">
                 <a href="{{ route('logout') }}" 
@@ -313,6 +377,30 @@ function loadMyTasks(event) {
             alert("Error loading score.");
         }
     });
+}
+function loadMyLeave(event) {
+    event.preventDefault();
+    $.ajax({
+        url: "/employee/leave",
+        type: "GET",
+        success: function(response) {
+            $("#contentArea").html(response);
+        },
+        error: function(xhr) {
+            console.error(xhr.responseText);
+            alert("Error loading score.");
+        }
+    }); // Load "My Leave" content via AJAX or redirect
+}
+
+function loadMySalary(event) {
+    event.preventDefault();
+    // Load "My Salary" content via AJAX or redirect
+}
+
+function loadMyRating(event) {
+    event.preventDefault();
+    // Load "My Rating" content via AJAX or redirect
 }
 
 

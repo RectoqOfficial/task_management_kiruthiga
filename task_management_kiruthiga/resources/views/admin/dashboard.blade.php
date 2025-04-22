@@ -109,6 +109,42 @@
                 <span class="ml-4">Scoreboard</span>
             </a>
         </li>
+         <!-- New Employee Leave Details -->
+    <li class="px-4 py-3">
+        <a href="#" id="leaveDetailsLink" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadLeaveDetails(event)">
+            <span class="icon-container w-5 h-5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
+                </svg>
+            </span>
+            <span class="ml-4">Employee Leave Details</span>
+        </a>
+    </li>
+
+    <!-- New Employee Salary Details -->
+    <li class="px-4 py-3">
+        <a href="#" id="salaryDetailsLink" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadSalaryDetails(event)">
+            <span class="icon-container w-5 h-5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+            </span>
+            <span class="ml-4">Employee Salary Details</span>
+        </a>
+    </li>
+
+    <!-- New Employee Rating -->
+    <li class="px-4 py-3">
+        <a href="#" id="ratingLink" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeRating(event)">
+            <span class="icon-container w-5 h-5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 8c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4zm0 6c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"></path>
+                </svg>
+            </span>
+            <span class="ml-4">Employee Rating</span>
+        </a>
+    </li>
+
         <li class="px-4 py-3">
             <a href="{{ route('logout') }}" 
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
@@ -191,6 +227,41 @@
                 <span class="ml-4">Scoreboard</span>
             </a>
         </li>
+         <!-- New Employee Leave Details -->
+    <li class="px-4 py-3">
+        <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadLeaveDetails(event); closeMobileSidebar()">
+            <span class="icon-container w-5 h-5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
+                </svg>
+            </span>
+            <span class="ml-4">Employee Leave Details</span>
+        </a>
+    </li>
+
+    <!-- New Employee Salary Details -->
+    <li class="px-4 py-3">
+        <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadSalaryDetails(event); closeMobileSidebar()">
+            <span class="icon-container w-5 h-5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+            </span>
+            <span class="ml-4">Employee Salary Details</span>
+        </a>
+    </li>
+
+    <!-- New Employee Rating -->
+    <li class="px-4 py-3">
+        <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeRating(event); closeMobileSidebar()">
+            <span class="icon-container w-5 h-5">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 8c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4zm0 6c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"></path>
+                </svg>
+            </span>
+            <span class="ml-4">Employee Rating</span>
+        </a>
+    </li>
         <li class="px-4 py-3">
             <a href="{{ route('logout') }}" 
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
@@ -478,7 +549,28 @@ function loadScoreDetails(event) {
         },
     });
 }
+   function loadLeaveDetails(event) {
+        event.preventDefault(); // Stop default link behavior
+        setActiveLink('leaveDetailsLink'); // Highlight active sidebar link
+ window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+    console.log("API Base URL:", API_BASE_URL);
+        let apiUrl = "/admin/leave"; // Route that returns the leave.blade.php view as HTML
 
+        $.ajax({
+            url: apiUrl,
+            method: "GET",
+            dataType: "html",
+            success: function (response) {
+                console.log("✅ Leave details loaded successfully!");
+                $("#contentArea").html(response); // Inject response HTML
+                closeMobileSidebar(); // Optional: if sidebar is collapsible
+            },
+            error: function (xhr, status, error) {
+                console.error("❌ AJAX Error:", xhr.responseText);
+                $("#contentArea").html('<p class="text-red-500">Failed to load Leave Details.</p>');
+            }
+        });
+    }
 
     </script>
 </body>
