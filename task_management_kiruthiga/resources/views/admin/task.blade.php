@@ -118,6 +118,8 @@
                     <th class="p-2">Task Document</th>
                     <th class="p-2">Flowchart</th>
                     <th class="p-2">Sheet Detail</th>
+                    <th class="p-2">Admin Feedback</th>
+
                     <th class="p-2">Remarks</th>
                     <th class="p-2">Score</th>
                     <th class="p-2">Actions</th>
@@ -210,6 +212,38 @@
                                 <span class="text-gray-400">Not Uploaded</span>
                             @endif
                         </td>
+                        
+<td class="p-2">
+    @if(Auth::guard('admin')->check())
+        <form method="POST" action="{{ route('tasks.uploadFeedback', $task->id) }}" enctype="multipart/form-data">
+            @csrf
+            <input type="file" name="feedback_image" accept="image/*" class="mb-1 text-white" />
+            <textarea name="feedback_note" class="w-full p-1 rounded text-black bg-white border border-white mb-1" placeholder="Write feedback...">{{ $task->feedback_note }}</textarea>
+            <button type="submit" class="px-2 py-1 bg-yellow-600 text-white rounded">Upload</button>
+        </form>
+
+        {{-- Show current feedback below the form --}}
+        @if($task->feedback_image || $task->feedback_note)
+            <div class="mt-2 p-2 bg-gray-800 rounded">
+                <p class="text-white font-semibold mb-1">Uploaded Feedback:</p>
+                @if($task->feedback_image)
+                    <a href="{{ asset('storage/' . $task->feedback_image) }}" target="_blank" class="text-blue-400 underline">View Feedback Image</a><br>
+                @endif
+                @if($task->feedback_note)
+                    <p class="text-white mt-1"><strong>Note:</strong> {{ $task->feedback_note }}</p>
+                @endif
+            </div>
+        @endif
+    @else
+        {{-- Employee View --}}
+        @if($task->feedback_image)
+            <a href="{{ asset('storage/' . $task->feedback_image) }}" target="_blank" class="text-blue-400 underline">View Feedback Image</a><br>
+        @endif
+        <span class="text-white">{{ $task->feedback_note }}</span>
+    @endif
+</td>
+
+
                         <td class="p-2">
                             <textarea class="w-full p-1 rounded text-black remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
                             <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="{{ $task->id }}">Save</button>
@@ -592,6 +626,32 @@ window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
 });
 
 
-    </script>
+
+    document.querySelectorAll('.status-select').forEach(function(select) {
+        select.addEventListener('change', function() {
+            const taskId = this.dataset.taskId;
+            const newStatus = this.value;
+
+            fetch(`/admin/tasks/update-status/${taskId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Task status updated successfully!");
+                    location.reload(); // Optional: reload to show "Completed at" if displayed
+                } else {
+                    alert("Failed to update task status.");
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

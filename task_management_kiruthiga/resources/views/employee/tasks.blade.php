@@ -39,6 +39,7 @@
                            <th class="p-2 whitespace-nowrap min-w-[120px]">Task Document</th>
                     <th class="p-2 whitespace-nowrap min-w-[120px]">Flowchart</th>
                     <th class="p-2 whitespace-nowrap min-w-[120px]">Sheet Detail</th>
+                     <th class="p-2 whitespace-nowrap min-w-[120px]">Admin Feedback</th>
                     <th class="p-2 whitespace-nowrap min-w-[140px]">Remarks</th>
                     
                 </tr>
@@ -189,7 +190,35 @@
         @endif
     </div>
 </td>
+<td class="p-2">
+    @if(Auth::guard('admin')->check())
+        <form method="POST" action="{{ route('tasks.uploadFeedback', $task->id) }}" enctype="multipart/form-data">
+            @csrf
+            <input type="file" name="feedback_image" accept="image/*" class="mb-1 text-white" />
+            <textarea name="feedback_note" class="w-full p-1 rounded text-black bg-white border border-white mb-1" placeholder="Write feedback...">{{ $task->feedback_note }}</textarea>
+            <button type="submit" class="px-2 py-1 bg-yellow-600 text-white rounded">Upload</button>
+        </form>
 
+        {{-- Show current feedback below the form --}}
+        @if($task->feedback_image || $task->feedback_note)
+            <div class="mt-2 p-2 bg-gray-800 rounded">
+                <p class="text-white font-semibold mb-1">Uploaded Feedback:</p>
+                @if($task->feedback_image)
+                    <a href="{{ asset('storage/' . $task->feedback_image) }}" target="_blank" class="text-blue-400 underline">View Feedback Image</a><br>
+                @endif
+                @if($task->feedback_note)
+                    <p class="text-white mt-1"><strong>Note:</strong> {{ $task->feedback_note }}</p>
+                @endif
+            </div>
+        @endif
+    @else
+        {{-- Employee View --}}
+        @if($task->feedback_image)
+            <a href="{{ asset('storage/' . $task->feedback_image) }}" target="_blank" class="text-blue-400 underline">View Feedback Image</a><br>
+        @endif
+        <span class="text-white">{{ $task->feedback_note }}</span>
+    @endif
+</td>
 
                      <td class="p-2">
                             <textarea class="w-full p-1 rounded text-white remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>

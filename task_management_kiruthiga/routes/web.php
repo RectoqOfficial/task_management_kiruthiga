@@ -47,6 +47,7 @@ Route::middleware('auth:admin')->group(function () {
     })->name('admin.dashboard');
 });
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'dashboard'])->name('admin.dashboard');
+
 //employee middleware
 Route::middleware('auth:employee')->group(function () {
     Route::get('/employee/dashboard', function () {
@@ -109,6 +110,8 @@ Route::post('/tasks/{task}/upload-document', [TaskController::class, 'uploadDocu
 Route::post('/tasks/{task}/upload-flowchart', [TaskController::class, 'uploadFlowchart'])->name('tasks.uploadFlowchart');
 Route::post('/tasks/{task}/upload-sheet', [TaskController::class, 'uploadSheet'])->name('tasks.uploadSheet');
 Route::get('/update-overdue', [TaskController::class, 'updateOverdueTasks']);
+Route::post('/tasks/{id}/upload-feedback', [TaskController::class, 'uploadFeedback'])->name('tasks.uploadFeedback');
+Route::post('/admin/tasks/update-status/{id}', [TaskController::class, 'updateStatus']);
 
 
 

@@ -427,5 +427,27 @@ public function uploadSheet(Request $request, Task $task)
     // Redirect back for normal requests
     return back()->with('success', 'Sheet detail uploaded successfully.');
 }
+public function uploadFeedback(Request $request, $id)
+{
+    $task = Task::findOrFail($id);
+
+    // Handle file upload if it exists
+    if ($request->hasFile('feedback_image')) {
+        $image = $request->file('feedback_image')->store('feedbacks', 'public');
+        $task->feedback_image = $image;
+    }
+
+    // Update feedback note
+    $task->feedback_note = $request->feedback_note;
+
+    // Set the feedback_updated flag to true
+    $task->feedback_updated = true;
+
+    // Save task
+    $task->save();
+
+    return back()->with('success', 'Feedback uploaded successfully!');
+}
+
 
 }
