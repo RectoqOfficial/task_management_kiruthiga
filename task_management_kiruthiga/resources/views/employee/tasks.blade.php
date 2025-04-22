@@ -16,6 +16,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container mx-auto p-6">
     <h2 class="text-2xl font-bold text-white mb-4">My Tasks</h2>
    <div class="max-w-5xl mx-auto overflow-x-auto" style="max-height: 500px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #888 #444;">
@@ -27,23 +28,52 @@
                     <th class="p-2 whitespace-nowrap min-w-[120px]">Task Title</th>
                     <th class="p-2 whitespace-nowrap min-w-[160px]">Description</th>
                     <th class="p-2 whitespace-nowrap min-w-[140px]">Assigned To</th>
+                    <th class="p-2 whitespace-nowrap min-w-[100px]">Overdue</th>
+
                     <th class="p-2 whitespace-nowrap min-w-[100px]">Status</th>
                     <th class="p-2 whitespace-nowrap min-w-[130px]">Redo Count</th>
                     <th class="p-2 whitespace-nowrap min-w-[160px]">Task Create Date</th>
                     <th class="p-2 whitespace-nowrap min-w-[160px]">Task Start Date</th>
                     <th class="p-2 whitespace-nowrap min-w-[130px]">No. of Days</th>
                     <th class="p-2 whitespace-nowrap min-w-[120px]">Deadline</th>
+                           <th class="p-2 whitespace-nowrap min-w-[120px]">Task Document</th>
+                    <th class="p-2 whitespace-nowrap min-w-[120px]">Flowchart</th>
+                    <th class="p-2 whitespace-nowrap min-w-[120px]">Sheet Detail</th>
                     <th class="p-2 whitespace-nowrap min-w-[140px]">Remarks</th>
                     
                 </tr>
             </thead>
              <tbody id="task-table-body" class="text-sm">
                 @foreach ($tasks as $task)
-                    <tr class="bg-gray-900 hover:bg-gray-700 text-white">
-   <td class="p-2">{{ $task->id }}</td>
+                    <td class="p-2">{{ $task->id }}</td>
                         <td class="p-2">{{ $task->task_title }}</td>
                         <td class="p-2">{{ $task->description }}</td>
                         <td class="p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
+<td class="p-2">
+    @php
+        $overdue = 0;
+        $penalty = 0;
+
+        if ($task->task_start_date && $task->deadline && $task->no_of_days) {
+            $deadline = \Carbon\Carbon::parse($task->deadline);
+            $now = $task->status === 'Completed' && $task->updated_at ? $task->updated_at : now();
+
+            if ($deadline->isPast()) {
+                $overdue = floor($deadline->floatDiffInRealDays($now));
+                $overdue = max($overdue, 0);
+            }
+        }
+
+        // Calculate penalty (-30 per day)
+        $penalty = $overdue * -30;
+    @endphp
+
+    <span>{{ $overdue }} day(s)</span><br>
+    {{-- <span class="text-red-600">Score: {{ $penalty }}</span> --}}
+</td>
+
+
+                        
                         <td class="p-2">
                            @if (Auth::guard('admin')->check() && $task->status !== 'Completed')
     <select class="p-1 text-black bg-white border border-white rounded status-select" data-task-id="{{ $task->id }}">
@@ -103,6 +133,64 @@
         data-task-id="{{ $task->id }}" 
     />
 </td>
+<!-- Task Document Upload and View -->
+<td class="p-2">
+    <!-- Upload Form -->
+    <form action="{{ route('tasks.uploadDocument', $task->id) }}" method="POST" enctype="multipart/form-data" class="upload-form">
+        @csrf
+        <input type="file" name="task_document" class="text-white">
+        <button type="submit" class="mt-1 bg-blue-600 text-white px-2 py-1 rounded">Upload</button>
+    </form>
+    
+    <!-- Display Uploaded Task Document -->
+    <div id="task_document-{{ $task->id }}-view">
+        @if($task->task_document)
+            <a href="{{ asset('storage/' . $task->task_document) }}" target="_blank" class="text-blue-500">View Task Document</a>
+        @else
+            <span class="text-red-500">No Document Uploaded</span>
+        @endif
+    </div>
+</td>
+
+<!-- Flowchart Upload and View -->
+<td class="p-2">
+    <!-- Upload Form -->
+    <form action="{{ route('tasks.uploadFlowchart', $task->id) }}" method="POST" enctype="multipart/form-data" class="upload-form">
+        @csrf
+        <input type="file" name="flowchart" class="text-white">
+        <button type="submit" class="mt-1 bg-blue-600 text-white px-2 py-1 rounded">Upload</button>
+    </form>
+    
+    <!-- Display Uploaded Flowchart -->
+    <div id="flowchart-{{ $task->id }}-view">
+        @if($task->flowchart)
+            <a href="{{ asset('storage/' . $task->flowchart) }}" target="_blank" class="text-blue-500">View Flowchart</a>
+        @else
+            <span class="text-red-500">No Flowchart Uploaded</span>
+        @endif
+    </div>
+</td>
+
+<!-- Sheet Detail Upload and View -->
+<td class="p-2">
+    <!-- Upload Form -->
+    <form action="{{ route('tasks.uploadSheet', $task->id) }}" method="POST" enctype="multipart/form-data" class="upload-form">
+        @csrf
+        <input type="file" name="sheet_detail" class="text-white">
+        <button type="submit" class="mt-1 bg-blue-600 text-white px-2 py-1 rounded">Upload</button>
+    </form>
+    
+    <!-- Display Uploaded Sheet -->
+    <div id="sheet_detail-{{ $task->id }}-view">
+        @if($task->sheet_detail)
+            <a href="{{ asset('storage/' . $task->sheet_detail) }}" target="_blank" class="text-blue-500">View Sheet Detail</a>
+        @else
+            <span class="text-red-500">No Sheet Uploaded</span>
+        @endif
+    </div>
+</td>
+
+
                      <td class="p-2">
                             <textarea class="w-full p-1 rounded text-white remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
                             <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="{{ $task->id }}">Save</button>
@@ -294,5 +382,68 @@ document.querySelectorAll('.task-start-date').forEach(input => {
         deadlineElement.value = formatted;
     });
 });
+$(document).ready(function() {
+    // Handle the form submission using AJAX
+    $('.upload-form').submit(function(e) {
+        e.preventDefault(); // Prevent page reload
+        
+        let form = $(this);
+        let formData = new FormData(form[0]);
+        
+        $.ajax({
+            url: form.attr('action'),
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                // Check if upload was successful
+                if (response.success) {
+                    let fileLink = response.file_url;
+                    let fileName = response.file_name; // Assuming your backend sends the file name
+                    let fileType = '';
+                    let viewLinkHtml = '';
+                    
+                    // Determine file type (task_document, flowchart, or sheet_detail)
+                    if (form.find('input[name="task_document"]').length > 0) {
+                        fileType = 'task_document';
+                    } else if (form.find('input[name="flowchart"]').length > 0) {
+                        fileType = 'flowchart';
+                    } else if (form.find('input[name="sheet_detail"]').length > 0) {
+                        fileType = 'sheet_detail';
+                    }
+                    
+                    // Construct the view link HTML
+                    viewLinkHtml = `<a href="${fileLink}" target="_blank" class="text-blue-500">View ${fileType.replace('_', ' ').toUpperCase()}</a>`;
+                    
+                    // Update the appropriate view section for the file type
+                    $(`#${fileType}-${form.data('task-id')}-view`).html(viewLinkHtml);
+
+                    // Dynamically append a new row in the table
+                    let tableRow = `
+                        <tr>
+                            <td>${form.data('task-id')}</td>
+                            <td>${fileName}</td>
+                            <td>${viewLinkHtml}</td>
+                        </tr>
+                    `;
+                    
+                    // Append the new row to the table with ID 'task-documents-table'
+                    $('#task-documents-table tbody').append(tableRow);
+                    
+                    // Show success alert with the file name
+                    alert("Upload successful! File: " + fileName);
+                } else {
+                    alert("File upload failed");
+                }
+            },
+            error: function() {
+                alert("An error occurred while uploading the file.");
+            }
+        });
+    });
+});
+
+
 </script>
 @endsection
