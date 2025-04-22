@@ -92,6 +92,10 @@
     </select>
 @else
     <span>{{ $task->status }}</span>
+     @if ($task->status === 'Completed' && $task->completed_at)
+            <br>
+            <small class="text-green-400">Completed at: {{ \Carbon\Carbon::parse($task->completed_at)->format('d M Y, h:i A') }}</small>
+        @endif
 @endif
 
                         </td>

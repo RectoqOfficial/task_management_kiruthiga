@@ -131,19 +131,29 @@ return response()->json([
         }
     }
 
-    // Update Task Status
-    public function updateStatus(Request $request, $id)
-    {
-        try {
-            $task = Task::findOrFail($id);
-            $task->status = $request->status;
-            $task->save();
+  // Update Task Status
+public function updateStatus(Request $request, $id)
+{
+    try {
+        $task = Task::findOrFail($id);
 
-            return response()->json(['success' => true, 'status' => $task->status]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Error updating status'], 500);
+        // ✅ If status is changed to Completed and it's not already completed
+        if ($request->status === 'Completed' && $task->completed_at === null) {
+            $task->completed_at = now();
         }
+
+        $task->status = $request->status;
+        $task->save();
+
+        return response()->json([
+            'success' => true,
+            'status' => $task->status,
+            'completed_at' => $task->completed_at ? $task->completed_at->format('d M Y, h:i A') : null
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => 'Error updating status'], 500);
     }
+}
 
 
       // Delete a task

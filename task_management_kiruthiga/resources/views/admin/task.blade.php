@@ -157,19 +157,24 @@
 
 
 
+<td class="p-2">
+    @if (Auth::guard('admin')->check() && $task->status !== 'Completed')
+        <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
+            <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+            <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
+            <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
+            <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
+        </select>
+    @else
+        <span>{{ $task->status }}</span>
+        @if ($task->status === 'Completed' && $task->completed_at)
+            <br>
+            <small class="text-green-400">Completed at: {{ \Carbon\Carbon::parse($task->completed_at)->format('d M Y, h:i A') }}</small>
+        @endif
+    @endif
+</td>
 
-                        <td class="p-2">
-                            @if (Auth::guard('admin')->check() && $task->status !== 'Completed')
-                                <select class="p-1 text-black rounded status-select" data-task-id="{{ $task->id }}">
-                                    <option value="Pending" {{ $task->status == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="Started" {{ $task->status == 'Started' ? 'selected' : '' }}>Started</option>
-                                    <option value="Review" {{ $task->status == 'Review' ? 'selected' : '' }}>Review</option>
-                                    <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}>Completed</option>
-                                </select>
-                            @else
-                                <span>{{ $task->status }}</span>
-                            @endif
-                        </td>
+
                         <td class="p-2">
                             <span class="redo-count">{{ $task->redo_count ?? 0 }}</span>
                             @if (Auth::guard('employee')->check() && $task->status == 'Review')
