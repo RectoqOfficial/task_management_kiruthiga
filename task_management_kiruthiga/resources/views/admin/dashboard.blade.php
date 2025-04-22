@@ -215,50 +215,85 @@
         
       
 
-    
-        <!-- ========== Start Section ========== -->
-<div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[80vh] text-white "> 
-<!-- Dashboard Section -->
-<div id="dashboard" class="hidden">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Total Tasks -->
-        <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-            <h3 class="text-lg font-semibold text-white">Total Tasks</h3>
-            <p class="text-3xl font-bold text-blue-400">{{ $totalTasks }}</p>
+ <!-- ========== Start Section ========== -->
+<div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[80vh] text-white"> 
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Total Tasks -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-semibold text-white">Total Tasks</h3>
+                <p class="text-3xl font-bold text-blue-400">{{ $totalTasks }}</p>
+            </div>
+
+            <!-- Pending Tasks -->
+            <div class="bg-yellow-600 p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-semibold text-white">Pending Tasks</h3>
+                <p class="text-3xl font-bold">{{ $pendingTasks }}</p>
+            </div>
+
+            <!-- Started Tasks -->
+            <div class="bg-blue-600 p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-semibold text-white">Started Tasks</h3>
+                <p class="text-3xl font-bold">{{ $startedTasks }}</p>
+            </div>
+
+            <!-- Completed Tasks -->
+            <div class="bg-green-600 p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-semibold text-white">Completed Tasks</h3>
+                <p class="text-3xl font-bold">{{ $completedTasks }}</p>
+            </div>
+
+            <!-- Review Tasks -->
+            <div class="bg-purple-600 p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-semibold text-white">Tasks in Review</h3>
+                <p class="text-3xl font-bold">{{ $reviewTasks }}</p>
+            </div>
+        </div>
+   
+
+    <!-- Top Performers Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <!-- Top Performer - Last 3 Months -->
+        <div class="bg-indigo-700 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-lg font-semibold text-white">Top Performer (Last 3 Months)</h3>
+            @if ($top3Months)
+                <p class="text-xl font-bold text-green-300">{{ $top3Months->employee->full_name }}</p>
+                <p class="text-white mt-2">{{ $top3Months->completed_count }} tasks completed</p>
+            @else
+                <p class="text-white mt-2">No data</p>
+            @endif
         </div>
 
-        <!-- Pending Tasks -->
-        <div class="bg-yellow-600 p-6 rounded-lg shadow-lg text-center">
-            <h3 class="text-lg font-semibold text-white">Pending Tasks</h3>
-            <p class="text-3xl font-bold">{{ $pendingTasks }}</p>
+        <!-- Top Performer - Last 6 Months -->
+        <div class="bg-teal-700 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-lg font-semibold text-white">Top Performer (Last 6 Months)</h3>
+            @if ($top6Months)
+                <p class="text-xl font-bold text-green-300">{{ $top6Months->employee->full_name }}</p>
+                <p class="text-white mt-2">{{ $top6Months->completed_count }} tasks completed</p>
+            @else
+                <p class="text-white mt-2">No data</p>
+            @endif
         </div>
 
-        <!-- Started Tasks -->
-        <div class="bg-blue-600 p-6 rounded-lg shadow-lg text-center">
-            <h3 class="text-lg font-semibold text-white">Started Tasks</h3>
-            <p class="text-3xl font-bold">{{ $startedTasks }}</p>
-        </div>
-
-        <!-- Completed Tasks -->
-        <div class="bg-green-600 p-6 rounded-lg shadow-lg text-center">
-            <h3 class="text-lg font-semibold text-white">Completed Tasks</h3>
-            <p class="text-3xl font-bold">{{ $completedTasks }}</p>
-        </div>
-
-        <!-- Review Tasks -->
-        <div class="bg-purple-600 p-6 rounded-lg shadow-lg text-center">
-            <h3 class="text-lg font-semibold text-white">Tasks in Review</h3>
-            <p class="text-3xl font-bold">{{ $reviewTasks }}</p>
+        <!-- Top Performer - Last 1 Year -->
+        <div class="bg-pink-700 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-lg font-semibold text-white">Top Performer (Last 1 Year)</h3>
+            @if ($top1Year)
+                <p class="text-xl font-bold text-green-300">{{ $top1Year->employee->full_name }}</p>
+                <p class="text-white mt-2">{{ $top1Year->completed_count }} tasks completed</p>
+            @else
+                <p class="text-white mt-2">No data</p>
+            @endif
         </div>
     </div>
+     </div>
+
+     
 </div>
-
-</div>
-
+<!-- ========== End Section ========== -->
 
 
-
-   <!-- ========== End Section ========== -->
    
         
     </div>
@@ -321,116 +356,126 @@
         });
     });
 
-//dashboard
-  function hideAllSections() {
-        document.getElementById("dashboard").classList.add("hidden");
-        // Add other sections here
-        const otherSections = ['departmentDetails', 'employeeDetails', 'taskDetails', 'scoreDetails'];
-        otherSections.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.classList.add("hidden");
-        });
+// Function to hide all sections (Dashboard, Department, Employee, Task, Score)
+function hideAllSections() {
+    const dashboardElement = document.getElementById("dashboard");
+    if (dashboardElement) {
+        dashboardElement.classList.add("hidden");
     }
 
-    function loadDashboard(event) {
-        event.preventDefault();
-         setActiveLink('dashboardLink');
-        hideAllSections();
-        document.getElementById("dashboard").classList.remove("hidden");
+    // Hide other sections
+    const otherSections = ['departmentDetails', 'employeeDetails', 'taskDetails', 'scoreDetails'];
+    otherSections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add("hidden");
+    });
+}
+
+// Function to load the Dashboard section
+function loadDashboard(event) {
+    event.preventDefault();  // Prevent the default link behavior
+    setActiveLink('dashboardLink');
+    hideAllSections();  // Hide all sections
+
+    const dashboardElement = document.getElementById("dashboard");
+    if (dashboardElement) {
+        dashboardElement.classList.remove("hidden");  // Show the dashboard
+    } else {
+        console.error('Dashboard element not found!');
     }
-// Function to load Role Details content into the #contentArea div
+}
+
+// Function to load Department Details into the #contentArea div
 function loadDepartmentDetails(event) {
-    event.preventDefault(); // Prevent the default behavior of the link/button click
-     setActiveLink('departmentLink');
-   window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
-   console.log("API Base URL:", API_BASE_URL);
-   let $api_url = window.API_BASE_URL + "/admin/departments";
+    event.preventDefault();  // Prevent the default behavior of the link/button click
+    setActiveLink('departmentLink');
+    window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+    console.log("API Base URL:", API_BASE_URL);
+    let $api_url = window.API_BASE_URL + "/admin/departments";
+
     $.ajax({
         url: $api_url,  // The correct endpoint for fetching department details
         method: "GET",  // HTTP GET request
         dataType: "html",  // Expecting an HTML response
         success: function (response) {
-               console.log("✅ Department details loaded successfully!");
+            console.log("✅ Department details loaded successfully!");
             $("#contentArea").html(response);  // Inject the response into the target div
             closeMobileSidebar();  // Close sidebar (if applicable)
         },
         error: function (xhr, status, error) {
-            console.error(" AJAX Error: ", xhr.responseText);
+            console.error("AJAX Error: ", xhr.responseText);
             alert("Error loading department details: " + xhr.responseText);  // Show error message
-            $("#contentArea").html('<p class="text-red-500">Failed to load Department Details.</p>'); // Display failure message
+            $("#contentArea").html('<p class="text-red-500">Failed to load Department Details.</p>');  // Display failure message
         },
     });
 }
 
-// Function to load Employee Details content into the #contentArea div
+// Function to load Employee Details into the #contentArea div
 function loadEmployeeDetails(event) {
-    event.preventDefault(); // Prevent default behavior
-     setActiveLink('employeeLink');
-   window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
-   console.log("API Base URL:", API_BASE_URL);
-   let $api_url = window.API_BASE_URL + "/admin/employees";
-   $.ajax({
-    url: $api_url,
-    method: 'GET',
-    success: function(response) {
-        console.log(response); // Log response to see what data is returned
-        $('#contentArea').html(response);
-        closeMobileSidebar();
-    },
-    error: function(xhr, status, error) {
-        console.error('Error loading employee details:', error);
-        alert('Error loading employee details! ' + error);
-        console.log(xhr.responseText); // Log the actual error response for better debugging
-        $('#contentArea').html('<p class="text-red-500">Failed to load Employee Details.</p>');
-    }
-});
+    event.preventDefault();  // Prevent default behavior
+    setActiveLink('employeeLink');
+    window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+    console.log("API Base URL:", API_BASE_URL);
+    let $api_url = window.API_BASE_URL + "/admin/employees";
 
-}
-
-
-
-// Function to load Task Details content into the #contentArea div
-function loadTaskDetails(event) {
-    event.preventDefault(); // Prevent default behavior (navigation)
-     setActiveLink('taskLink');
- window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
-   console.log("API Base URL:", API_BASE_URL);
-   let $api_url = window.API_BASE_URL + "/tasks";
     $.ajax({
-        url: $api_url, // The route for fetching tasks
-        method: 'GET',
-        success: function(response) {
-            $('#contentArea').html(response); // Inject the response into the content area
-            closeMobileSidebar(); // If you have a mobile sidebar
+        url: $api_url,  // Endpoint to fetch employee details
+        method: "GET",  // HTTP GET request
+        success: function (response) {
+            console.log(response);  // Log response to see what data is returned
+            $('#contentArea').html(response);  // Inject the response into the content area
+            closeMobileSidebar();  // Close mobile sidebar (if applicable)
         },
-        error: function(xhr, status, error) {
-            alert('Error loading task details! ' + error); // Error handling
-            $('#contentArea').html('<p class="text-red-500">Failed to load Task Details.</p>');
-        }
+        error: function (xhr, status, error) {
+            console.error('Error loading employee details:', error);
+            alert('Error loading employee details! ' + error);
+            console.log(xhr.responseText);  // Log the actual error response for better debugging
+            $('#contentArea').html('<p class="text-red-500">Failed to load Employee Details.</p>');  // Display failure message
+        },
     });
 }
 
+// Function to load Task Details into the #contentArea div
+function loadTaskDetails(event) {
+    event.preventDefault();  // Prevent default behavior (navigation)
+    setActiveLink('taskLink');
+    window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+    console.log("API Base URL:", API_BASE_URL);
+    let $api_url = window.API_BASE_URL + "/tasks";
 
-
-
-// Function to load Scoreboard content into the #contentArea div
-function loadScoreDetails(event) {
-    event.preventDefault(); // Prevent default behavior
-      setActiveLink('scoreLink');
-window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
-   console.log("API Base URL:", API_BASE_URL);
-   let $api_url = window.API_BASE_URL + "/scores";
     $.ajax({
-        url: $api_url, // Updated URL to match scoreboard route
-        method: 'GET',
-        success: function(response) {
-            $('#contentArea').html(response); // Inject the response into the content area
-            closeMobileSidebar(); 
+        url: $api_url,  // The route for fetching tasks
+        method: 'GET',  // HTTP GET request
+        success: function (response) {
+            $('#contentArea').html(response);  // Inject the response into the content area
+            closeMobileSidebar();  // Close mobile sidebar (if applicable)
         },
-        error: function(xhr, status, error) {
-            alert('Error loading scoreboard details! ' + error); // Show an error message
-            $('#contentArea').html('<p class="text-red-500">Failed to load Scoreboard Details.</p>');
-        }
+        error: function (xhr, status, error) {
+            alert('Error loading task details! ' + error);  // Show error message
+            $('#contentArea').html('<p class="text-red-500">Failed to load Task Details.</p>');  // Display failure message
+        },
+    });
+}
+
+// Function to load Scoreboard Details into the #contentArea div
+function loadScoreDetails(event) {
+    event.preventDefault();  // Prevent default behavior
+    setActiveLink('scoreLink');
+    window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+    console.log("API Base URL:", API_BASE_URL);
+    let $api_url = window.API_BASE_URL + "/scores";
+
+    $.ajax({
+        url: $api_url,  // Updated URL to match scoreboard route
+        method: 'GET',  // HTTP GET request
+        success: function (response) {
+            $('#contentArea').html(response);  // Inject the response into the content area
+            closeMobileSidebar();  // Close mobile sidebar (if applicable)
+        },
+        error: function (xhr, status, error) {
+            alert('Error loading scoreboard details! ' + error);  // Show an error message
+            $('#contentArea').html('<p class="text-red-500">Failed to load Scoreboard Details.</p>');  // Display failure message
+        },
     });
 }
 
