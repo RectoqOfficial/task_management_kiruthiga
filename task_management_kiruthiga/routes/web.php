@@ -136,6 +136,8 @@ Route::get('admin/leave/view/{id}', [AdminLeaveController::class, 'view'])->name
 
 
 Route::get('admin/leave', [AdminLeaveController::class, 'index'])->name('admin.leave.index');
+Route::get('/admin/leave/search', [AdminLeaveController::class, 'search'])->name('admin.leave.search');
+
 use App\Http\Controllers\Employee\LeaveController;
 
 // Employee Leave Routes (without middleware)

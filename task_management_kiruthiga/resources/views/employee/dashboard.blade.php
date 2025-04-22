@@ -388,7 +388,7 @@ function loadMyLeave(event) {
         },
         error: function(xhr) {
             console.error(xhr.responseText);
-            alert("Error loading score.");
+            alert("Error loading leave.");
         }
     }); // Load "My Leave" content via AJAX or redirect
 }

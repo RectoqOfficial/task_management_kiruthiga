@@ -11,17 +11,22 @@
 
 <div class="container mx-auto p-4 max-w-screen-lg">
     <h1 class="text-2xl font-bold mb-4">Employee Leave Requests</h1>
+{{-- <!-- Search & Filter -->
+<div class="flex flex-wrap gap-4 mb-4">
+    <input type="text" id="searchInput" placeholder="Search by Employee Name" class="w-full sm:w-1/3 px-4 py-2 rounded border text-black border-gray-900">
+    
+    <select id="statusFilter" class="w-full sm:w-auto px-4 py-2 rounded border border-gray-300 text-black">
+        <option value="">Filter by Status</option>
+        <option value="Pending">Pending</option>
+        <option value="Approved">Approved</option>
+        <option value="Rejected">Rejected</option>
+    </select>
 
-    <!-- Search & Filter -->
-    <div class="flex flex-wrap gap-4 mb-4">
-        <input type="text" id="searchInput" placeholder="Search by Employee Name" class="w-full sm:w-1/3 px-4 py-2 rounded border border-gray-300">
-        <select id="statusFilter" class="w-full sm:w-auto px-4 py-2 rounded border border-gray-300 text-black">
-            <option value="">Filter by Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
-        </select>
-    </div>
+    <button onclick="performUnifiedSearch()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+        Search
+    </button>
+</div> --}}
+
 
     <!-- Alert Message -->
     <div id="alertBox" class="hidden mb-4 px-4 py-2 rounded text-white"></div>
@@ -38,7 +43,7 @@
                 <th class="px-4 py-2 text-left">Actions</th>
             </tr>
             </thead>
-            <tbody id="leaveRequestsTable">
+            <tbody id="contentArea">
             @foreach($leaveRequests as $leave)
                 <tr id="row-{{ $leave->id }}">
                     <td class="px-4 py-2">{{ $leave->employee->full_name }}</td>
@@ -142,6 +147,36 @@
     function closeModal() {
         $('#detailsModal').addClass('hidden');
     }
+
+
+//     function performUnifiedSearch() {
+//         const name = document.getElementById('searchInput').value;
+//         const status = document.getElementById('statusFilter').value;
+
+//         // Optional: Console log for debugging
+//         console.log("Searching for:", name, "with status:", status);
+
+//         // Example AJAX call or form submit
+//         $.ajax({
+//           url: "/admin/leave/search", // <-- Updated route
+//  // Your backend route
+//             type: "GET",
+//             data: {
+//                 name: name,
+//                 status: status
+//             },
+//             success: function(response) {
+//                 // Populate your table/content
+//                 $("#contentArea").html(response);
+//             },
+//             error: function(xhr) {
+//                 console.error(xhr.responseText);
+//                 alert("Error performing search.");
+//             }
+//         });
+//     }
+
+
 </script>
 
 </body>

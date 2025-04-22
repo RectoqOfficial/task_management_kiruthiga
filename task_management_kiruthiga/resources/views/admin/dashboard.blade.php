@@ -114,8 +114,8 @@
         <a href="#" id="leaveDetailsLink" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadLeaveDetails(event)">
             <span class="icon-container w-5 h-5">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
-                </svg>
+                <path d="M8 7V3m8 4V3M3 11h18M5 19h14a2 2 0 002-2v-6H3v6a2 2 0 002 2z"></path>
+            </svg>
             </span>
             <span class="ml-4">Employee Leave Details</span>
         </a>
@@ -125,9 +125,9 @@
     <li class="px-4 py-3">
         <a href="#" id="salaryDetailsLink" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadSalaryDetails(event)">
             <span class="icon-container w-5 h-5">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                </svg>
+               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3m0-6c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3m0 6v6m-3-3h6"></path>
+            </svg>
             </span>
             <span class="ml-4">Employee Salary Details</span>
         </a>
@@ -138,8 +138,8 @@
         <a href="#" id="ratingLink" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeRating(event)">
             <span class="icon-container w-5 h-5">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M12 8c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4zm0 6c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"></path>
-                </svg>
+                <path d="M12 17.27L18.18 21l-1.45-6.21L22 9.24l-6.36-.54L12 3 9.36 8.7 3 9.24l5.27 5.55L6.82 21z"></path>
+            </svg>
             </span>
             <span class="ml-4">Employee Rating</span>
         </a>
@@ -232,8 +232,8 @@
         <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadLeaveDetails(event); closeMobileSidebar()">
             <span class="icon-container w-5 h-5">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"></path>
-                </svg>
+                <path d="M8 7V3m8 4V3M3 11h18M5 19h14a2 2 0 002-2v-6H3v6a2 2 0 002 2z"></path>
+            </svg>
             </span>
             <span class="ml-4">Employee Leave Details</span>
         </a>
@@ -244,8 +244,8 @@
         <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadSalaryDetails(event); closeMobileSidebar()">
             <span class="icon-container w-5 h-5">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                </svg>
+                <path d="M12 8c-1.657 0-3 1.343-3 3 0 1.657 1.343 3 3 3m0-6c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3m0 6v6m-3-3h6"></path>
+            </svg>
             </span>
             <span class="ml-4">Employee Salary Details</span>
         </a>
@@ -255,9 +255,9 @@
     <li class="px-4 py-3">
         <a href="#" class="flex items-center text-gray-300 hover:text-red-400" onclick="loadEmployeeRating(event); closeMobileSidebar()">
             <span class="icon-container w-5 h-5">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M12 8c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 2c-2.21 0-4 1.79-4 4v1h8v-1c0-2.21-1.79-4-4-4zm0 6c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z"></path>
-                </svg>
+                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 17.27L18.18 21l-1.45-6.21L22 9.24l-6.36-.54L12 3 9.36 8.7 3 9.24l5.27 5.55L6.82 21z"></path>
+            </svg>
             </span>
             <span class="ml-4">Employee Rating</span>
         </a>
@@ -371,7 +371,7 @@
 
 <script>
     function setActiveLink(linkId) {
-        const links = ['dashboardLink', 'departmentLink', 'employeeLink', 'taskLink', 'scoreLink'];
+        const links = ['dashboardLink', 'departmentLink', 'employeeLink', 'taskLink', 'scoreLink','leaveDetailsLink','salaryDetailsLink','ratingLink',];
         links.forEach(id => {
             const link = document.getElementById(id);
             if (link) {
@@ -552,12 +552,13 @@ function loadScoreDetails(event) {
    function loadLeaveDetails(event) {
         event.preventDefault(); // Stop default link behavior
         setActiveLink('leaveDetailsLink'); // Highlight active sidebar link
- window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+  window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
     console.log("API Base URL:", API_BASE_URL);
-        let apiUrl = "/admin/leave"; // Route that returns the leave.blade.php view as HTML
+    let $api_url = window.API_BASE_URL + "/admin/leave";
+       // Route that returns the leave.blade.php view as HTML
 
         $.ajax({
-            url: apiUrl,
+            url: $api_url,
             method: "GET",
             dataType: "html",
             success: function (response) {

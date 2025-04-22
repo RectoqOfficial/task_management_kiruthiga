@@ -35,5 +35,23 @@ class LeaveController extends Controller
     $leave = LeaveRequest::with('employee')->find($id);
     return response()->json(['leave' => $leave]);
 }
+// public function search(Request $request)
+// {
+//     $query = LeaveRequest::query()->with(['employee', 'leaveType']);
+
+//     if ($request->name) {
+//         $query->whereHas('employee', function ($q) use ($request) {
+//             $q->where('full_name', 'like', '%' . $request->name . '%');
+//         });
+//     }
+
+//     if ($request->status) {
+//         $query->where('status', $request->status);
+//     }
+
+//     $leaveRequests = $query->get();
+
+//     return view('admin.partials.leave_table_rows', compact('leaveRequests'))->render();
+// }
 
 }
