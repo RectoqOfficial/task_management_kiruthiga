@@ -6,20 +6,22 @@
 
         <table class="min-w-full table-auto border">
             <thead>
-                <tr class="bg-gray-200 text-gray-700">
-                    <th class="px-4 py-2 border">Task Title</th>
-                    <th class="px-4 py-2 border">Status</th>
-                    <th class="px-4 py-2 border">Score</th>
-                    <th class="px-4 py-2 border">Rating</th>  <!-- Added column for ratings -->
+                <tr class="bg-red-600 text-white">
+                     <th class="px-4 py-2">Id</th>
+                    <th class="px-4 py-2">Task Title</th>
+                    <th class="px-4 py-2">Status</th>
+                    <th class="px-4 py-2">Score</th>
+                    <th class="px-4 py-2">Rating</th>  <!-- Added column for ratings -->
                 </tr>
             </thead>
             <tbody>
                 @foreach($tasks as $task)
-                    <tr>
-                        <td class="px-4 py-2 border text-black">{{ $task->task_title }}</td>
-                        <td class="px-4 py-2 border text-black">{{ $task->status }}</td>
-                        <td class="px-4 py-2 border text-black">{{ $task->score }}</td>
-                        <td class="px-4 py-2 border text-black">
+                    <tr class=" bg-gray-800 hover:bg-gray-700 text-white">
+                      <td class="p-2 ">{{ $task->id }}</td>
+                        <td class="p-2  ">{{ $task->task_title }}</td>
+                        <td class="p-2  ">{{ $task->status }}</td>
+                        <td class="p-2  ">{{ $task->score }}</td>
+                        <td class="p-2 ">
     @if($task->rating)
         <div class="flex text-yellow-500">
             @for ($i = 1; $i <= 5; $i++)

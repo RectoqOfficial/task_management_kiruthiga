@@ -259,19 +259,7 @@ public function updateDeadline(Request $request, $id)
 
     return response()->json(['success' => true, 'message' => 'Deadline updated successfully']);
 }
-public function updateRemarks(Request $request, $id)
-{
-    $task = Task::findOrFail($id);
 
-    $request->validate([
-        'remarks' => 'required|string|max:500'
-    ]);
-
-    $task->remarks = $request->remarks;
-    $task->save();
-
-    return response()->json(['success' => true, 'message' => 'Remark updated successfully', 'remarks' => $task->remarks]);
-}
 
 //redo count
 public function redoTask(Request $request)
@@ -351,7 +339,9 @@ public function updateScore(Request $request, $id)
     $task->save();
 
     return back()->with('success', 'Score updated successfully!');
-}// Upload Task Document
+}
+
+// Upload Task Document
 public function uploadDocument(Request $request, Task $task)
 {
     $request->validate([

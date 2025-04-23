@@ -119,8 +119,8 @@
                     <th class="p-2">Flowchart</th>
                     <th class="p-2">Sheet Detail</th>
                     <th class="p-2">Admin Feedback</th>
-
-                    <th class="p-2">Remarks</th>
+{{-- 
+                    <th class="p-2">Remarks</th> --}}
                     <th class="p-2">Score</th>
                     <th class="p-2">Actions</th>
                 </tr>
@@ -133,25 +133,32 @@
                         <td class="p-2">{{ $task->description }}</td>
                         <td class="p-2">{{ $task->employee->email_id ?? 'Not Assigned' }}</td>
 <td class="p-2">
-    @php
-        $overdue = 0;
-        $penalty = 0;
+@php
+    $overdue = 0;
+    $penalty = 0;
 
-        if ($task->task_start_date && $task->deadline && $task->no_of_days) {
-            $deadline = \Carbon\Carbon::parse($task->deadline);
-            $now = $task->status === 'Completed' && $task->updated_at ? $task->updated_at : now();
+    if ($task->task_start_date && $task->deadline && $task->no_of_days) {
+        $deadline = \Carbon\Carbon::parse($task->deadline);  
+        $now = $task->status === 'Completed' && $task->updated_at ? $task->updated_at : now();
 
-            if ($deadline->isPast()) {
-                $overdue = floor($deadline->floatDiffInRealDays($now));
-                $overdue = max($overdue, 0);
-            }
+        if ($deadline->isPast()) {
+            $overdue = $deadline->diffInDays($now, false);
+            $overdue = max($overdue, 0);
         }
+    }
 
-        // Calculate penalty (-30 per day)
-        $penalty = $overdue * -30;
-    @endphp
+    // Round the overdue days to the nearest whole number
+    $overdue = floor($overdue);
 
-    <span>{{ $overdue }} day(s)</span><br>
+    // Calculate penalty (-30 per day)
+    $penalty = $overdue * -30;
+@endphp
+
+<span>{{ $overdue }} day(s)</span><br>
+
+
+
+
     {{-- <span class="text-red-600">Score: {{ $penalty }}</span> --}}
 </td>
 
@@ -224,7 +231,12 @@
             @csrf
             <input type="file" name="feedback_image" accept="image/*" class="mb-1 text-white" />
             <textarea name="feedback_note" class="w-full p-1 rounded text-black bg-white border border-white mb-1" placeholder="Write feedback...">{{ $task->feedback_note }}</textarea>
-            <button type="submit" class="px-2 py-1 bg-yellow-600 text-white rounded">Upload</button>
+<button type="submit" class="mt-1">
+    <img src="{{ asset('build/assets/img/upload.png') }}" alt="Upload" class="w-5 h-5 inline"
+         style="filter: invert(48%) sepia(94%) saturate(2977%) hue-rotate(102deg) brightness(93%) contrast(89%);">
+</button>
+
+
         </form>
 
         {{-- Show current feedback below the form --}}
@@ -249,10 +261,10 @@
 </td>
 
 
-                        <td class="p-2">
+                        {{-- <td class="p-2">
                             <textarea class="w-full p-1 rounded text-black remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
                             <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="{{ $task->id }}">Save</button>
-                        </td>
+                        </td> --}}
                         <td class="p-2">
                             @if(Auth::guard('admin')->check() && $task->status === 'Completed')
                                 <form method="POST" action="{{ route('tasks.updateScore', $task->id) }}">
@@ -377,10 +389,7 @@ if (response.task) {
             <td>
                 <input type="date" readonly class="w-full p-1 rounded text-white bg-gray-700 task-deadline" id="deadline-${response.task.id}" value="${response.task.deadline ?? ''}" />
             </td>
-            <td>
-                <textarea class="w-full p-1 rounded text-black remark-input" data-task-id="${response.task.id}">${response.task.remarks ?? ''}</textarea>
-                <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="${response.task.id}">Save</button>
-            </td>
+           
             <td>
                 <form class="task-delete-form" data-task-id="${response.task.id}">
                     <button type="button" class="px-2 py-1 bg-red-600 text-white rounded delete-task-btn">Delete</button>
@@ -557,32 +566,7 @@ $(document).ready(function () {
 
 
 
-//update remarks
-document.querySelectorAll('.save-remark-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const taskId = this.getAttribute('data-task-id');
-        const remarkInput = document.querySelector(`.remark-input[data-task-id="${taskId}"]`);
-        const remarks = remarkInput.value;
 
-        fetch(`/tasks/${taskId}/update-remarks`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ remarks })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Remark updated successfully');
-            } else {
-                alert('Failed to update remark');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-});
 //redo count
 $(document).ready(function () {
  $('.redo-btn').off('click').on('click', function () {

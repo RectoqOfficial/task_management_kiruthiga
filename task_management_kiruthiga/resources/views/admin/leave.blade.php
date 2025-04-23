@@ -34,28 +34,28 @@
     <!-- Leave Requests Table -->
     <div class="overflow-x-auto">
         <table class="min-w-full table-auto border-collapse border border-gray-300">
-            <thead class="bg-gray-200">
-            <tr class="bg-[#ff0003] text-white">
-                <th class="px-4 py-2 text-left">Employee Name</th>
-                <th class="px-4 py-2 text-left">Leave Type</th>
-                <th class="px-4 py-2 text-left">Leave Dates</th>
-                <th class="px-4 py-2 text-left">Status</th>
-                <th class="px-4 py-2 text-left">Actions</th>
+            <thead class="">
+            <tr class="bg-red-600 text-white">
+                <th class="p-2">Employee Name</th>
+                <th class="p-2">Leave Type</th>
+                <th class="p-2">Leave Dates</th>
+                <th class="p-2">Status</th>
+                <th class="p-2">Actions</th>
             </tr>
             </thead>
             <tbody id="contentArea">
             @foreach($leaveRequests as $leave)
-                <tr id="row-{{ $leave->id }}">
-                    <td class="px-4 py-2">{{ $leave->employee->full_name }}</td>
-                    <td class="px-4 py-2">{{ ucfirst($leave->leaveType->name) }}</td>
-                    <td class="px-4 py-2">{{ $leave->start_date }} to {{ $leave->end_date }}</td>
-                    <td class="px-4 py-2">
+                <tr id="row-{{ $leave->id }}" class="bg-gray-800 hover:bg-gray-700 text-white">
+                    <td class="p-2">{{ $leave->employee->full_name }}</td>
+                    <td class="p-2">{{ ucfirst($leave->leaveType->name) }}</td>
+                    <td class="p-2">{{ $leave->start_date }} to {{ $leave->end_date }}</td>
+                    <td class="p-2">
                         <span id="status-{{ $leave->id }}"
                               class="badge {{ $leave->status == 'Approved' ? 'bg-green-500' : ($leave->status == 'Rejected' ? 'bg-red-500' : 'bg-yellow-500') }} text-white px-2 py-1 rounded">
                             {{ $leave->status }}
                         </span>
                     </td>
-                  <td class="px-4 py-2">
+                  <td class="p-2">
     <div class="flex flex-col sm:flex-row sm:flex-wrap gap-2">
         <button onclick="handleApprove({{ $leave->id }})"
                 class="bg-green-500 text-white px-4 py-2 rounded w-full sm:w-auto">Approve</button>

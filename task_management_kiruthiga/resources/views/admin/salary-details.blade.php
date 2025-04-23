@@ -5,8 +5,8 @@
     <h2 class="text-xl font-bold text-gray-700 mb-4">Employee Task-wise Salary Details</h2>
 
     <table class="min-w-full table-auto text-sm text-left border">
-        <thead class="bg-gray-200">
-            <tr>
+        <thead class="">
+            <tr class="bg-red-600 text-white" >
                  <th class="px-4 py-2">Id</th>
                 <th class="px-4 py-2">Employee Name</th>
                 <th class="px-4 py-2">Task Title</th>
@@ -19,16 +19,16 @@
         </thead>
         <tbody>
             @forelse($salaryData as $data)
-                <tr class="border-t">
-                    <td class="px-4 py-2 text-black">{{ $data['task_id'] }}</td>
-                    <td class="px-4 py-2 text-black">{{ $data['employee'] }}</td>
-                    <td class="px-4 py-2 text-black">{{ $data['task_title'] }}</td>
-                    <td class="px-4 py-2 text-black">{{ $data['status'] }}</td>
-                    <td class="px-4 py-2 text-black">{{ $data['start_date'] ?  $data['start_date']: 'Task not Started'}}</td>
+                <tr class="  bg-gray-800 hover:bg-gray-700 text-white">
+                    <td class="p-2 ">{{ $data['task_id'] }}</td>
+                    <td class="p-2 ">{{ $data['employee'] }}</td>
+                    <td class="p-2 ">{{ $data['task_title'] }}</td>
+                    <td class="p-2 ">{{ $data['status'] }}</td>
+                    <td class="p-2 ">{{ $data['start_date'] ?  $data['start_date']: 'Task not Started'}}</td>
   
-                    <td class="px-4 py-2 text-black">{{ $data['deadline'] }}</td>
-                    <td class="px-4 py-2 text-black">{{ $data['overdue_days'] }} day(s)</td>
-                    <td class="px-4 py-2 font-bold text-green-700">  ₹{{ $data['salary'] }}</td>
+                    <td class="p-2 ">{{ $data['deadline'] }}</td>
+                    <td class="p-2 ">{{ $data['overdue_days'] }} day(s)</td>
+                    <td class="p-2 font-bold text-green-700">  ₹{{ $data['salary'] }}</td>
                 </tr>
  
 

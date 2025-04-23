@@ -16,12 +16,12 @@
         <div id="message" class="hidden mb-4 px-4 py-2 rounded text-white font-medium"></div>
 
         <!-- Apply for Leave Form -->
-        <div class="mb-6 bg-white p-4 rounded shadow">
+        <div class="mb-6 bg-gray-800 p-4 rounded shadow">
             <h2 class="text-xl font-semibold mb-4">Apply for Leave</h2>
             <form id="leaveForm">
                 @csrf
                 <div class="mb-4">
-                    <label for="leave_type_id" class="block text-sm font-semibold text-gray-700">Leave Type</label>
+                    <label for="leave_type_id" class="block text-sm font-semibold text-white">Leave Type</label>
                     <select name="leave_type_id" id="leave_type_id" class="mt-1 block w-full text-black bg-white border border-gray-300 rounded p-2">
                         @foreach($leaveTypes as $leaveType)
                             <option value="{{ $leaveType->id }}">{{ ucfirst($leaveType->name) }}</option>
@@ -30,17 +30,17 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="start_date" class="block text-sm font-semibold text-gray-700">Leave Start Date</label>
+                    <label for="start_date" class="block text-sm font-semibold text-white">Leave Start Date</label>
                     <input type="date" name="start_date" id="start_date" class="mt-1 block w-full border border-gray-300 rounded p-2 text-black" required>
                 </div>
 
                 <div class="mb-4">
-                    <label for="end_date" class="block text-sm font-semibold text-gray-700">Leave End Date</label>
+                    <label for="end_date" class="block text-sm font-semibold text-white">Leave End Date</label>
                     <input type="date" name="end_date" id="end_date" class="mt-1 block w-full border border-gray-300 rounded p-2 text-black" required>
                 </div>
 
                 <div class="mb-4">
-                    <label for="notes" class="block text-sm font-semibold text-gray-700">Reason for Leave</label>
+                    <label for="notes" class="block text-sm font-semibold text-white">Reason for Leave</label>
                     <textarea name="notes" id="notes" class="mt-1 block w-full border border-gray-300 rounded p-2 text-black" rows="4"></textarea>
                 </div>
 

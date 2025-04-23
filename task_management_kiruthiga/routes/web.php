@@ -99,7 +99,7 @@ Route::post('/employee/task/update-status/{id}', [TaskController::class, 'update
 Route::post('/employee/task/update-start-date/{id}', [TaskController::class, 'updateStartDate']);
 Route::delete('/employee/task/delete/{id}', [TaskController::class, 'deleteTask']);
 Route::post('/employee/task/update-deadline/{id}', [TaskController::class, 'updateDeadline']);
-Route::post('/tasks/{id}/update-remarks', [TaskController::class, 'updateRemarks'])->name('tasks.updateRemarks');
+
 Route::get('/scoreboard', [TaskController::class, 'showScoreboard'])->name('scoreboard');
 
 

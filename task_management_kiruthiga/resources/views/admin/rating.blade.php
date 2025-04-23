@@ -10,29 +10,31 @@
 
         <table class="min-w-full table-auto border">
             <thead>
-                <tr class="bg-gray-200 text-gray-700">
-                    <th class="px-4 py-2 border">Task Title</th>
-                    <th class="px-4 py-2 border">Employee</th>
-                    <th class="px-4 py-2 border">Status</th>
-                    <th class="px-4 py-2 border">Completed At</th>
-                    <th class="px-4 py-2 border">Score</th>
-                    <th class="px-4 py-2 border">Rating</th>
+                <tr class="bg-red-600 text-white">
+                    <th class="px-4 py-2">Id</th>
+                    <th class="px-4 py-2 ">Task Title</th>
+                    <th class="px-4 py-2 ">Employee</th>
+                    <th class="px-4 py-2">Status</th>
+                    <th class="px-4 py-2 ">Completed At</th>
+                    <th class="px-4 py-2 ">Score</th>
+                    <th class="px-4 py-2 ">Rating</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($tasks as $task)
-                    <tr>
-                        <td class="px-4 py-2 border text-black">{{ $task->task_title }}</td>
-                        <td class="px-4 py-2 border text-black">{{ $task->employee->full_name }}</td>
-                        <td class="px-4 py-2 border text-black">{{ $task->status }}</td>
-                        <td class="px-4 py-2 border text-black">{{ $task->completed_at ?? 'Not Completed Yet' }}</td>
-                        <td class="px-4 py-2 border text-black">{{ $task->score }}</td>
-<td class="px-4 py-2 border text-black">
-    <form id="rating-form-{{ $task->id }}">
+                    <tr class=" bg-gray-800 hover:bg-gray-700 text-white">
+                            <td class="p-2 ">{{ $task->id }}</td>
+                        <td class="p-2  ">{{ $task->task_title }}</td>
+                        <td class="p-2  ">{{ $task->employee->full_name }}</td>
+                        <td class="p-2">{{ $task->status }}</td>
+                        <td class="p-2">{{ $task->completed_at ?? 'Not Completed Yet' }}</td>
+                        <td class="p-2 ">{{ $task->score }}</td>
+<td class="p-2">
+    <form id="rating-form-{{ $task->id }}" class="flex items-center space-x-2">
         @csrf
         <div class="flex space-x-1 text-yellow-500 cursor-pointer" id="stars-{{ $task->id }}">
             @for($i = 1; $i <= 5; $i++)
-                <svg data-value="{{ $i }}" class="star-{{ $task->id }} w-6 h-6 fill-current {{ $task->rating >= $i ? 'text-yellow-400' : 'text-gray-300' }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <svg data-value="{{ $i }}" class="star-{{ $task->id }} w-5 h-5 fill-current {{ $task->rating >= $i ? 'text-yellow-400' : 'text-gray-300' }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                     <path d="M10 15l-5.878 3.09L5.5 12.18.622 7.91l6.254-.91L10 1l3.124 6.001 6.254.91-4.878 4.27 1.378 5.91z"/>
                 </svg>
             @endfor
@@ -40,13 +42,13 @@
 
         <input type="hidden" name="rating" id="rating-input-{{ $task->id }}">
 
-        <button type="button" class="mt-2" onclick="submitRating({{ $task->id }})">
-            <img src="/build/assets/img/update.png" alt="Update" class="inline w-6 h-6"
-             class="w-5 h-5 cursor-pointer"
-                     style="filter: invert(48%) sepia(94%) saturate(2977%) hue-rotate(102deg) brightness(93%) contrast(89%);">
+        <button type="button" onclick="submitRating({{ $task->id }})" title="Update">
+            <img src="/build/assets/img/update.png" alt="Update" class="w-5 h-5 cursor-pointer"
+                 style="filter: invert(48%) sepia(94%) saturate(2977%) hue-rotate(102deg) brightness(93%) contrast(89%);">
         </button>
     </form>
 </td>
+
 
 
                           
