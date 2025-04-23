@@ -28,20 +28,26 @@
                         <td class="px-4 py-2 border text-black">{{ $task->completed_at ?? 'Not Completed Yet' }}</td>
                         <td class="px-4 py-2 border text-black">{{ $task->score }}</td>
 <td class="px-4 py-2 border text-black">
-<form action="{{ route('admin.employee-rating.update', ['taskId' => $task->id]) }}" method="POST" id="rating-form-{{ $task->id }}">
-    @csrf
-    <select name="rating" class="border rounded px-2 py-1" id="rating-select-{{ $task->id }}">
-        <option value="">Select</option>
-        @for($i = 1; $i <= 5; $i++)
-            <option value="{{ $i }}" {{ $task->rating == $i ? 'selected' : '' }}>
-                {{ $i }} Star{{ $i > 1 ? 's' : '' }}
-            </option>
-        @endfor
-    </select>
-    <button type="button" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600" onclick="submitRating({{ $task->id }})">Submit</button>
-</form>
+    <form id="rating-form-{{ $task->id }}">
+        @csrf
+        <div class="flex space-x-1 text-yellow-500 cursor-pointer" id="stars-{{ $task->id }}">
+            @for($i = 1; $i <= 5; $i++)
+                <svg data-value="{{ $i }}" class="star-{{ $task->id }} w-6 h-6 fill-current {{ $task->rating >= $i ? 'text-yellow-400' : 'text-gray-300' }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <path d="M10 15l-5.878 3.09L5.5 12.18.622 7.91l6.254-.91L10 1l3.124 6.001 6.254.91-4.878 4.27 1.378 5.91z"/>
+                </svg>
+            @endfor
+        </div>
 
+        <input type="hidden" name="rating" id="rating-input-{{ $task->id }}">
+
+        <button type="button" class="mt-2" onclick="submitRating({{ $task->id }})">
+            <img src="/build/assets/img/update.png" alt="Update" class="inline w-6 h-6"
+             class="w-5 h-5 cursor-pointer"
+                     style="filter: invert(48%) sepia(94%) saturate(2977%) hue-rotate(102deg) brightness(93%) contrast(89%);">
+        </button>
+    </form>
 </td>
+
 
                           
                     </tr>
@@ -50,37 +56,57 @@
         </table>
     </div>
 @endsection
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function submitRating(taskId) {
-        // Get the selected rating value
-        var rating = $('#rating-select-' + taskId).val();
+    $(document).ready(function () {
+        @foreach($tasks as $task)
+            let selectedRating{{ $task->id }} = {{ $task->rating ?? 0 }};
+            
+            $('#stars-{{ $task->id }} .star-{{ $task->id }}').on('mouseover', function () {
+                let val = $(this).data('value');
+                highlightStars(val, {{ $task->id }});
+            }).on('mouseleave', function () {
+                highlightStars(selectedRating{{ $task->id }}, {{ $task->id }});
+            }).on('click', function () {
+                selectedRating{{ $task->id }} = $(this).data('value');
+                $('#rating-input-{{ $task->id }}').val(selectedRating{{ $task->id }});
+            });
 
+            function highlightStars(val, taskId) {
+                $('#stars-' + taskId + ' .star-' + taskId).each(function () {
+                    if ($(this).data('value') <= val) {
+                        $(this).removeClass('text-gray-300').addClass('text-yellow-400');
+                    } else {
+                        $(this).removeClass('text-yellow-400').addClass('text-gray-300');
+                    }
+                });
+            }
+
+            // Initial highlight
+            highlightStars(selectedRating{{ $task->id }}, {{ $task->id }});
+        @endforeach
+    });
+
+    function submitRating(taskId) {
+        var rating = $('#rating-input-' + taskId).val();
         if (rating === "") {
             alert("Please select a rating.");
             return;
         }
 
-        // Prepare the data to be sent via AJAX
-        var data = {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            rating: rating
-        };
-
-        // Send the AJAX request to the server
         $.ajax({
             url: '{{ route('admin.employee-rating.update', ['taskId' => '__taskId__']) }}'.replace('__taskId__', taskId),
             method: 'POST',
-            data: data,
-            success: function(response) {
-                // If the request was successful, update the rating on the page
-                alert('Rating updated successfully!');
-                // Optionally, you can also update the rating in the table directly here
-                // $('#rating-column-' + taskId).text(rating + ' Star(s)');
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                rating: rating
             },
-            error: function(xhr, status, error) {
-                // Handle errors here
-                alert('There was an error updating the rating.');
+            success: function () {
+                alert("Rating updated successfully!");
+            },
+            error: function () {
+                alert("Error updating rating.");
             }
         });
     }
