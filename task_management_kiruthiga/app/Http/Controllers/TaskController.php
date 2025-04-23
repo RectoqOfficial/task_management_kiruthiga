@@ -33,77 +33,79 @@ public function show($id)
 }
 
 
-// Store a new task (Admin creates a task without task_start_date)
 public function store(Request $request)
 {
     \Log::info('Task creation request:', $request->all());
 
+    // ✅ Validate input
     $request->validate([
-        'task_title' => 'required|string|max:255',
-        'description' => 'required|string',
-        'department_id' => 'required|exists:departments,id',
-        'role_id' => 'required|exists:roles,id',
-        'assigned_to' => 'required|exists:employees,id',
-        'task_start_date' => 'nullable|date',
-        'no_of_days' => 'required|integer|min:1',
-     
+        'task_title'     => 'required|string|max:255',
+        'description'    => 'required|string',
+        'department_id'  => 'required|exists:departments,id',
+        'role_id'        => 'required|exists:roles,id',
+        'assigned_to'    => 'required|exists:employees,id',
+        'task_start_date'=> 'nullable|date',
+        'no_of_days'     => 'required|integer|min:1',
     ]);
 
-    // Use the provided start date, or default to today
+    // ✅ Calculate Deadline
     $taskStartDate = $request->task_start_date ? new \DateTime($request->task_start_date) : new \DateTime();
     $noOfDays = $request->no_of_days;
 
     try {
-        $taskStartDate->modify("+$noOfDays days"); // Add days
-        $taskStartDate->modify("-1 day"); // Subtract 1 day
-
+        $taskStartDate->modify("+$noOfDays days")->modify("-1 day");
         $deadline = $taskStartDate->format('Y-m-d');
     } catch (\Exception $e) {
-        return response()->json(['success' => false, 'message' => 'Error calculating the deadline'], 400);
+        return response()->json([
+            'success' => false,
+            'message' => 'Error calculating the deadline',
+        ], 400);
     }
 
     try {
+        // ✅ Create the task
         $task = Task::create([
-            'task_title' => $request->task_title,
-            'description' => $request->description,
-            'department_id' => $request->department_id,
-            'role_id' => $request->role_id,
-            'assigned_to' => $request->assigned_to,
-            'task_create_date' => now()->format('Y-m-d'),
+            'task_title'      => $request->task_title,
+            'description'     => $request->description,
+            'department_id'   => $request->department_id,
+            'role_id'         => $request->role_id,
+            'assigned_to'     => $request->assigned_to,
+            'task_create_date'=> now()->format('Y-m-d'),
             'task_start_date' => $request->task_start_date,
-            'no_of_days' => $request->no_of_days,
-            'deadline' => $deadline,
-            'status' => 'Pending',
+            'no_of_days'      => $request->no_of_days,
+            'deadline'        => $deadline,
+            'status'          => 'Pending',
         ]);
 
- Score::create([
-    'task_id' => $task->id,
-    'redo_count' => 0,
-    'overdue_count' => 0,
-    'score' => $request->score, // ✅ updated from 0 to request value
-]);
+        // ✅ Create the initial score
+        Score::create([
+            'task_id'      => $task->id,
+            'redo_count'   => 0,
+            'overdue_count'=> 0,
+            'score'        => $request->score ?? 0, // Default to 0 if not provided
+        ]);
 
+        $employee = Employee::find($request->assigned_to);
 
-
-  $employee = Employee::find($request->assigned_to);
-
-return response()->json([
-    'success' => true,
-    'message' => 'Task created successfully',
-    'task' => $task,
-    'employee' => $employee,
-'score' => [
-    'redo_count' => 0,
-    'overdue_count' => 0,
-    'score' => $request->score,
-]
-
-
-], 201);
+        // ✅ Return success response with HTTP 200
+        return response()->json([
+            'success'  => true,
+            'message'  => 'Task created successfully',
+            'task'     => $task,
+            'employee' => $employee,
+            'score'    => [
+                'redo_count'   => 0,
+                'overdue_count'=> 0,
+                'score'        => $request->score ?? 0,
+            ]
+        ], 200); // 🔥 Changed from 201 to 200 to fix the JS error
 
     } catch (\Exception $e) {
         \Log::error('Error creating task: ' . $e->getMessage());
-        return response()->json(['success' => false, 'message' => 'Error creating task'], 500);
+        return response()->json([
+            'success' => false,
+            'message' => 'Error creating task',
+        ], 500);
     }
 }
 

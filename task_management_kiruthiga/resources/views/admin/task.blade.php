@@ -361,42 +361,68 @@
 
 if (response.task) {
     $('#task-table-body').append(`
-        <tr class="bg-gray-900 hover:bg-gray-700 text-white">
-          <td>${response.task.id}</td>
-            <td>${response.task.task_title}</td>
-            <td>${response.task.description}</td>
-           <td>${response.employee?.email_id ?? 'Not Assigned'}</td>
+<tr class="bg-gray-900 hover:bg-gray-700 text-white">
+    <td class="p-2">${response.task.id}</td>
+    <td class="p-2">${response.task.task_title}</td>
+    <td class="p-2">${response.task.description}</td>
+    <td class="p-2">${response.employee?.email_id ?? 'Not Assigned'}</td>
+    <td class="p-2"><span>0 day(s)</span></td>
+    <td class="p-2">
+        <select class="p-1 text-black rounded status-select" data-task-id="${response.task.id}">
+            <option value="Pending">Pending</option>
+            <option value="Started">Started</option>
+            <option value="Review">Review</option>
+            <option value="Completed">Completed</option>
+        </select>
+    </td>
+    <td class="p-2">
+        <span class="redo-count">0</span>
+        ${response.role === 'employee' ? `<button class="px-2 py-1 bg-red-600 text-white rounded redo-btn" data-task-id="${response.task.id}">Redo</button>` : ''}
+    </td>
+    <td class="p-2">${response.task.task_create_date ?? '-'}</td>
+    <td class="p-2">
+        <input type="date" class="w-full p-1 rounded text-white task-start-date" 
+            value="${response.task.task_start_date ?? ''}" data-task-id="${response.task.id}" />
+    </td>
+    <td class="p-2">
+        <input type="number" class="w-full p-1 rounded text-black bg-white border border-white no-of-days-input" 
+            value="${response.task.no_of_days ?? ''}" data-task-id="${response.task.id}" />
+    </td>
+    <td class="p-2">
+        <input type="date" readonly class="w-full p-1 rounded text-white bg-gray-700 task-deadline" 
+            value="${response.task.deadline ?? ''}" data-task-id="${response.task.id}" />
+    </td>
+    <td class="p-2"><span class="text-gray-400">Not Uploaded</span></td>
+    <td class="p-2"><span class="text-gray-400">Not Uploaded</span></td>
+    <td class="p-2"><span class="text-gray-400">Not Uploaded</span></td>
+    <td class="p-2">
+        ${response.role === 'admin' ? `
+            <form method="POST" action="/tasks/upload-feedback/${response.task.id}" enctype="multipart/form-data">
+                <input type="file" name="feedback_image" accept="image/*" class="mb-1 text-white" />
+                <textarea name="feedback_note" class="w-full p-1 rounded text-black bg-white border border-white mb-1" placeholder="Write feedback..."></textarea>
+                <button type="submit" class="mt-1">
+                    <img src="/build/assets/img/upload.png" alt="Upload" class="w-5 h-5 inline"
+                        style="filter: invert(48%) sepia(94%) saturate(2977%) hue-rotate(102deg) brightness(93%) contrast(89%);">
+                </button>
+            </form>
+        ` : `<span class="text-white">-</span>`}
+    </td>
+    <td class="p-2">
+        ${response.role === 'admin' ? `
+            <form method="POST" action="/tasks/update-score/${response.task.id}">
+                <input type="number" name="score" value="0" class="w-20 p-1 rounded text-black bg-white border border-white" min="0" />
+                <button type="submit" class="px-2 py-1 bg-green-600 text-white rounded ml-2">Save</button>
+            </form>
+        ` : `<span>0</span>`}
+    </td>
+    <td class="p-2">
+        <form class="task-delete-form" data-task-id="${response.task.id}">
+            <button type="button" class="px-2 py-1 bg-red-600 text-white rounded delete-task-btn">Delete</button>
+        </form>
+    </td>
+</tr>
+`);
 
-            <td>
-                <select class="p-1 text-black rounded status-select" id="status-${response.task.id}" data-task-id="${response.task.id}">
-                    <option value="Pending" ${response.task.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                    <option value="Started" ${response.task.status === 'Started' ? 'selected' : ''}>Started</option>
-                    <option value="Review" ${response.task.status === 'Review' ? 'selected' : ''}>Review</option>
-                    <option value="Completed" ${response.task.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                </select>
-            </td>
-            <td>
-<span class="redo-count">${response.score?.redo_count ?? 0}</span>
-                <button class="px-2 py-1 bg-red-600 text-white rounded redo-btn" data-task-id="${response.task.id}">Redo</button>
-            </td>
-            <td>${response.task.task_create_date ?? '-'}</td>
-            <td>
-                <input type="date" class="w-full p-1 rounded text-black task-start-date" id="start-date-${response.task.id}" value="${response.task.task_start_date ?? ''}" data-task-id="${response.task.id}" />
-            </td>
-            <td>
-                <input type="number" class="w-full p-1 rounded text-white no-of-days-input" id="no_of_days-${response.task.id}" value="${response.task.no_of_days ?? 0}" data-task-id="${response.task.id}" />
-            </td>
-            <td>
-                <input type="date" readonly class="w-full p-1 rounded text-white bg-gray-700 task-deadline" id="deadline-${response.task.id}" value="${response.task.deadline ?? ''}" />
-            </td>
-           
-            <td>
-                <form class="task-delete-form" data-task-id="${response.task.id}">
-                    <button type="button" class="px-2 py-1 bg-red-600 text-white rounded delete-task-btn">Delete</button>
-                </form>
-            </td>
-        </tr>
-    `);
 }
 
 

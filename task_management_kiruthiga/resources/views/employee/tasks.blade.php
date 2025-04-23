@@ -40,12 +40,13 @@
                     <th class="p-2 whitespace-nowrap min-w-[120px]">Flowchart</th>
                     <th class="p-2 whitespace-nowrap min-w-[120px]">Sheet Detail</th>
                      <th class="p-2 whitespace-nowrap min-w-[120px]">Admin Feedback</th>
-                    <th class="p-2 whitespace-nowrap min-w-[140px]">Remarks</th>
+                    {{-- <th class="p-2 whitespace-nowrap min-w-[140px]">Remarks</th> --}}
                     
                 </tr>
             </thead>
              <tbody id="task-table-body" class="text-sm">
                 @foreach ($tasks as $task)
+                  <tr class="bg-gray-800 hover:bg-gray-700 text-white">
                     <td class="p-2">{{ $task->id }}</td>
                         <td class="p-2">{{ $task->task_title }}</td>
                         <td class="p-2">{{ $task->description }}</td>
@@ -138,14 +139,18 @@
         data-task-id="{{ $task->id }}" 
     />
 </td>
+
 <!-- Task Document Upload and View -->
 <td class="p-2">
     <!-- Upload Form -->
-    <form action="{{ route('tasks.uploadDocument', $task->id) }}" method="POST" enctype="multipart/form-data" class="upload-form">
-        @csrf
-        <input type="file" name="task_document" class="text-white">
-        <button type="submit" class="mt-1 bg-blue-600 text-white px-2 py-1 rounded">Upload</button>
-    </form>
+  <form action="{{ route('tasks.uploadDocument', $task->id) }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    <input type="file" name="task_document" class="text-white">
+   <button type="submit" class="mt-1">
+    <img src="{{ asset('build/assets/img/upload.png') }}" alt="Upload" class="w-5 h-5 inline"
+         style="filter: invert(48%) sepia(94%) saturate(2977%) hue-rotate(102deg) brightness(93%) contrast(89%);">
+</button>
+</form>
     
     <!-- Display Uploaded Task Document -->
     <div id="task_document-{{ $task->id }}-view">
@@ -163,7 +168,10 @@
     <form action="{{ route('tasks.uploadFlowchart', $task->id) }}" method="POST" enctype="multipart/form-data" class="upload-form">
         @csrf
         <input type="file" name="flowchart" class="text-white">
-        <button type="submit" class="mt-1 bg-blue-600 text-white px-2 py-1 rounded">Upload</button>
+<button type="submit" class="mt-1">
+    <img src="{{ asset('build/assets/img/upload.png') }}" alt="Upload" class="w-5 h-5 inline"
+         style="filter: invert(48%) sepia(94%) saturate(2977%) hue-rotate(102deg) brightness(93%) contrast(89%);">
+</button>
     </form>
     
     <!-- Display Uploaded Flowchart -->
@@ -182,7 +190,10 @@
     <form action="{{ route('tasks.uploadSheet', $task->id) }}" method="POST" enctype="multipart/form-data" class="upload-form">
         @csrf
         <input type="file" name="sheet_detail" class="text-white">
-        <button type="submit" class="mt-1 bg-blue-600 text-white px-2 py-1 rounded">Upload</button>
+<button type="submit" class="mt-1">
+    <img src="{{ asset('build/assets/img/upload.png') }}" alt="Upload" class="w-5 h-5 inline"
+         style="filter: invert(48%) sepia(94%) saturate(2977%) hue-rotate(102deg) brightness(93%) contrast(89%);">
+</button>
     </form>
     
     <!-- Display Uploaded Sheet -->
@@ -195,39 +206,16 @@
     </div>
 </td>
 <td class="p-2">
-    @if(Auth::guard('admin')->check())
-        <form method="POST" action="{{ route('tasks.uploadFeedback', $task->id) }}" enctype="multipart/form-data">
-            @csrf
-            <input type="file" name="feedback_image" accept="image/*" class="mb-1 text-white" />
-            <textarea name="feedback_note" class="w-full p-1 rounded text-black bg-white border border-white mb-1" placeholder="Write feedback...">{{ $task->feedback_note }}</textarea>
-            <button type="submit" class="px-2 py-1 bg-yellow-600 text-white rounded">Upload</button>
-        </form>
+    @if($task->feedback_image)
+        <a href="{{ asset('storage/' . $task->feedback_image) }}" target="_blank" class="text-blue-400 underline">View Feedback Image</a><br>
+    @endif
 
-        {{-- Show current feedback below the form --}}
-        @if($task->feedback_image || $task->feedback_note)
-            <div class="mt-2 p-2 bg-gray-800 rounded">
-                <p class="text-white font-semibold mb-1">Uploaded Feedback:</p>
-                @if($task->feedback_image)
-                    <a href="{{ asset('storage/' . $task->feedback_image) }}" target="_blank" class="text-blue-400 underline">View Feedback Image</a><br>
-                @endif
-                @if($task->feedback_note)
-                    <p class="text-white mt-1"><strong>Note:</strong> {{ $task->feedback_note }}</p>
-                @endif
-            </div>
-        @endif
-    @else
-        {{-- Employee View --}}
-        @if($task->feedback_image)
-            <a href="{{ asset('storage/' . $task->feedback_image) }}" target="_blank" class="text-blue-400 underline">View Feedback Image</a><br>
-        @endif
+    @if($task->feedback_note)
         <span class="text-white">{{ $task->feedback_note }}</span>
     @endif
 </td>
 
-                     <td class="p-2">
-                            <textarea class="w-full p-1 rounded text-white remark-input" data-task-id="{{ $task->id }}">{{ $task->remarks }}</textarea>
-                            <button class="px-2 py-1 bg-blue-600 text-white rounded mt-2 save-remark-btn" data-task-id="{{ $task->id }}">Save</button>
-                        </td>
+
                        
                     </tr>
                 @endforeach
@@ -244,28 +232,6 @@ $(document).ready(function () {
         }
     });
 
-    // ✅ Update remarks
-    $(".save-remark-btn").click(function () {
-        let taskId = $(this).data("task-id");
-        let remarks = $(`.remark-input[data-task-id="${taskId}"]`).val();
-
-        $.ajax({
-            url: `/tasks/${taskId}/update-remarks`,
-            type: 'POST',
-            data: { remarks: remarks },
-            success: function (response) {
-                if (response.success) {
-                    alert('Remarks updated successfully!');
-                } else {
-                    alert('Failed to update remarks.');
-                }
-            },
-            error: function (xhr) {
-                alert('Error updating remarks.');
-                console.log(xhr.responseText);
-            }
-        });
-    });
 
     // ✅ Update task status
     $(".status-select").change(function () {
