@@ -146,3 +146,29 @@ Route::post('employee/leave', [LeaveController::class, 'store'])->name('employee
 
 Route::patch('/employee/leave/{id}/update-status/{status}', [LeaveController::class, 'updateStatus'])
     ->name('employee.leave.updateStatus');
+// Admin Routes
+use App\Http\Controllers\Admin\RatingController as AdminRatingController;
+
+
+Route::get('/admin/employee-rating', [AdminRatingController::class, 'index'])->name('admin.employee-rating');
+
+Route::post('/admin/employee-rating/{taskId}', [AdminRatingController::class, 'updateRating'])->name('admin.employee-rating.update');
+
+
+use App\Http\Controllers\Employee\RatingController as EmployeeRatingController;
+Route::get('/employee/my-rating', [EmployeeRatingController::class, 'index']);
+
+
+
+
+use App\Http\Controllers\Admin\SalaryController as AdminSalaryController;
+Route::get('/admin/salary-details', [AdminSalaryController::class, 'index']);
+
+// Employee Routes
+use App\Http\Controllers\Employee\SalaryController as EmployeeSalaryController;
+Route::get('/employee/my-salary', [EmployeeSalaryController::class, 'index']);
+
+
+
+
+

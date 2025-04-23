@@ -412,7 +412,7 @@ $(document).ready(function () {
 
 function fetchDashboardStats() {
     $.ajax({
-        url: "{{ route('employee.dashboard.stats') }}", // Ensure this route exists in web.php
+        url: "/employee/dashboard/stats", // Ensure this route exists in web.php
         type: "GET",
         dataType: "json",
         success: function (data) {
@@ -425,6 +425,39 @@ function fetchDashboardStats() {
         }
     });
 }
+
+function loadMySalary(event) {
+    event.preventDefault();
+    $.ajax({
+        url: "/employee/my-salary",
+        type: "GET",
+        dataType: "html",
+        success: function (response) {
+            $("#contentArea").html(response);
+        },
+        error: function (xhr) {
+            console.error(xhr.responseText);
+            alert("Error loading salary details.");
+        }
+    });
+}
+
+function loadMyRating(event) {
+    event.preventDefault();
+    $.ajax({
+        url: "/employee/my-rating",
+        type: "GET",
+        dataType: "html",
+        success: function (response) {
+            $("#contentArea").html(response);
+        },
+        error: function (xhr) {
+            console.error(xhr.responseText);
+            alert("Error loading rating.");
+        }
+    });
+}
+
     </script>
 
 </body>

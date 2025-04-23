@@ -149,32 +149,7 @@
     }
 
 
-//     function performUnifiedSearch() {
-//         const name = document.getElementById('searchInput').value;
-//         const status = document.getElementById('statusFilter').value;
 
-//         // Optional: Console log for debugging
-//         console.log("Searching for:", name, "with status:", status);
-
-//         // Example AJAX call or form submit
-//         $.ajax({
-//           url: "/admin/leave/search", // <-- Updated route
-//  // Your backend route
-//             type: "GET",
-//             data: {
-//                 name: name,
-//                 status: status
-//             },
-//             success: function(response) {
-//                 // Populate your table/content
-//                 $("#contentArea").html(response);
-//             },
-//             error: function(xhr) {
-//                 console.error(xhr.responseText);
-//                 alert("Error performing search.");
-//             }
-//         });
-//     }
 
 
 </script>

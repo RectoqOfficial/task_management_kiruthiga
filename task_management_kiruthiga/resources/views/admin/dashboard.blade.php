@@ -572,6 +572,54 @@ function loadScoreDetails(event) {
             }
         });
     }
+//salary
+function loadSalaryDetails(event) {
+    event.preventDefault();
+    setActiveLink('salaryLink');
+    
+    window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+    console.log("API Base URL:", API_BASE_URL);
+    
+    let $api_url = window.API_BASE_URL + "/admin/salary-details";
+
+    $.ajax({
+        url: $api_url,
+        method: "GET",
+        success: function (response) {
+            $('#contentArea').html(response);
+            closeMobileSidebar();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading salary details:', error);
+            $('#contentArea').html('<p class="text-red-500">Failed to load Salary Details.</p>');
+        }
+    });
+}
+
+//rating
+function loadEmployeeRating(event) {
+    event.preventDefault();
+    setActiveLink('ratingLink');
+    
+    window.API_BASE_URL = "{{ env('MIX_API_URL') }}";
+    console.log("API Base URL:", API_BASE_URL);
+
+    let $api_url = window.API_BASE_URL + "/admin/employee-rating";
+
+    $.ajax({
+        url: $api_url,
+        method: "GET",
+        success: function (response) {
+            $('#contentArea').html(response);
+            closeMobileSidebar();
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading employee ratings:', error);
+            $('#contentArea').html('<p class="text-red-500">Failed to load Employee Ratings.</p>');
+        }
+    });
+}
+
 
     </script>
 </body>
