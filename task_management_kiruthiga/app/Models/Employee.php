@@ -44,37 +44,35 @@ class Employee extends Authenticatable
     }
 
 // Vacation Leave Balance Calculation
+public function approvedLeaveDays($type)
+{
+    return $this->leaveRequests()
+        ->whereHas('leaveType', function ($query) use ($type) {
+            $query->where('name', $type);
+        })
+        ->where('status', 'Approved')
+        ->get()
+        ->sum(function ($leave) {
+            return Carbon::parse($leave->start_date)->diffInDays(Carbon::parse($leave->end_date)) + 1;
+        });
+}
+
 public function vacationLeaveBalance()
 {
-    $vacationLeaveUsed = $this->leaveRequests()
-        ->whereHas('leaveType', function ($query) {
-            $query->where('name', 'Vacation');
-        })
-        ->where('status', 'Approved')
-        ->get()
-        ->sum(function ($leaveRequest) {
-            return Carbon::parse($leaveRequest->end_date)->diffInDays(Carbon::parse($leaveRequest->start_date)) + 1;
-        });
-
-    $totalVacationLeave = 20; // Assuming 20 vacation days per year
-    return $totalVacationLeave - $vacationLeaveUsed; // Return the updated balance
+    $totalAllowed = 20; // Or fetch from config or DB if dynamic
+    return $totalAllowed - $this->approvedLeaveDays('Vacation');
 }
 
-// Sick Leave Balance Calculation
 public function sickLeaveBalance()
 {
-    $sickLeaveUsed = $this->leaveRequests()
-        ->whereHas('leaveType', function ($query) {
-            $query->where('name', 'Sick');
-        })
-        ->where('status', 'Approved')
-        ->get()
-        ->sum(function ($leaveRequest) {
-            return Carbon::parse($leaveRequest->end_date)->diffInDays(Carbon::parse($leaveRequest->start_date)) + 1;
-        });
-
-    $totalSickLeave = 10; // Assuming 10 sick days per year
-    return $totalSickLeave - $sickLeaveUsed; // Return the updated balance
+    $total = 10;
+    return max(0, $total - $this->approvedLeaveDays('Sick Leave'));
 }
+public function casualLeaveBalance()
+{
+    $total = 5; // You can customize this
+    return max(0, $total - $this->approvedLeaveDays('Casual Leave'));
+}
+
 
 }

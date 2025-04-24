@@ -11,21 +11,7 @@
 
 <div class="container mx-auto p-4 max-w-screen-lg">
     <h1 class="text-2xl font-bold mb-4">Employee Leave Requests</h1>
-{{-- <!-- Search & Filter -->
-<div class="flex flex-wrap gap-4 mb-4">
-    <input type="text" id="searchInput" placeholder="Search by Employee Name" class="w-full sm:w-1/3 px-4 py-2 rounded border text-black border-gray-900">
-    
-    <select id="statusFilter" class="w-full sm:w-auto px-4 py-2 rounded border border-gray-300 text-black">
-        <option value="">Filter by Status</option>
-        <option value="Pending">Pending</option>
-        <option value="Approved">Approved</option>
-        <option value="Rejected">Rejected</option>
-    </select>
 
-    <button onclick="performUnifiedSearch()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-        Search
-    </button>
-</div> --}}
 
 
     <!-- Alert Message -->
@@ -36,6 +22,8 @@
         <table class="min-w-full table-auto border-collapse border border-gray-300">
             <thead class="">
             <tr class="bg-red-600 text-white">
+                      
+                <th class="p-2">ID</th>
                 <th class="p-2">Employee Name</th>
                 <th class="p-2">Leave Type</th>
                 <th class="p-2">Leave Dates</th>
@@ -46,6 +34,7 @@
             <tbody id="contentArea">
             @foreach($leaveRequests as $leave)
                 <tr id="row-{{ $leave->id }}" class="bg-gray-800 hover:bg-gray-700 text-white">
+                    <td class="p-2">{{ $leave->employee->id }}</td>
                     <td class="p-2">{{ $leave->employee->full_name }}</td>
                     <td class="p-2">{{ ucfirst($leave->leaveType->name) }}</td>
                     <td class="p-2">{{ $leave->start_date }} to {{ $leave->end_date }}</td>

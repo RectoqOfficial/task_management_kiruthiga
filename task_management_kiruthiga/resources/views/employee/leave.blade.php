@@ -79,12 +79,13 @@
         </div>
 
         <!-- Leave Balance -->
-    <!-- Leave Balance -->
-<div class="mt-6 bg-gray-500 p-4 rounded shadow text-white">
+ <div class="mt-6 bg-gray-500 p-4 rounded shadow text-white">
     <h2 class="text-xl font-semibold mb-2">My Leave Balance</h2>
     <p>Vacation Leave: <strong>{{ $vacationLeaveBalance }}</strong> days</p>
     <p>Sick Leave: <strong>{{ $sickLeaveBalance }}</strong> days</p>
+    <p>Casual Leave: <strong>{{ $casualLeaveBalance }}</strong> days</p>
 </div>
+
 
 
     </div>

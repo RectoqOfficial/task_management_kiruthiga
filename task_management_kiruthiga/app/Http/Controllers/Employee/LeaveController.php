@@ -11,109 +11,126 @@ use Carbon\Carbon;
 
 class LeaveController extends Controller
 {
-    // Display employee leave requests and balances
     public function index()
     {
-        // Ensure the employee is authenticated
         if (!Auth::guard('employee')->check()) {
             return redirect()->route('employee.login')->with('error', 'Please log in to view your leave requests.');
         }
 
-        // Retrieve the employee (currently authenticated user)
         $employee = Auth::guard('employee')->user();
 
-        // Calculate the leave balances
         $vacationLeaveBalance = $employee->vacationLeaveBalance();
         $sickLeaveBalance = $employee->sickLeaveBalance();
+        $casualLeaveBalance = $employee->casualLeaveBalance(); // ✅ Added
 
-        // Retrieve the leave requests for the authenticated employee
         $leaveRequests = LeaveRequest::where('employee_id', $employee->id)->get();
-
-        // Retrieve all leave types for the leave request form
         $leaveTypes = LeaveType::all();
 
-        // Return the view with the necessary data
-        return view('employee.leave', compact('leaveRequests', 'vacationLeaveBalance', 'sickLeaveBalance', 'leaveTypes'));
-    }
-public function store(Request $request)
-{
-    $request->validate([
-        'leave_type_id' => 'required|exists:leave_types,id',
-        'start_date' => 'required|date',
-        'end_date' => 'required|date|after_or_equal:start_date',
-        'notes' => 'nullable|string',
-    ]);
-
-    $employee = Auth::guard('employee')->user();
-    $leaveType = LeaveType::findOrFail($request->leave_type_id);
-    $leaveDays = Carbon::parse($request->start_date)->diffInDays(Carbon::parse($request->end_date)) + 1;
-
-    // Check leave balance before creating the request
-    if ($leaveType->name == 'Vacation' && $employee->vacationLeaveBalance() < $leaveDays) {
-        return $request->ajax()
-            ? response()->json(['message' => 'You do not have enough vacation leave.'], 422)
-            : redirect()->route('employee.leave.index')->with('error', 'You do not have enough vacation leave.');
+        return view('employee.leave', compact(
+            'leaveRequests',
+            'vacationLeaveBalance',
+            'sickLeaveBalance',
+            'casualLeaveBalance', // ✅ Added
+            'leaveTypes'
+        ));
     }
 
-    if ($leaveType->name == 'Sick' && $employee->sickLeaveBalance() < $leaveDays) {
-        return $request->ajax()
-            ? response()->json(['message' => 'You do not have enough sick leave.'], 422)
-            : redirect()->route('employee.leave.index')->with('error', 'You do not have enough sick leave.');
-    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'leave_type_id' => 'required|exists:leave_types,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'notes' => 'nullable|string',
+        ]);
 
-    // Create the leave request
-    $leaveRequest = LeaveRequest::create([
-        'employee_id' => $employee->id,
-        'leave_type_id' => $request->leave_type_id,
-        'start_date' => $request->start_date,
-        'end_date' => $request->end_date,
-        'status' => 'Pending', // Initially pending
-        'notes' => $request->notes,
-    ]);
+        $employee = Auth::guard('employee')->user();
+        $leaveType = LeaveType::findOrFail($request->leave_type_id);
+        $leaveDays = Carbon::parse($request->start_date)->diffInDays(Carbon::parse($request->end_date)) + 1;
 
-    // If the request is approved later, update the balance
-    if ($leaveRequest->status == 'Approved') {
-        if ($leaveType->name == 'Vacation') {
-            $employee->decrement('vacation_leave_balance', $leaveDays);
-        } elseif ($leaveType->name == 'Sick') {
-            $employee->decrement('sick_leave_balance', $leaveDays);
+        // ✅ Leave Balance Checks
+        if ($leaveType->name == 'Vacation' && $employee->vacationLeaveBalance() < $leaveDays) {
+            return $request->ajax()
+                ? response()->json(['message' => 'You do not have enough vacation leave.'], 422)
+                : redirect()->route('employee.leave.index')->with('error', 'You do not have enough vacation leave.');
         }
+
+        if ($leaveType->name == 'Sick' && $employee->sickLeaveBalance() < $leaveDays) {
+            return $request->ajax()
+                ? response()->json(['message' => 'You do not have enough sick leave.'], 422)
+                : redirect()->route('employee.leave.index')->with('error', 'You do not have enough sick leave.');
+        }
+
+        if ($leaveType->name == 'Casual Leave' && $employee->casualLeaveBalance() < $leaveDays) {
+            return $request->ajax()
+                ? response()->json(['message' => 'You do not have enough casual leave.'], 422)
+                : redirect()->route('employee.leave.index')->with('error', 'You do not have enough casual leave.');
+        }
+
+        $leaveRequest = LeaveRequest::create([
+            'employee_id' => $employee->id,
+            'leave_type_id' => $request->leave_type_id,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'status' => 'Pending',
+            'notes' => $request->notes,
+        ]);
+
+        $message = 'Leave request submitted successfully.';
+
+        return $request->ajax()
+            ? response()->json([
+                'message' => $message,
+                'leave_type' => $leaveType->name,
+                'start_date' => $leaveRequest->start_date,
+                'end_date' => $leaveRequest->end_date,
+            ])
+            : redirect()->route('employee.leave.index')->with('success', $message);
     }
 
-    $message = 'Leave request submitted successfully.';
+    public function updateStatus($id, $status)
+    {
+        $leaveRequest = LeaveRequest::findOrFail($id);
 
-    return $request->ajax()
-        ? response()->json([
-            'message' => $message,
-            'leave_type' => $leaveType->name,
-            'start_date' => $leaveRequest->start_date,
-            'end_date' => $leaveRequest->end_date,
-        ])
-        : redirect()->route('employee.leave.index')->with('success', $message);
-}
-public function updateStatus($id, $status)
-{
-    $leaveRequest = LeaveRequest::findOrFail($id);
-    $employee = $leaveRequest->employee;
+        if (!in_array($status, ['Approved', 'Rejected', 'Pending'])) {
+            return redirect()->back()->with('error', 'Invalid status provided.');
+        }
 
-    // Update the leave request status
-    $leaveRequest->status = $status;
-    $leaveRequest->save();
+        if (in_array($leaveRequest->status, ['Approved', 'Rejected'])) {
+            return redirect()->back()->with('error', 'This leave request has already been processed.');
+        }
 
-    // Update the balance if approved
-    if ($status == 'Approved') {
+        $employee = $leaveRequest->employee;
         $leaveType = $leaveRequest->leaveType;
         $leaveDays = Carbon::parse($leaveRequest->start_date)->diffInDays(Carbon::parse($leaveRequest->end_date)) + 1;
 
-        // Decrement balance when approved
-        if ($leaveType->name == 'Vacation') {
-            $employee->decrement('vacation_leave_balance', $leaveDays);
-        } elseif ($leaveType->name == 'Sick') {
-            $employee->decrement('sick_leave_balance', $leaveDays);
+        if ($status == 'Approved') {
+            if ($leaveType->name == 'Vacation') {
+                if ($employee->vacationLeaveBalance() < $leaveDays) {
+                    return redirect()->back()->with('error', 'Insufficient vacation leave balance.');
+                }
+                $employee->decrement('vacation_leave_balance', $leaveDays);
+            }
+
+            if ($leaveType->name == 'Sick') {
+                if ($employee->sickLeaveBalance() < $leaveDays) {
+                    return redirect()->back()->with('error', 'Insufficient sick leave balance.');
+                }
+                $employee->decrement('sick_leave_balance', $leaveDays);
+            }
+
+            if ($leaveType->name == 'Casual Leave') {
+                if ($employee->casualLeaveBalance() < $leaveDays) {
+                    return redirect()->back()->with('error', 'Insufficient casual leave balance.');
+                }
+                $employee->decrement('casual_leave_balance', $leaveDays); // optional if you're tracking in DB
+            }
+            
         }
+
+        $leaveRequest->status = $status;
+        $leaveRequest->save();
+
+        return redirect()->back()->with('success', "Leave request has been {$status}.");
     }
-
-    return redirect()->route('employee.leave.index')->with('success', 'Leave request status updated successfully.');
-}
-
 }

@@ -190,9 +190,13 @@
                         </td>
                         <td class="p-2">{{ $task->task_create_date }}</td>
                         <td class="p-2">
-                            <input type="date" class="w-full p-1 rounded text-white task-start-date" 
-                                   value="{{ $task->task_start_date }}" data-task-id="{{ $task->id }}"
-                                   @if(Auth::guard('employee')->check() && $task->task_start_date) disabled @endif />
+      <input 
+    type="date" 
+    class="w-full p-1 rounded text-black bg-white border border-white task-start-date" 
+    value="{{ $task->task_start_date }}" 
+    data-task-id="{{ $task->id }}"
+    @if(Auth::guard('employee')->check() && $task->task_start_date) disabled @endif
+/>
                         </td>
                         <td class="p-2">
                             <input type="number" class="w-full p-1 rounded text-black bg-white border border-white no-of-days-input" 
