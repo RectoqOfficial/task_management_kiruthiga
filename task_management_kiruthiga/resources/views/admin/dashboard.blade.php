@@ -290,74 +290,74 @@
 <div id="contentArea" class="mt-8 p-8 bg-black shadow-lg rounded-2xl w-full h-[80vh] text-white"> 
     <!-- Dashboard Section -->
     <div id="dashboard" class="hidden">
-   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    <!-- Total Tasks -->
-    <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl">
-        <h3 class="text-lg font-semibold text-white">Total Tasks</h3>
-        <p class="text-3xl font-bold text-blue-400">{{ $totalTasks }}</p>
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Total Tasks -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-semibold text-white">Total Tasks</h3>
+                <p class="text-3xl font-bold text-blue-400">{{ $totalTasks }}</p>
+            </div>
 
-    <!-- Pending Tasks -->
-    <div class="bg-yellow-600 p-6 rounded-lg shadow-lg text-center transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl">
-        <h3 class="text-lg font-semibold text-white">Pending Tasks</h3>
-        <p class="text-3xl font-bold">{{ $pendingTasks }}</p>
-    </div>
+            <!-- Pending Tasks -->
+            <div class="bg-yellow-600 p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-semibold text-white">Pending Tasks</h3>
+                <p class="text-3xl font-bold">{{ $pendingTasks }}</p>
+            </div>
 
-    <!-- Started Tasks -->
-    <div class="bg-blue-600 p-6 rounded-lg shadow-lg text-center transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl">
-        <h3 class="text-lg font-semibold text-white">Started Tasks</h3>
-        <p class="text-3xl font-bold">{{ $startedTasks }}</p>
-    </div>
+            <!-- Started Tasks -->
+            <div class="bg-blue-600 p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-semibold text-white">Started Tasks</h3>
+                <p class="text-3xl font-bold">{{ $startedTasks }}</p>
+            </div>
 
-    <!-- Completed Tasks -->
-    <div class="bg-green-600 p-6 rounded-lg shadow-lg text-center transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl">
-        <h3 class="text-lg font-semibold text-white">Completed Tasks</h3>
-        <p class="text-3xl font-bold">{{ $completedTasks }}</p>
-    </div>
+            <!-- Completed Tasks -->
+            <div class="bg-green-600 p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-semibold text-white">Completed Tasks</h3>
+                <p class="text-3xl font-bold">{{ $completedTasks }}</p>
+            </div>
 
-    <!-- Review Tasks -->
-    <div class="bg-purple-600 p-6 rounded-lg shadow-lg text-center transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl">
-        <h3 class="text-lg font-semibold text-white">Tasks in Review</h3>
-        <p class="text-3xl font-bold">{{ $reviewTasks }}</p>
-    </div>
-</div>
+            <!-- Review Tasks -->
+            <div class="bg-purple-600 p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-semibold text-white">Tasks in Review</h3>
+                <p class="text-3xl font-bold">{{ $reviewTasks }}</p>
+            </div>
+        </div>
+   
 
-<!-- Top Performers Section -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-    <!-- Top Performer - Last 3 Months -->
-    <div class="bg-indigo-700 p-6 rounded-lg shadow-lg text-center transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl">
-        <h3 class="text-lg font-semibold text-white">Top Performer (Last 3 Months)</h3>
-        @if ($top3Months)
-            <p class="text-xl font-bold text-green-300">{{ $top3Months->employee->full_name }}</p>
-            <p class="text-white mt-2">{{ $top3Months->completed_count }} tasks completed</p>
-        @else
-            <p class="text-white mt-2">No data</p>
-        @endif
-    </div>
+    <!-- Top Performers Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <!-- Top Performer - Last 3 Months -->
+        <div class="bg-indigo-700 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-lg font-semibold text-white">Top Performer (Last 3 Months)</h3>
+            @if ($top3Months)
+                <p class="text-xl font-bold text-green-300">{{ $top3Months->employee->full_name }}</p>
+                <p class="text-white mt-2">{{ $top3Months->completed_count }} tasks completed</p>
+            @else
+                <p class="text-white mt-2">No data</p>
+            @endif
+        </div>
 
-    <!-- Top Performer - Last 6 Months -->
-    <div class="bg-teal-700 p-6 rounded-lg shadow-lg text-center transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl">
-        <h3 class="text-lg font-semibold text-white">Top Performer (Last 6 Months)</h3>
-        @if ($top6Months)
-            <p class="text-xl font-bold text-green-300">{{ $top6Months->employee->full_name }}</p>
-            <p class="text-white mt-2">{{ $top6Months->completed_count }} tasks completed</p>
-        @else
-            <p class="text-white mt-2">No data</p>
-        @endif
-    </div>
+        <!-- Top Performer - Last 6 Months -->
+        <div class="bg-teal-700 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-lg font-semibold text-white">Top Performer (Last 6 Months)</h3>
+            @if ($top6Months)
+                <p class="text-xl font-bold text-green-300">{{ $top6Months->employee->full_name }}</p>
+                <p class="text-white mt-2">{{ $top6Months->completed_count }} tasks completed</p>
+            @else
+                <p class="text-white mt-2">No data</p>
+            @endif
+        </div>
 
-    <!-- Top Performer - Last 1 Year -->
-    <div class="bg-pink-700 p-6 rounded-lg shadow-lg text-center transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl">
-        <h3 class="text-lg font-semibold text-white">Top Performer (Last 1 Year)</h3>
-        @if ($top1Year)
-            <p class="text-xl font-bold text-green-300">{{ $top1Year->employee->full_name }}</p>
-            <p class="text-white mt-2">{{ $top1Year->completed_count }} tasks completed</p>
-        @else
-            <p class="text-white mt-2">No data</p>
-        @endif
+        <!-- Top Performer - Last 1 Year -->
+        <div class="bg-pink-700 p-6 rounded-lg shadow-lg text-center">
+            <h3 class="text-lg font-semibold text-white">Top Performer (Last 1 Year)</h3>
+            @if ($top1Year)
+                <p class="text-xl font-bold text-green-300">{{ $top1Year->employee->full_name }}</p>
+                <p class="text-white mt-2">{{ $top1Year->completed_count }} tasks completed</p>
+            @else
+                <p class="text-white mt-2">No data</p>
+            @endif
+        </div>
     </div>
-</div>
-
      </div>
 
      
